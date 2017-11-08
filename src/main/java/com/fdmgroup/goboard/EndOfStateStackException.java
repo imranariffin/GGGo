@@ -1,13 +1,13 @@
 package com.fdmgroup.goboard;
 
-public class EmptyStateStackException extends Exception {
+public class EndOfStateStackException extends Exception {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public EmptyStateStackException(String msg) {
+	public EndOfStateStackException(String msg) {
 		super(msg);
 	}
 	

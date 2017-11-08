@@ -1,27 +1,34 @@
 package com.fdmgroup.goboard;
 
+import static com.fdmgroup.goboard.Stone.E;
+import static com.fdmgroup.goboard.Stone.B;
+import static com.fdmgroup.goboard.Stone.W;
+
 import java.util.Stack;
 
 public class GoGame extends Go implements PlayableGo {
 	
-	private int size;
+	private final int SIZE;
 	private boolean passed;
-	private String[][] board;
 	private boolean finished;
-	Stack<State> states = new Stack<State>();
-	Stack<State> futureStates = new Stack<State>();
+	Stack<State> states;
+	Stack<State> futureStates;
 	
 	public GoGame() {
-		size = 9;
-		board = new String[size][size];
+		SIZE = 9;
+		Stone[][] board = new Stone[SIZE][SIZE];
+		states = new Stack<State>();
+		futureStates = new Stack<State>();
 		
-		for (int i=0; i<size; i++) {
-			for (int j=0; j<size; j++) {
-				board[i][j] = "E";
+		for (int i=0; i<SIZE; i++) {
+			for (int j=0; j<SIZE; j++) {
+				board[i][j] = E;
 			}
 		}
+		
+		states.push(new State(board));
 	}
-	
+
 	@Override
 	public String getWinner() {
 		return null;
@@ -29,15 +36,16 @@ public class GoGame extends Go implements PlayableGo {
 
 	@Override
 	public boolean place(int i, int j) {
-		String stone = getCurStone();
+		Stone stone = getCurStone();
 		passed = false;
 		
 		if (!isValid(i, j)) {
 			return false;
 		}
 		
-		board[i][j] = stone;
-		states.push(new State());
+		Stone[][] newBoard = createNewBoard(i, j, stone);
+		GoUtils.removeCaptured(newBoard, i, j);
+		states.push(new State(newBoard));
 		
 		return true;
 	}
@@ -50,13 +58,16 @@ public class GoGame extends Go implements PlayableGo {
 			finish();
 		}
 		
-		states.push(new State());
+		Stone[][] board = getBoard();
+		Stone[][] newBoard = copyBoard(board);
+		
+		states.push(new State(newBoard));
 		passed = true;
 	}
 
 	@Override
 	public void resign() {
-		String stone = getCurStone();
+		Stone stone = getCurStone();
 		System.out.println(stone + " resigned!");
 		finish();
 	}
@@ -66,29 +77,29 @@ public class GoGame extends Go implements PlayableGo {
 	}
 	
 	public int getTurn() {
-		return states.size();
+		return states.size() - 1;
 	}
 
-	public String getStone(int i, int j) {
-		return board[i][j];
+	public Stone getStone(int i, int j) {
+		return getBoard()[i][j];
 	}
 
 	public int getSize() {
-		return size;
+		return SIZE;
 	}
 	
-	public void back() throws EmptyStateStackException {
-		if (states.size() == 0) {
-			String errMsg = "PlayableGo.back(): State stack is empty -- no previous state available!";
-			throw new EmptyStateStackException(errMsg);
+	public void back() throws EndOfStateStackException {
+		if (states.size() == 1) {
+			String errMsg = "PlayableGo.back(): State stack reaches its end -- no previous state available!";
+			throw new EndOfStateStackException(errMsg);
 		}
 		futureStates.push(states.pop());
 	}
 
-	public void next() throws EmptyStateStackException {
+	public void next() throws EndOfStateStackException {
 		if (futureStates.size() == 0) {
-			String errMsg = "Playable.next(): End of state stack -- no future state available!";
-			throw new EmptyStateStackException(errMsg);
+			String errMsg = "Playable.next(): State stack reaches its end -- no future state available!";
+			throw new EndOfStateStackException(errMsg);
 		}
 		states.push(futureStates.pop());
 	}
@@ -101,17 +112,44 @@ public class GoGame extends Go implements PlayableGo {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public State getCurState() {
+		return states.peek();
+	}
 	
-	private String getCurStone() {
-		return getTurn() % 2 == 0 ? "B" : "W";
+	public Stone[][] getBoard() {
+		return getCurState().getBoard();
+	}
+	
+	private Stone getCurStone() {
+		return getTurn() % 2 == 0 ? B : W;
 	}
 
 	boolean isValid(int i, int j) {
-		return board[i][j].equals("E");
+		return getBoard()[i][j] == E;
 	}
 	
 	private void finish() {
 		finished = true;
 		System.out.println("Game finished");
+	}
+	
+	Stone[][] createNewBoard(int i, int j, Stone stone) {
+		
+		// copy current board and update it with new placed stone
+		Stone[][] board = getBoard();
+		Stone[][] newBoard = copyBoard(board);
+		newBoard[i][j] = stone;
+		
+		return newBoard;
+	}
+	
+	Stone[][] copyBoard(Stone[][] board) {
+		Stone[][] newBoard = new Stone[SIZE][SIZE];
+		for (int i=0; i<SIZE; i++) {
+			System.arraycopy(board[i], 0, newBoard[i], 0, SIZE);
+		}
+		
+		return newBoard;
 	}
 }
