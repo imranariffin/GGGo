@@ -53,8 +53,6 @@ public class GoGame extends Go implements PlayableGo {
 	@Override
 	public void pass() {;
 		if (passed) {
-			System.out.println("Calculating territories ...");
-			System.out.println("X wins by Y points!");
 			finish();
 		}
 		
@@ -68,7 +66,6 @@ public class GoGame extends Go implements PlayableGo {
 	@Override
 	public void resign() {
 		Stone stone = getCurStone();
-		System.out.println(stone + " resigned!");
 		finish();
 	}
 
@@ -131,7 +128,6 @@ public class GoGame extends Go implements PlayableGo {
 	
 	private void finish() {
 		finished = true;
-		System.out.println("Game finished");
 	}
 	
 	Stone[][] createNewBoard(int i, int j, Stone stone) {

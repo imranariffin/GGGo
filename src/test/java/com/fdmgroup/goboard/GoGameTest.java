@@ -53,18 +53,17 @@ public class GoGameTest {
 	
 	@Test
 	public void test_Place_PlacesABlackStoneOnBoard_GivenNumberOfTurnIsEven() {
-		
-		spyGoGame = spy(goGame);
-		
 		when(spyGoGame.getTurn()).thenReturn(0);
 		spyGoGame.place(0, 0);
 		
 		assertEquals(B, spyGoGame.getStone(0, 0));
-		
+	}
+	
+	@Test
+	public void test_Place_PlacesABlackStoneOnBoard_GivenNumberOfTurnIsEven2() {
 		when(spyGoGame.getTurn()).thenReturn(2);
 		spyGoGame.place(6, 6);
 		
-		System.out.println(spyGoGame.getStone(6, 6));
 		assertEquals(B, spyGoGame.getStone(6, 6));
 	}
 	
