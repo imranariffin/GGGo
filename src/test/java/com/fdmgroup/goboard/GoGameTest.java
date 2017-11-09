@@ -3,14 +3,13 @@ package com.fdmgroup.goboard;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 import static com.fdmgroup.goboard.Stone.E;
 import static com.fdmgroup.goboard.Stone.W;
 import static com.fdmgroup.goboard.Stone.B;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.mockito.Mockito.*;
 
 public class GoGameTest {
 	
