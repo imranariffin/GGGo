@@ -449,4 +449,100 @@ public class GoUtilsTest {
 
 		assertEquals(3, actualTerritoryCount);
 	}
+	
+	@Test
+	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByAWallAndASingleColor_GivenWhiteAndBoardMultipleTerritory() {
+		GoGame goGame = new GoGame();		
+		GoGame spyGoGame = spy(goGame);
+		
+		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,W,W,E,E}, // 0
+			{E,E,E,B,W,E,E,W,E}, // 1
+			{E,E,B,E,B,W,W,W,W}, // 2
+			{E,E,B,E,B,E,W,W,E}, // 3
+			{E,E,E,B,W,E,E,W,E}, // 4
+			{E,E,E,E,E,E,E,W,E}, // 5
+			{E,E,E,W,E,E,E,E,W}, // 6
+			{E,E,W,E,W,E,E,E,E}, // 7
+			{E,E,E,W,E,E,E,E,E}, // 8
+		});
+		
+		Stone[][] board = spyGoGame.getBoard();
+		int actualTerritoryCount = GoUtils.countTerritory(board, W);
+
+		assertEquals(9, actualTerritoryCount);
+	}
+	
+	@Test
+	public void test_CountTerritory_DoesNotCountIfGroupHasMoreThanOneLiberty() {
+		GoGame goGame = new GoGame();		
+		GoGame spyGoGame = spy(goGame);
+		
+		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,E,E,W,E,E,E,E}, // 2
+			{E,E,E,W,E,W,E,E,E}, // 3
+			{E,E,E,W,E,W,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,B,E,E,E,E}, // 6
+			{E,E,E,B,E,B,E,E,E}, // 7
+			{E,E,E,E,B,E,E,E,E}, // 8
+		});
+		
+		Stone[][] board = spyGoGame.getBoard();
+		int actualTerritoryCount = GoUtils.countTerritory(board, W);
+
+		assertEquals(0, actualTerritoryCount);
+	}
+	
+	@Test
+	public void test_CountTerritory_DoesCountIfOccupiedGroupAtCorner() {
+		GoGame goGame = new GoGame();		
+		GoGame spyGoGame = spy(goGame);
+		
+		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,W,E,E,E,E,E,E,E}, // 0
+			{W,E,E,E,E,E,E,E,E}, // 1
+			{E,E,E,E,E,E,E,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,B,E,E,E,E}, // 6
+			{E,E,E,B,E,B,E,E,E}, // 7
+			{E,E,E,E,B,E,E,E,E}, // 8
+		});
+		
+		Stone[][] board = spyGoGame.getBoard();
+		int actualTerritoryCount = GoUtils.countTerritory(board, W);
+
+		assertEquals(1, actualTerritoryCount);
+	}
+	
+	@Test
+	public void test_CountTerritory_DoesNotCountIfGroupSurroundedByMoreThanOneColor() {
+		GoGame goGame = new GoGame();		
+		GoGame spyGoGame = spy(goGame);
+		
+		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,W}, // 1
+			{E,E,E,E,E,E,E,W,E}, // 2
+			{E,E,E,E,E,E,E,E,W}, // 3
+			{E,E,E,E,B,E,E,E,E}, // 4
+			{E,E,E,B,E,B,E,E,E}, // 5
+			{E,E,B,E,W,E,B,E,E}, // 6
+			{E,E,E,B,E,B,E,E,E}, // 7
+			{E,E,E,E,B,E,E,E,E}, // 8
+		});
+		
+		Stone[][] board = spyGoGame.getBoard();
+		int actualTerritoryCount = GoUtils.countTerritory(board, B);
+
+		assertEquals(0, actualTerritoryCount);
+	}
 }
