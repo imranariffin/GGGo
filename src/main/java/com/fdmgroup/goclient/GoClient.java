@@ -1,6 +1,5 @@
 package com.fdmgroup.goclient;
 
-import com.fdmgroup.goboard.EndOfStateStackException;
 import com.fdmgroup.goboard.GoGame;
 
 public class GoClient {
