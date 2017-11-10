@@ -43,6 +43,13 @@ public class GoGame extends Go implements PlayableGo {
 			throw new InvalidPlacementException();
 		}
 		
+		// removes futures states if any
+		if (futureStates.size() > 0) {
+			// from this point on, the board will thread a 
+			// different path of states different from original one
+			futureStates.clear();
+		}
+		
 		Stone[][] newBoard = createNewBoard(i, j, stone);
 		GoUtils.removeCaptured(newBoard, i, j);
 		states.push(new State(newBoard));
@@ -101,7 +108,7 @@ public class GoGame extends Go implements PlayableGo {
 	public void jumpToFirst() {
 		while (true) {
 			try {
-				forward();
+				back();
 			} catch (EndOfStateStackException eosse) {
 				break;
 			}
@@ -111,7 +118,7 @@ public class GoGame extends Go implements PlayableGo {
 	public void jumpToLast() {
 		while (true) {
 			try {
-				back();
+				forward();
 			} catch (EndOfStateStackException eosse) {
 				break;
 			}
