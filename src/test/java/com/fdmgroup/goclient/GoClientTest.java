@@ -1,12 +1,11 @@
 package com.fdmgroup.goclient;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+//import static org.junit.Assert.*;
+//import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
 

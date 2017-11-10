@@ -65,7 +65,6 @@ public class GoGame extends Go implements PlayableGo {
 
 	@Override
 	public void resign() {
-		Stone stone = getCurStone();
 		finish();
 	}
 
@@ -93,7 +92,7 @@ public class GoGame extends Go implements PlayableGo {
 		futureStates.push(states.pop());
 	}
 
-	public void next() throws EndOfStateStackException {
+	public void forward() throws EndOfStateStackException {
 		if (futureStates.size() == 0) {
 			String errMsg = "Playable.next(): State stack reaches its end -- no future state available!";
 			throw new EndOfStateStackException(errMsg);
@@ -102,12 +101,23 @@ public class GoGame extends Go implements PlayableGo {
 	}
 
 	public void jumpToFirst() {
-		// TODO Auto-generated method stub
+		while (true) {
+			try {
+				forward();
+			} catch (EndOfStateStackException eosse) {
+				break;
+			}
+		}
 	}
 
 	public void jumpToLast() {
-		// TODO Auto-generated method stub
-		
+		while (true) {
+			try {
+				back();
+			} catch (EndOfStateStackException eosse) {
+				break;
+			}
+		}
 	}
 
 	public State getCurState() {

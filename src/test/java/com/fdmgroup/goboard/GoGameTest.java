@@ -261,7 +261,7 @@ public class GoGameTest {
 
 		goGame.place(5, 5);
 		goGame.back();
-		goGame.next();
+		goGame.forward();
 		
 		assertEquals(1, goGame.getTurn());
 	}
@@ -273,8 +273,8 @@ public class GoGameTest {
 		goGame.back();
 		
 		try {
-			goGame.next();
-			goGame.next();
+			goGame.forward();
+			goGame.forward();
 			fail();
 		} catch(Exception e) {
 			String expectedErrMsg = "Playable.next(): State stack reaches its end -- no future state available!";

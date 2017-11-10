@@ -1,7 +1,7 @@
 package com.fdmgroup.goclient;
 
+import com.fdmgroup.goboard.EndOfStateStackException;
 import com.fdmgroup.goboard.GoGame;
-import com.fdmgroup.goboard.Stone;
 
 public class GoClient {
 	private static GoGame goGame;
@@ -14,9 +14,13 @@ public class GoClient {
 			String input = console.console();
 			
 			switch (input) {
-				case "exit": exit(console);
 				case "pass": handlePass(); break;
 				case "resign": handleResign(); break;
+				case "back": handleBack(); break;
+				case "forward": handleForward(); break;
+				case "first": handleJumpToFirst(); break;
+				case "last": handleJumpToLast(); break;
+				case "exit": exit(console);
 				default: handlePlacement(input);
 			}
 			
@@ -26,6 +30,30 @@ public class GoClient {
 		}
 		
 		exit(console);
+	}
+
+	private static void handleJumpToLast() {
+		goGame.jumpToLast();
+	}
+
+	private static void handleJumpToFirst() {
+		goGame.jumpToFirst();
+	}
+
+	private static void handleForward() {
+		try {
+			goGame.forward();
+		} catch (EndOfStateStackException eosse) {
+			System.out.println(eosse.getMessage());
+		}
+	}
+
+	private static void handleBack() {
+		try {
+			goGame.back();
+		} catch (EndOfStateStackException eosse) {
+			System.out.println(eosse.getMessage());
+		}
 	}
 
 	private static void handleResign() {
@@ -39,7 +67,7 @@ public class GoClient {
 	private static void handlePlacement(String input) {
 		String[] pos = input.split(",");
 		if (pos.length != 2) {
-			System.out.print("Invalid placement\n"); 
+			System.out.print("Invalid command!\n"); 
 		}
 		
 		int i = Integer.parseInt(pos[0]) - 1; 
