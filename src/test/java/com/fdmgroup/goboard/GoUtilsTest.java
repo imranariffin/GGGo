@@ -401,4 +401,52 @@ public class GoUtilsTest {
 		
 		assertTrue(GoUtils.compareBoard(expected, board));
 	}
+	
+	@Test
+	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByASingleColor_GivenBlackAndBoard() {
+		GoGame goGame = new GoGame();		
+		GoGame spyGoGame = spy(goGame);
+		
+		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,B,E,E,E,E,E}, // 1
+			{E,E,B,E,B,E,E,E,E}, // 2
+			{E,E,B,E,B,E,E,E,E}, // 3
+			{E,E,E,B,W,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,E,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8
+		});
+		
+		Stone[][] board = spyGoGame.getBoard();
+		int actualTerritoryCount = GoUtils.countTerritory(board, B);
+
+		assertEquals(2, actualTerritoryCount);
+	}
+	
+	@Test
+	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByAWallAndASingleColor_GivenWhiteAndBoard() {
+		GoGame goGame = new GoGame();		
+		GoGame spyGoGame = spy(goGame);
+		
+		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,B,E,E,E,E,E}, // 1
+			{E,E,B,E,B,E,E,E,W}, // 2
+			{E,E,B,E,B,E,E,W,E}, // 3
+			{E,E,E,B,W,E,E,W,E}, // 4
+			{E,E,E,E,E,E,E,W,E}, // 5
+			{E,E,E,E,E,E,E,E,W}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8
+		});
+		
+		Stone[][] board = spyGoGame.getBoard();
+		int actualTerritoryCount = GoUtils.countTerritory(board, W);
+
+		assertEquals(3, actualTerritoryCount);
+	}
 }
