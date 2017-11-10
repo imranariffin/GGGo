@@ -51,8 +51,12 @@ public class GoUtilsTest {
 				"║     ---  GGGo  ---     ║\n"+
 				"╚════════════════════════╝\n";
 		
+		try {
+			goGame.place(2, 2);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
-		goGame.place(2, 2);
 		String actual = GoUtils.toString(goGame.getBoard());
 		assertEquals(expected, actual);
 	}
@@ -76,10 +80,14 @@ public class GoUtilsTest {
 				"║     ---  GGGo  ---     ║\n"+
 				"╚════════════════════════╝\n";
 		
+		try {
+			goGame.place(2, 2);
+			goGame.place(1, 2);
+			goGame.place(1, 1);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
-		goGame.place(2, 2);
-		goGame.place(1, 2);
-		goGame.place(1, 1);
 		String actual = GoUtils.toString(goGame.getBoard());
 		assertEquals(expected, actual);
 	}
