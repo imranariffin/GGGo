@@ -9,6 +9,7 @@ public class GoUtils {
 	private static final String WHITE = "●"; // White
 	private static final String BLACK = "○"; // Black
 	private static final String HOSHI = "╬"; // Hoshi (star)
+	private static boolean isTerritory;
 	
 	public static void removeCaptured(Stone[][] board, int i, int j) {
 		int[][] sides = new int[][] {
@@ -61,6 +62,57 @@ public class GoUtils {
 			}
 		}
 		return true;
+	}
+
+	public static int countTerritory(Stone[][] board, Stone stone) {
+		int n = board.length;
+		boolean[][] visited = new boolean[n][n];
+		isTerritory = false;
+		return countTerritory(board, stone, visited);
+	}
+	
+	private static int countTerritory(Stone[][] board, Stone stone, boolean[][] visited) {
+		int ret = 0;
+		int n = board.length;
+		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (board[i][j] == E && !visited[i][j]) {
+					// dfs will update isTerritory
+					isTerritory = true;
+					int r = dfs(board, stone, i, j, visited);
+					ret = isTerritory ? ret + r : ret;
+				}
+			}
+		}
+		
+		return ret;
+	}
+
+	private static int dfs(Stone[][] board, Stone stone, int i, int j, boolean[][] visited) {
+		if (i < 0 || i >= board.length || j < 0 || j >= board.length) {
+			return 0;
+		}
+		if (visited[i][j]) {
+			return 0;
+		}
+		if (board[i][j] != E && board[i][j] != stone) {
+			isTerritory = false;
+			return 0;
+		}
+		if (board[i][j] != E) {
+			return 0;
+		}
+		
+		int ret = 1;
+		visited[i][j] = true;
+		
+		ret += dfs(board, stone, i - 1, j, visited);
+		ret += dfs(board, stone, i + 1, j, visited);
+		ret += dfs(board, stone, i, j - 1, visited);
+		ret += dfs(board, stone, i, j + 1, visited);
+		
+		return ret;
 	}
 
 	static void remove(Stone[][] b, boolean[][] v, Stone stone, int i, int j) {
