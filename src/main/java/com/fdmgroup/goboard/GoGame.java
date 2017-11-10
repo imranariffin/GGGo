@@ -35,19 +35,17 @@ public class GoGame extends Go implements PlayableGo {
 	}
 
 	@Override
-	public boolean place(int i, int j) {
+	public void place(int i, int j) throws InvalidPlacementException {
 		Stone stone = getCurStone();
 		passed = false;
 		
 		if (!isValid(i, j)) {
-			return false;
+			throw new InvalidPlacementException();
 		}
 		
 		Stone[][] newBoard = createNewBoard(i, j, stone);
 		GoUtils.removeCaptured(newBoard, i, j);
 		states.push(new State(newBoard));
-		
-		return true;
 	}
 
 	@Override
@@ -133,6 +131,7 @@ public class GoGame extends Go implements PlayableGo {
 	}
 
 	boolean isValid(int i, int j) {
+		if (i < 0 || i >= SIZE || j < 0 || j >= SIZE) return false;
 		return getBoard()[i][j] == E;
 	}
 	

@@ -35,26 +35,49 @@ public class GoGameTest {
 	
 	@Test
 	public void test_IsValid_ReturnsFalse_GivenAPosition_WhenStoneAlreadyPlaced() {
-		goGame.place(5, 5);
+		
+		try {
+			goGame.place(5, 5);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
+		
 		assertFalse(goGame.isValid(5, 5));
 	}
 	
 	@Test
 	public void test_IsValid_ReturnsTrue_GivenAPosition_WhenAnotherPositionPlaced() {
-		goGame.place(5, 5);
+		
+		try {
+			goGame.place(5, 5);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
+		
 		assertTrue(goGame.isValid(0, 0));
 	}
 	
 	@Test
 	public void test_Place_IncreasesNumberOfTurnsByOne() {
-		goGame.place(5, 5);
+		
+		try {
+			goGame.place(5, 5);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
+		
 		assertEquals(1, goGame.getTurn());
 	}
 	
 	@Test
 	public void test_Place_PlacesABlackStoneOnBoard_GivenNumberOfTurnIsEven() {
 		when(spyGoGame.getTurn()).thenReturn(0);
-		spyGoGame.place(0, 0);
+		
+		try {
+			spyGoGame.place(0, 0);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertEquals(B, spyGoGame.getStone(0, 0));
 	}
@@ -62,7 +85,12 @@ public class GoGameTest {
 	@Test
 	public void test_Place_PlacesABlackStoneOnBoard_GivenNumberOfTurnIsEven2() {
 		when(spyGoGame.getTurn()).thenReturn(2);
-		spyGoGame.place(6, 6);
+		
+		try {
+			spyGoGame.place(6, 6);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertEquals(B, spyGoGame.getStone(6, 6));
 	}
@@ -82,13 +110,22 @@ public class GoGameTest {
 			{E, E, E, E, E, E, E, E, E}, // 8			
 		};
 		
-		goGame.place(2, 3);
-		goGame.place(3, 3);
-		goGame.place(3, 2);
+		try {
+			goGame.place(2, 3);
+			goGame.place(3, 3);
+			goGame.place(3, 2);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertTrue(goGame.getCurState().equals(new State(currBoard)));
 		
-		goGame.place(4, 3);
+		try {
+			goGame.place(4, 3);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
+		
 		assertEquals(W, goGame.getStone(4, 3));
 	}
 	
@@ -106,12 +143,16 @@ public class GoGameTest {
 			{E, E, E, E, E, E, E, E, E}, // 7
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
-		goGame.place(2, 2); // B
-		goGame.place(2, 3); // W
-		goGame.place(1, 3); // B
-		goGame.place(1, 2); // W
-		goGame.place(3, 3); // B
-		goGame.place(3, 2); // W
+		try {
+			goGame.place(2, 2); // B
+			goGame.place(2, 3); // W
+			goGame.place(1, 3); // B
+			goGame.place(1, 2); // W
+			goGame.place(3, 3); // B
+			goGame.place(3, 2); // W
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertTrue(goGame.getCurState().equals(new State(currBoard)));
 		/*
@@ -119,7 +160,12 @@ public class GoGameTest {
 		 * When Black places at 2,4, White at 2,3 should be captured and removed from board.
 		*/
 		
-		goGame.place(2, 4);
+		
+		try {
+			goGame.place(2, 4);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertEquals(B, goGame.getStone(2, 4));
 		assertEquals(E, goGame.getStone(2, 3));
@@ -139,11 +185,16 @@ public class GoGameTest {
 			{E, E, E, E, E, E, E, E, E}, // 7
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
-		goGame.place(1, 1); // B
-		goGame.place(1, 0); // W
-		goGame.place(2, 0); // B
-		goGame.place(2, 1); // W
-		goGame.place(3, 1); // B
+		
+		try {
+			goGame.place(1, 1); // B
+			goGame.place(1, 0); // W
+			goGame.place(2, 0); // B
+			goGame.place(2, 1); // W
+			goGame.place(3, 1); // B
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertTrue(goGame.getCurState().equals(new State(currBoard)));
 		/*
@@ -151,27 +202,35 @@ public class GoGameTest {
 		 * When White places at 3,0, Black at 2,0 should be captured and removed from board.
 		*/
 		
-		goGame.place(3, 0); // W
+		try { 
+			goGame.place(3, 0); // W
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertEquals(E, goGame.getStone(2, 0));
 	}
 	
 	@Test
 	public void test_Place_WillRemoveCapturedStones_GivenTwoEyedCapture() {
-		goGame.place(2, 2); // B
-		goGame.place(2, 3); // W
-		goGame.place(1, 3); // B
-		goGame.place(1, 2); // W
-		goGame.place(3, 3); // B
-		
-		goGame.place(2, 4); // W
-		goGame.place(1, 4); // B
-		goGame.place(3, 2); // W
-		goGame.place(2, 1); // B
-		goGame.place(3, 1); // W
-		
-		goGame.place(3, 4); // B
-		goGame.place(1, 1); // W
+		try {
+			goGame.place(2, 2); // B
+			goGame.place(2, 3); // W
+			goGame.place(1, 3); // B
+			goGame.place(1, 2); // W
+			goGame.place(3, 3); // B
+			
+			goGame.place(2, 4); // W
+			goGame.place(1, 4); // B
+			goGame.place(3, 2); // W
+			goGame.place(2, 1); // B
+			goGame.place(3, 1); // W
+			
+			goGame.place(3, 4); // B
+			goGame.place(1, 1); // W
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		Stone[][] currBoard = new Stone[][] {
 //			 0, 1, 2, 3, 4, 5, 6, 7, 8
@@ -192,7 +251,13 @@ public class GoGameTest {
 		 * On this board, the number of turn is 12 so it's Black's turn to place a stone.
 		 * When Black places at 3,4, White at 2,3 and 2,4 should be captured and removed from board.
 		*/
-		goGame.place(2, 5);
+		
+		try {
+			goGame.place(2, 5);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
+		
 		assertEquals(B, goGame.getStone(1, 4));
 		assertEquals(E, goGame.getStone(2, 3));
 		assertEquals(E, goGame.getStone(2, 4));
@@ -214,15 +279,25 @@ public class GoGameTest {
 	@Test
 	public void test_Pass_DoesNotFinishTheGame_WhenOnceAndFollowedByAPlacement() {
 		goGame.pass();
-		goGame.place(5, 5);
+		
+		try {
+			goGame.place(5, 5);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
 		
 		assertFalse(goGame.isFinished());
 	}
 	
 	@Test
-	public void test_Back_ReducesNumberOfTurnByOne() throws EndOfStateStackException {
-		goGame.place(0, 0);
-		goGame.back();
+	public void test_Back_ReducesNumberOfTurnByOne() {
+		
+		try {
+			goGame.place(0, 0);
+			goGame.back();
+		} catch (InvalidPlacementException | EndOfStateStackException e) {
+			fail();
+		}
 		
 		assertEquals(0, goGame.getTurn());
 	}
@@ -241,8 +316,12 @@ public class GoGameTest {
 	
 	@Test
 	public void test_Back_throwsError_IfKeepsGoingBackBeyondBeginningOfGame() {
-		goGame.place(5, 5);
-		goGame.place(4, 4);
+		try {
+			goGame.place(5, 5);
+			goGame.place(4, 4);
+		} catch (InvalidPlacementException e1) {
+			fail();
+		}
 		
 		try {
 			goGame.back(); 
@@ -257,20 +336,28 @@ public class GoGameTest {
 	}
 	
 	@Test
-	public void test_Next_IncreasesNumberOfTurnsByOne() throws EndOfStateStackException {
+	public void test_Next_IncreasesNumberOfTurnsByOne() {
+ 
+		try {
+			goGame.place(5, 5);
+			goGame.back();
+			goGame.forward();
+		} catch (InvalidPlacementException | EndOfStateStackException e) {
+			fail();
+		}
 
-		goGame.place(5, 5);
-		goGame.back();
-		goGame.forward();
-		
 		assertEquals(1, goGame.getTurn());
 	}
 	
 	@Test
-	public void test_Next_ThrowsException_IfNoFutureStateAvailable() throws EndOfStateStackException {
+	public void test_Next_ThrowsException_IfNoFutureStateAvailable() {
 		
-		goGame.place(5, 5);
-		goGame.back();
+		try {
+			goGame.place(5, 5);
+			goGame.back();
+		} catch (InvalidPlacementException | EndOfStateStackException e1) {
+			fail();
+		}
 		
 		try {
 			goGame.forward();
