@@ -5,10 +5,10 @@ import static com.fdmgroup.goboard.Stone.H;
 
 public class GoUtils {
 	
-	private static String EMPTY = "┼"; // Empty
-	private static String WHITE = "●"; // White
-	private static String BLACK = "○"; // Black
-	private static String HOSHI = "╬"; // Hoshi (star)
+	private static final String EMPTY = "┼"; // Empty
+	private static final String WHITE = "●"; // White
+	private static final String BLACK = "○"; // Black
+	private static final String HOSHI = "╬"; // Hoshi (star)
 	
 	public static void removeCaptured(Stone[][] board, int i, int j) {
 		int[][] sides = new int[][] {
