@@ -1,6 +1,8 @@
 package com.fdmgroup.goboard;
 
 import static com.fdmgroup.goboard.Stone.E;
+import static com.fdmgroup.goboard.Stone.B;
+import static com.fdmgroup.goboard.Stone.W;
 import static com.fdmgroup.goboard.Stone.H;
 
 public class GoUtils {
@@ -64,6 +66,13 @@ public class GoUtils {
 		return true;
 	}
 
+	public static Stone getWinner(Stone[][] board) {
+		int blackScore = countTerritory(board, B);
+		int whiteScore = countTerritory(board, W);
+		
+		return ((float) blackScore) - 6.5 > (float) whiteScore ? B : W; 
+	}
+	
 	public static int countTerritory(Stone[][] board, Stone stone) {
 		int n = board.length;
 		boolean[][] visited = new boolean[n][n];

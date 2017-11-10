@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import com.fdmgroup.goboard.GoGame;
@@ -14,6 +15,8 @@ import org.junit.Before;
 
 public class GoClientConsoleTest {
 	
+	static PrintStream stdOut = System.out;
+	static PrintStream stdErr = System.err;
 	private final ByteArrayOutputStream outContent= new ByteArrayOutputStream();
 	private final ByteArrayOutputStream errContent= new ByteArrayOutputStream();
 	
@@ -27,6 +30,12 @@ public class GoClientConsoleTest {
 	public void tearDownStreams() {
 		System.setOut(null);
 		System.setErr(null);
+	}
+	
+	@AfterClass
+	public static void resetStreams() {
+		System.setOut(stdOut);
+		System.setErr(stdErr);
 	}
 	
 	@Test

@@ -58,7 +58,13 @@ public class GoGame extends Go implements PlayableGo {
 	@Override
 	public void pass() {;
 		if (passed) {
-			finish();
+			Stone[][] board = getBoard();
+			Stone winner = GoUtils.getWinner(board);
+			if (board == null) {
+				System.out.println("=====\n=====\n====\n");
+			}
+			finish(winner, (float) GoUtils.countTerritory(board, winner));
+			return;
 		}
 		
 		Stone[][] board = getBoard();
@@ -70,7 +76,7 @@ public class GoGame extends Go implements PlayableGo {
 
 	@Override
 	public void resign() {
-		finish();
+		finish(getCurStone(), -1);
 	}
 
 	public boolean isFinished() {
@@ -142,7 +148,13 @@ public class GoGame extends Go implements PlayableGo {
 		return getBoard()[i][j] == E;
 	}
 	
-	private void finish() {
+	private void finish(Stone winner, float score) {
+		String w = winner == B ? "B" : "W";
+		if (score > 0) {
+			System.out.println(w + " + " + score);
+		} else {
+			System.out.println(w + " + R");
+		}
 		finished = true;
 	}
 	
