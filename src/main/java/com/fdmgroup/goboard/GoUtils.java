@@ -80,6 +80,21 @@ public class GoUtils {
 		return countTerritory(board, stone, visited);
 	}
 	
+	public static GoGame generateGoGame(int[][] kifu) {
+		GoGame goGame = new GoGame();
+		for (int[] pos: kifu) {
+			int i = pos[0];
+			int j = pos[1];
+			
+			try {
+				goGame.place(i, j);
+			} catch (InvalidPlacementException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return goGame;
+	}
+	
 	private static int countTerritory(Stone[][] board, Stone stone, boolean[][] visited) {
 		int ret = 0;
 		int n = board.length;

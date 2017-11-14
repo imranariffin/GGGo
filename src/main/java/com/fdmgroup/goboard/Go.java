@@ -6,3 +6,4 @@ public abstract class Go {
 	public abstract void pass();
 	public abstract void resign();
 }
+	

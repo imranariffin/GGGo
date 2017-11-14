@@ -369,4 +369,82 @@ public class GoGameTest {
 			assertEquals(EndOfStateStackException.class, e.getClass());
 		}
 	}
+	
+	@Test
+	public void test_Place_WillRemoveCapturedStones_GivenCaptureFromWithin() {
+		try {
+			goGame.place(3, 3); // B
+			goGame.place(2, 3); // W
+			goGame.place(3, 4); // B
+			goGame.place(2, 4); // W
+			goGame.place(3, 5); // B
+			goGame.place(2, 5); // W
+			
+			goGame.place(4, 5); // B
+			goGame.place(4, 6); // W
+			goGame.place(5, 5); // B
+			goGame.place(5, 6); // W
+			goGame.place(5, 3); // B
+			goGame.place(5, 2); // W
+			
+			goGame.place(5, 4); // B
+			goGame.place(6, 4); // W
+			
+			goGame.place(4, 3); // B
+			goGame.place(4, 2); // W
+			
+			goGame.place(2, 2); // B
+			goGame.place(3, 6); // W
+			goGame.place(2, 6); // B
+			goGame.place(3, 2); // W
+			goGame.place(6, 6); // B
+			goGame.place(6, 5); // W
+			goGame.place(5, 7); // B
+			goGame.place(6, 3); // W
+			goGame.place(3, 7); // B
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
+		
+		Stone[][] expected = new Stone[][] {
+//			 0, 1, 2, 3, 4, 5, 6, 7, 8
+			{E, E, E, E, E, E, E, E, E}, // 0
+			{E, E, E, E, E, E, E, E, E}, // 1
+			{E, E, B, W, W, W, B, E, E}, // 2
+			{E, E, W, B, B, B, W, B, E}, // 3
+			{E, E, W, B, E, B, W, E, E}, // 4
+			{E, E, W, B, B, B, W, B, E}, // 5
+			{E, E, E, W, W, W, B, E, E}, // 6
+			{E, E, E, E, E, E, E, E, E}, // 7
+			{E, E, E, E, E, E, E, E, E}, // 8
+		};
+		
+		assertTrue(goGame.getCurState().equals(new State(expected)));
+		
+		/*
+		 * On this board, the number of turn is 12 so it's Black's turn to place a stone.
+		 * When Black places at 3,4, White at 2,3 and 2,4 should be captured and removed from board.
+		*/
+		
+		try {
+			goGame.place(4, 4);
+		} catch (InvalidPlacementException e) {
+			fail();
+		}
+		
+		expected = new Stone[][] {
+//			 0, 1, 2, 3, 4, 5, 6, 7, 8
+			{E, E, E, E, E, E, E, E, E}, // 0
+			{E, E, E, E, E, E, E, E, E}, // 1
+			{E, E, B, W, W, W, B, E, E}, // 2
+			{E, E, W, E, E, E, W, B, E}, // 3
+			{E, E, W, E, W, E, W, E, E}, // 4
+			{E, E, W, E, E, E, W, B, E}, // 5
+			{E, E, E, W, W, W, B, E, E}, // 6
+			{E, E, E, E, E, E, E, E, E}, // 7
+			{E, E, E, E, E, E, E, E, E}, // 8
+		};
+		
+		assertTrue(goGame.getCurState().equals(new State(expected)));
+	}
 }
