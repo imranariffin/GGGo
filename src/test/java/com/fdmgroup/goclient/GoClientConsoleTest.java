@@ -41,10 +41,14 @@ public class GoClientConsoleTest {
 	@Test
 	public void test_Console_PrintsWelcomeMessageEmptyBoard_ReturnsUserInput_GivenNewBoard() {
 		GoGame goGame = new GoGame();
-		GoClientConsole goConsole = new GoClientConsole(goGame, System.in, System.out);
+		new GoClient(goGame);
+		GoClientConsole goConsole = GoClient.getConsole("MAIN");
 		goConsole.welcome();
 		
-		String expected = "Welcome to GGGo!\n";
+		String expected = "Welcome to GGGo!\n"+
+				"P: Start new game\n" + 
+				"V: View past games\n" + 
+				"----------------------\n";
 		
 		assertEquals(expected, outContent.toString());
 	}
