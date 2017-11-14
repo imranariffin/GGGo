@@ -3,16 +3,13 @@ package com.fdmgroup.goboard;
 import static com.fdmgroup.goboard.Stone.E;
 import static com.fdmgroup.goboard.Stone.B;
 import static com.fdmgroup.goboard.Stone.W;
-
 import java.util.Stack;
 
-public class GoGame extends Go implements PlayableGo {
+public class GoGame extends InteractiveGo implements Go {
 	
 	private final int SIZE;
 	private boolean passed;
 	private boolean finished;
-	Stack<State> states;
-	Stack<State> futureStates;
 	
 	public GoGame() {
 		SIZE = 9;
@@ -27,11 +24,6 @@ public class GoGame extends Go implements PlayableGo {
 		}
 		
 		states.push(new State(board));
-	}
-
-	@Override
-	public String getWinner() {
-		return null;
 	}
 
 	@Override
@@ -94,42 +86,6 @@ public class GoGame extends Go implements PlayableGo {
 	public int getSize() {
 		return SIZE;
 	}
-	
-	public void back() throws EndOfStateStackException {
-		if (states.size() == 1) {
-			String errMsg = "PlayableGo.back(): State stack reaches its end -- no previous state available!";
-			throw new EndOfStateStackException(errMsg);
-		}
-		futureStates.push(states.pop());
-	}
-
-	public void forward() throws EndOfStateStackException {
-		if (futureStates.size() == 0) {
-			String errMsg = "Playable.next(): State stack reaches its end -- no future state available!";
-			throw new EndOfStateStackException(errMsg);
-		}
-		states.push(futureStates.pop());
-	}
-
-	public void jumpToFirst() {
-		while (true) {
-			try {
-				back();
-			} catch (EndOfStateStackException eosse) {
-				break;
-			}
-		}
-	}
-
-	public void jumpToLast() {
-		while (true) {
-			try {
-				forward();
-			} catch (EndOfStateStackException eosse) {
-				break;
-			}
-		}
-	}
 
 	public State getCurState() {
 		return states.peek();
@@ -175,5 +131,13 @@ public class GoGame extends Go implements PlayableGo {
 		}
 		
 		return newBoard;
+	}
+
+	public Stack<State> getStates() {
+		Stack<State> ret = new Stack<>(); 
+		for (State s: states) {
+			ret.push(new State(s.board));
+		}
+		return ret;
 	}
 }
