@@ -7,8 +7,8 @@ import com.fdmgroup.goboard.GoGame;
 
 public class MainConsole extends GoClientConsole {
 	private static MainConsole inst;
-	private MainConsole(GoGame gg, InputStream is, PrintStream os) {
-		super(gg, is, os);
+	private MainConsole(InputStream is, PrintStream os) {
+		super(is, os);
 	}
 	
 	@Override
@@ -27,7 +27,7 @@ public class MainConsole extends GoClientConsole {
 
 	public static GoClientConsole getInstance(GoGame gg) {
 		if (inst == null) {
-			return new MainConsole(gg, System.in, System.out);
+			return new MainConsole(System.in, System.out);
 		}
 		return inst;
 	}

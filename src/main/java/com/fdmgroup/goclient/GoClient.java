@@ -1,23 +1,28 @@
 package com.fdmgroup.goclient;
 
+import com.fdmgroup.goboard.GoFinishedGame;
 import com.fdmgroup.goboard.GoGame;
+import com.fdmgroup.goboard.GoUtils;
+import static com.fdmgroup.goboard.Stone.B;
+import static com.fdmgroup.goboard.Stone.W;
 
 public class GoClient {
 	private static String MAIN = "MAIN";
 	private static String GAME ="GAME";
 	private static String HISTORY = "HISTORY";
 	private static GoGame goGame;
+	private static GoFinishedGame pastGame;
 	private static GoClientConsole console;
-	private static GoCommandHandler cmdHandler;
+	private static GoCommandHandler goCmdHandler;
+	private static PastGoCommandHandler pgCmdHandler;
 	
 	public GoClient(GoGame gg) {
 		goGame = gg;
-		cmdHandler = new GoCommandHandler(goGame);
+		goCmdHandler = new GoCommandHandler(goGame);
 	}
 	
 	public static void main(String[] args) {
 		goGame = new GoGame();
-		cmdHandler = new GoCommandHandler(goGame);
 		console = getConsole(MAIN);
 		
 		console.welcome();
@@ -36,19 +41,53 @@ public class GoClient {
 
 	private static void viewPastGames() {
 		console = getConsole(HISTORY);
+		pgCmdHandler = new PastGoCommandHandler(pastGame);
 		
 		while (true) {
 			String input = console.console();
 			switch (input) {
-				case "back": cmdHandler.handleBack(); break;
-				case "forward": cmdHandler.handleForward(); break;
-				case "first": cmdHandler.handleJumpToFirst(); break;
-				case "last": cmdHandler.handleJumpToLast(); break;
+				case "back": pgCmdHandler.handleBack(); break;
+				case "forward": pgCmdHandler.handleForward(); break;
+				case "first": pgCmdHandler.handleJumpToFirst(); break;
+				case "last": pgCmdHandler.handleJumpToLast(); break;
 				default: help();
 			}
 		}
 	}
 
+	private static void startGame() {
+		console = getConsole(GAME);
+		goCmdHandler = new GoCommandHandler(goGame);
+		
+		while (!goGame.isFinished()) {
+			String input = console.console();
+			switch (input) {
+				case "pass": goCmdHandler.handlePass(); break;
+				case "resign": goCmdHandler.handleResign(); break;
+				case "back": goCmdHandler.handleBack(); break;
+				case "forward": goCmdHandler.handleForward(); break;
+				case "first": goCmdHandler.handleJumpToFirst(); break;
+				case "last": goCmdHandler.handleJumpToLast(); break;
+				case "exit": return;
+				case "help": help();
+				default: goCmdHandler.handlePlacement(input);
+			}
+		}
+		
+		int wscore = GoUtils.countTerritory(goGame.getBoard(), W);
+		int bscore = GoUtils.countTerritory(goGame.getBoard(), B);
+		pastGame = new GoFinishedGame(goGame, wscore, bscore);
+	}
+	
+	static GoClientConsole getConsole(String whichConsole) {
+		switch (whichConsole) {
+			case "MAIN": return MainConsole.getInstance(goGame);
+			case "GAME": return GameConsole.getInstance(goGame);
+			case "HISTORY": return HistoryConsole.getInstance(pastGame);
+			default: throw new Error();
+		}
+	}
+	
 	private static void exit() {
 		console.out("Bye Bye!\n");
 		System.exit(0);
@@ -78,33 +117,5 @@ public class GoClient {
 		console.out("@History> first - go back one step to first state of the board\n");
 		console.out("@History> last - go forward to the latest state of the board\n");
 		console.out("@Game> exit - exits to main menu\n");
-	}
-	
-	private static void startGame() {
-		console = getConsole(GAME);
-		
-		while (!goGame.isFinished()) {
-			String input = console.console();
-			switch (input) {
-				case "pass": cmdHandler.handlePass(); break;
-				case "resign": cmdHandler.handleResign(); break;
-				case "back": cmdHandler.handleBack(); break;
-				case "forward": cmdHandler.handleForward(); break;
-				case "first": cmdHandler.handleJumpToFirst(); break;
-				case "last": cmdHandler.handleJumpToLast(); break;
-				case "exit": return;
-				case "help": help();
-				default: cmdHandler.handlePlacement(input);
-			}
-		}	
-	}
-	
-	static GoClientConsole getConsole(String whichConsole) {
-		switch (whichConsole) {
-			case "MAIN": return MainConsole.getInstance(goGame);
-			case "GAME": return GameConsole.getInstance(goGame);
-//			case "HISTORY": return HistoryConsole.getInstance();
-			default: throw new Error();
-		}
 	}
 }

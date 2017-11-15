@@ -74,10 +74,6 @@ public class GoGame extends InteractiveGo implements Go {
 	public boolean isFinished() {
 		return finished;
 	}
-	
-	public int getTurn() {
-		return states.size() - 1;
-	}
 
 	public Stone getStone(int i, int j) {
 		return getBoard()[i][j];
@@ -85,14 +81,6 @@ public class GoGame extends InteractiveGo implements Go {
 
 	public int getSize() {
 		return SIZE;
-	}
-
-	public State getCurState() {
-		return states.peek();
-	}
-	
-	public Stone[][] getBoard() {
-		return getCurState().getBoard();
 	}
 	
 	private Stone getCurStone() {
@@ -134,10 +122,6 @@ public class GoGame extends InteractiveGo implements Go {
 	}
 
 	public Stack<State> getStates() {
-		Stack<State> ret = new Stack<>(); 
-		for (State s: states) {
-			ret.push(new State(s.board));
-		}
-		return ret;
+		return states;
 	}
 }

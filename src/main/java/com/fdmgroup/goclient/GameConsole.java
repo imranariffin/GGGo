@@ -9,8 +9,10 @@ import com.fdmgroup.goboard.GoUtils;
 public class GameConsole extends GoClientConsole {
 	
 	private static GameConsole inst;
+	private GoGame goGame;
 	private GameConsole(GoGame gg, InputStream is, PrintStream os) {
-		super(gg, is, os);
+		super(is, os);
+		goGame = gg;
 	}
 
 	@Override

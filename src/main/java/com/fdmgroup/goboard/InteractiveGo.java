@@ -42,4 +42,16 @@ public class InteractiveGo {
 			}
 		}
 	}
+	
+	public State getCurState() {
+		return states.peek();
+	}
+	
+	public Stone[][] getBoard() {
+		return getCurState().getBoard();
+	}
+	
+	public int getTurn() {
+		return states.size() - 1;
+	}
 }

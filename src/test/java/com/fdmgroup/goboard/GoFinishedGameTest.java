@@ -40,7 +40,7 @@ public class GoFinishedGameTest {
 		assertEquals(10, bScore);
 		assertEquals(4, wScore);
 		
-		pastGame = new GoFinishedGame(goGame.getStates(), wScore, bScore); 
+		pastGame = new GoFinishedGame(goGame, wScore, bScore); 
 
 		assertEquals(W, pastGame.getWinner());
 	}

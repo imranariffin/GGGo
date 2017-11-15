@@ -4,12 +4,12 @@ import com.fdmgroup.goboard.EndOfStateStackException;
 import com.fdmgroup.goboard.GoGame;
 import com.fdmgroup.goboard.InvalidPlacementException;
 
-public class GoCommandHandler {
+public class GoCommandHandler extends CommandHandler {
 
 	private GoGame goGame;
 	
-	public GoCommandHandler(GoGame _goGame) {
-		goGame = _goGame;
+	public GoCommandHandler(GoGame gg) {
+		goGame = gg;
 	}
 
 	public void handleJumpToLast() {

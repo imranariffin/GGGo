@@ -8,15 +8,15 @@ public class GoFinishedGame extends InteractiveGo {
 	private final float whiteScore;
 	private final float blackScore;
 	
-	public GoFinishedGame(Stack<State> _states, float wScore, float bScore) {
+	public GoFinishedGame(GoGame gg, float wScore, float bScore) {
 		SIZE = 9;
 		states = new Stack<>();
 		futureStates = new Stack<>();
 		whiteScore = wScore;
 		blackScore = bScore;
 		
-		for (State s: _states) {
-			states.push(s);
+		for (State s: gg.getStates()) {
+			states.push(new State(s.board));
 		}
 	}
 	
