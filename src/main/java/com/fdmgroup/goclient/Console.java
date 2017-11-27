@@ -4,11 +4,11 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public abstract class GoClientConsole {
+public abstract class Console {
 	protected Scanner in;
 	protected PrintStream out;
 	
-	public GoClientConsole(InputStream is, PrintStream os) {
+	public Console(InputStream is, PrintStream os) {
 		in = new Scanner(is);
 		out = os;
 	}

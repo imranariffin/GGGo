@@ -6,7 +6,7 @@ import java.io.PrintStream;
 import com.fdmgroup.goboard.GoGame;
 import com.fdmgroup.goboard.GoUtils;
 
-public class GameConsole extends GoClientConsole {
+public class GameConsole extends Console {
 	
 	private static GameConsole inst;
 	private GoGame goGame;
@@ -28,10 +28,13 @@ public class GameConsole extends GoClientConsole {
 		out("Black to start. Board size: 9x9. Komi: 0.0\n");		
 	}
 
-	public static GoClientConsole getInstance(GoGame gg) {
+	public static Console getInstance(GoGame gg) {
 		if (inst == null) {
 			return new GameConsole(gg, System.in, System.out);
 		}
 		return inst;
+	}
+
+	public void run() {
 	}
 }

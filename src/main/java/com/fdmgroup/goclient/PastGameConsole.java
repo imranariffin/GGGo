@@ -6,18 +6,18 @@ import java.io.PrintStream;
 import com.fdmgroup.goboard.GoFinishedGame;
 import com.fdmgroup.goboard.GoUtils;
 
-public class HistoryConsole extends GoClientConsole {
-	private static HistoryConsole inst;
+public class PastGameConsole extends Console {
+	private static PastGameConsole inst;
 	private GoFinishedGame pastGame;
 	
-	public static HistoryConsole getInstance(GoFinishedGame pg) {
+	public static PastGameConsole getInstance(GoFinishedGame pg) {
 		if (inst == null) {
-			return new HistoryConsole(pg, System.in, System.out);
+			return new PastGameConsole(pg, System.in, System.out);
 		}
 		return inst;
 	}
 	
-	private HistoryConsole (GoFinishedGame pg, InputStream is, PrintStream os) {
+	private PastGameConsole (GoFinishedGame pg, InputStream is, PrintStream os) {
 		super(is, os);
 		pastGame = pg;
 	}

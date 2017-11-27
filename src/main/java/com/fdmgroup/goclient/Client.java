@@ -3,38 +3,42 @@ package com.fdmgroup.goclient;
 import com.fdmgroup.goboard.GoFinishedGame;
 import com.fdmgroup.goboard.GoGame;
 import com.fdmgroup.goboard.GoUtils;
+import com.fdmgroup.goboard.Stone;
+
 import static com.fdmgroup.goboard.Stone.B;
 import static com.fdmgroup.goboard.Stone.W;
 
-public class GoClient {
+import com.fdmgroup.gggo.model.User;
+
+import static com.fdmgroup.goboard.Stone.*;
+
+public class Client {
 	private static String MAIN = "MAIN";
 	private static String GAME ="GAME";
 	private static String HISTORY = "HISTORY";
 	private static GoGame goGame;
 	private static GoFinishedGame pastGame;
-	private static GoClientConsole console;
+	private static Console console;
 	private static GoCommandHandler goCmdHandler;
 	private static PastGoCommandHandler pgCmdHandler;
 	
-	public GoClient(GoGame gg) {
+	public Client(GoGame gg) {
 		goGame = gg;
 		goCmdHandler = new GoCommandHandler(goGame);
 	}
 	
 	public static void main(String[] args) {
-		goGame = new GoGame();
+//		goGame = new GoGame();
 		console = getConsole(MAIN);
+		AuthConsole authConsole = new AuthConsole();
+		GameConsole gameConsole = (GameConsole) GameConsole.getInstance(null);
 		
 		console.welcome();
-		
+		User user = null;
 		while (true) {
-			console = getConsole(MAIN);
-			String input = console.console();
-			switch(input) {
-				case "V": viewPastGames(); break;
-				case "P": startGame(); break;
-				case "exit": exit(); 
-				default: help(); break;
+			user = authConsole.run();
+			if (user == null) {
+				user = authConsole.run();
 			}
 		}
 	}
@@ -79,11 +83,11 @@ public class GoClient {
 		pastGame = new GoFinishedGame(goGame, wscore, bscore);
 	}
 	
-	static GoClientConsole getConsole(String whichConsole) {
+	static Console getConsole(String whichConsole) {
 		switch (whichConsole) {
-			case "MAIN": return MainConsole.getInstance(goGame);
+			case "MAIN": return MainConsole.getInstance();
 			case "GAME": return GameConsole.getInstance(goGame);
-			case "HISTORY": return HistoryConsole.getInstance(pastGame);
+			case "HISTORY": return PastGameConsole.getInstance(pastGame);
 			default: throw new Error();
 		}
 	}
