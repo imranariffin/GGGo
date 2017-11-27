@@ -11,6 +11,13 @@ public class GoGame extends InteractiveGo implements Go {
 	private boolean passed;
 	private boolean finished;
 	
+	public GoGame(Stone[][] b) {
+		SIZE = b.length;
+		states = new Stack<State>();
+		futureStates = new Stack<State>();
+		states.push(new State(b));
+	}
+	
 	public GoGame() {
 		SIZE = 9;
 		Stone[][] board = new Stone[SIZE][SIZE];
