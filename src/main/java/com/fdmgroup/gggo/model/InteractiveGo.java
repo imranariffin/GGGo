@@ -1,0 +1,63 @@
+package com.fdmgroup.gggo.model;
+
+import java.util.Stack;
+
+import com.fdmgroup.gggo.controller.EndOfStateStackException;
+
+public class InteractiveGo {
+	protected int SIZE;
+	protected Stack<State> states;
+	protected Stack<State> futureStates;
+	
+	public void back() throws EndOfStateStackException {
+		if (states.size() == 1) {
+			String errMsg = "PlayableGo.back(): State stack reaches its end -- no previous state available!";
+			throw new EndOfStateStackException(errMsg);
+		}
+		futureStates.push(states.pop());
+	}
+	
+	public void forward() throws EndOfStateStackException {
+		if (futureStates.size() == 0) {
+			String errMsg = "Playable.next(): State stack reaches its end -- no future state available!";
+			throw new EndOfStateStackException(errMsg);
+		}
+		states.push(futureStates.pop());
+	}
+	
+	public void jumpToFirst() {
+		while (true) {
+			try {
+				back();
+			} catch (EndOfStateStackException eosse) {
+				break;
+			}
+		}
+	}
+	
+	public void jumpToLast() {
+		while (true) {
+			try {
+				forward();
+			} catch (EndOfStateStackException eosse) {
+				break;
+			}
+		}
+	}
+	
+	public State getCurState() {
+		return states.peek();
+	}
+	
+	public Stone[][] getBoard() {
+		return getCurState().getBoard();
+	}
+	
+	public int getTurn() {
+		return states.size() - 1;
+	}
+	
+	public int getNextTurn() {
+		return getTurn() + 1;
+	}
+}
