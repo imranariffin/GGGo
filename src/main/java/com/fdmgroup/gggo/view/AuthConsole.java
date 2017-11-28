@@ -1,4 +1,4 @@
-package com.fdmgroup.goclient;
+package com.fdmgroup.gggo.view;
 
 import com.fdmgroup.gggo.model.User;
 

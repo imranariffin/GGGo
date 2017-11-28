@@ -1,4 +1,4 @@
-package com.fdmgroup.goclient;
+package com.fdmgroup.gggo.view;
 
 import static org.junit.Assert.assertEquals;
 
