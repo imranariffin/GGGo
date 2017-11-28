@@ -1,28 +1,25 @@
-package com.fdmgroup.goclient;
+package com.fdmgroup.gggo.view;
 
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class MainConsoleTest {
-
+public class MainViewTest {
 	static PrintStream stdOut = System.out;
 	static PrintStream stdErr = System.err;
 	private final ByteArrayOutputStream outContent= new ByteArrayOutputStream();
 	private final ByteArrayOutputStream errContent= new ByteArrayOutputStream();
 
-	private MainConsole console;
+	private static MainView mainView;
 	
 	@BeforeClass
 	public static void setupBeforeClass() {
-		
+		mainView = new MainView();
 	}
 	
 	@Before
@@ -30,24 +27,10 @@ public class MainConsoleTest {
 		System.setOut(new PrintStream(outContent));
 		System.setErr(new PrintStream(errContent));
 	}
-	
-	@After
-	public void tearDownStreams() {
-		System.setOut(null);
-		System.setErr(null);
-	}
-	
-	@AfterClass
-	public static void resetStreams() {
-		System.setOut(stdOut);
-		System.setErr(stdErr);
-	}
-	
 	@Test
-	public void test_MainConsole_StartsByWelcomingThenPromptsForLoginOrSignup() {
-		console = (MainConsole) MainConsole.getInstance();
+	public void test_Welcome_ReturnsBeautifulWelcomeStringTextWithGoBoardAndSomeWelcomeMessages() {
 		
-		String actual = new StringBuilder()
+		String expected = new StringBuilder()
 				.append("# ----- GGGO v0.1 ----- #\n")
 				.append("Welcome to Good Game Go (GGGo), A 2-player Go Client on terminal!\n")
 				.append("Please enjoy the game, yoroshiku onegaishimaaasu...!\n")
@@ -76,13 +59,8 @@ public class MainConsoleTest {
 				.append("║               ---  GGGo  ---               ║\n")
 				.append("╚════════════════════════════════════════════╝\n")
 				.append("\n")
-				.append("To get started please register or login:\n")
-				.append("* login: Login\n")
-				.append("* signup: Signup\n")
-				.append("> ")
 				.toString();
-//		
-//		console.welcome();
-//		assertEquals(actual, outContent.toString());
+		
+		assertEquals(expected, mainView.welcome());
 	}
 }

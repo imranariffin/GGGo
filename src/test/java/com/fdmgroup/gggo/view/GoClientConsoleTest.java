@@ -1,4 +1,4 @@
-package com.fdmgroup.goclient;
+package com.fdmgroup.gggo.view;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import com.fdmgroup.gggo.view.Client;
+import com.fdmgroup.gggo.view.Console;
 import com.fdmgroup.goboard.GoGame;
 
 import org.junit.Before;

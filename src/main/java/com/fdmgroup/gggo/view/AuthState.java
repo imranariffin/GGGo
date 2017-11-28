@@ -1,4 +1,4 @@
-package com.fdmgroup.goclient;
+package com.fdmgroup.gggo.view;
 
 public enum AuthState {
 	NOT_AUTHORIZED, AUTHORIZED, DEFAULT 

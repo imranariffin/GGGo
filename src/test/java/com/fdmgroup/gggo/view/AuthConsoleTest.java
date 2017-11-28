@@ -1,4 +1,4 @@
-package com.fdmgroup.goclient;
+package com.fdmgroup.gggo.view;
 
 import static org.junit.Assert.*;
 
@@ -15,6 +15,8 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.fdmgroup.gggo.view.AuthConsole;
 
 public class AuthConsoleTest {
 
