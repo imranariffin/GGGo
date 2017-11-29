@@ -1,16 +1,20 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.model;
 
+import static com.fdmgroup.gggo.model.Stone.B;
+import static com.fdmgroup.gggo.model.Stone.E;
+import static com.fdmgroup.gggo.model.Stone.W;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import static com.fdmgroup.goboard.Stone.W;
-import static com.fdmgroup.goboard.Stone.B;
-import static com.fdmgroup.goboard.Stone.E;
+import com.fdmgroup.gggo.controller.GoUtils;
+import com.fdmgroup.gggo.model.FinishedGame;
+import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.model.Stone;
 
 public class GoFinishedGameTest {
-	GoFinishedGame pastGame;
-	GoGame goGame;
+	FinishedGame pastGame;
+	Game goGame;
 	
 	@Test
 	public void test_GetWinner_ReturnsWhiteStone_IfWhiteHasHigherScore() {
@@ -40,7 +44,7 @@ public class GoFinishedGameTest {
 		assertEquals(10, bScore);
 		assertEquals(4, wScore);
 		
-		pastGame = new GoFinishedGame(goGame, wScore, bScore); 
+		pastGame = new FinishedGame(goGame, wScore, bScore); 
 
 		assertEquals(W, pastGame.getWinner());
 	}

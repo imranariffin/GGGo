@@ -1,12 +1,12 @@
 package com.fdmgroup.gggo.view;
 
-import com.fdmgroup.goboard.EndOfStateStackException;
-import com.fdmgroup.goboard.GoFinishedGame;
+import com.fdmgroup.gggo.controller.EndOfStateStackException;
+import com.fdmgroup.gggo.model.FinishedGame;
 
 public class PastGoCommandHandler extends CommandHandler {
-	private GoFinishedGame pastGame;
+	private FinishedGame pastGame;
 	
-	public PastGoCommandHandler(GoFinishedGame pg) {
+	public PastGoCommandHandler(FinishedGame pg) {
 		pastGame = pg;
 	}
 	

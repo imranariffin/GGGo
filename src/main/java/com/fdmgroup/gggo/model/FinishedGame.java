@@ -1,14 +1,15 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.model;
 
-import static com.fdmgroup.goboard.Stone.W;
-import static com.fdmgroup.goboard.Stone.B;
+import static com.fdmgroup.gggo.model.Stone.B;
+import static com.fdmgroup.gggo.model.Stone.W;
+
 import java.util.Stack;
 
-public class GoFinishedGame extends InteractiveGo {
+public class FinishedGame extends InteractiveGo {
 	private final float whiteScore;
 	private final float blackScore;
 	
-	public GoFinishedGame(GoGame gg, float wScore, float bScore) {
+	public FinishedGame(Game gg, float wScore, float bScore) {
 		SIZE = 9;
 		states = new Stack<>();
 		futureStates = new Stack<>();
@@ -16,7 +17,7 @@ public class GoFinishedGame extends InteractiveGo {
 		blackScore = bScore;
 		
 		for (State s: gg.getStates()) {
-			states.push(new State(s.board));
+			states.push(new State(s.getBoard(), getNextTurn()));
 		}
 	}
 	

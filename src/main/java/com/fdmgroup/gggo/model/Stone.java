@@ -1,4 +1,4 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.model;
 
 public enum Stone {
 	E, // Empty  

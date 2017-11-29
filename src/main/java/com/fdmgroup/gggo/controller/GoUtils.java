@@ -1,9 +1,12 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.goboard.Stone.E;
-import static com.fdmgroup.goboard.Stone.B;
-import static com.fdmgroup.goboard.Stone.W;
-import static com.fdmgroup.goboard.Stone.H;
+import static com.fdmgroup.gggo.model.Stone.B;
+import static com.fdmgroup.gggo.model.Stone.E;
+import static com.fdmgroup.gggo.model.Stone.H;
+import static com.fdmgroup.gggo.model.Stone.W;
+
+import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.model.Stone;
 
 public class GoUtils {
 	
@@ -80,8 +83,8 @@ public class GoUtils {
 		return countTerritory(board, stone, visited);
 	}
 	
-	public static GoGame generateGoGame(int[][] kifu) {
-		GoGame goGame = new GoGame();
+	public static Game generateGoGame(int[][] kifu) {
+		Game goGame = new Game();
 		for (int[] pos: kifu) {
 			int i = pos[0];
 			int j = pos[1];
@@ -236,7 +239,11 @@ public class GoUtils {
 		return sb.toString();
 	}
 	
-	private static String toString(Stone stone) { 
+	public static String toString(Stone stone) {
+		if (stone == null) {
+			return null;
+		}
+		
 		switch (stone) {
 			case E: return EMPTY;
 			case B: return BLACK;
@@ -263,5 +270,15 @@ public class GoUtils {
 				(i == 2 || i == 6) &&
 				(j == 2 || j == 6) || 
 				(i == 4 && j == 4);
+	}
+
+	public static Stone toStone(String stoneString) {
+		switch (stoneString) {
+			case EMPTY: return E;
+			case BLACK: return B;
+			case WHITE: return W;
+			case HOSHI: return H;
+			default: return null;
+		}
 	}
 }

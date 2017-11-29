@@ -1,4 +1,4 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.controller;
 
 public class EndOfStateStackException extends Exception {
 	

@@ -1,6 +1,8 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.model;
 
 import java.util.Stack;
+
+import com.fdmgroup.gggo.controller.EndOfStateStackException;
 
 public class InteractiveGo {
 	protected int SIZE;
@@ -53,5 +55,9 @@ public class InteractiveGo {
 	
 	public int getTurn() {
 		return states.size() - 1;
+	}
+	
+	public int getNextTurn() {
+		return getTurn() + 1;
 	}
 }

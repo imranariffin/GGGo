@@ -1,26 +1,32 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.model;
 
 import static org.junit.Assert.*;
+import static com.fdmgroup.gggo.model.Stone.B;
+import static com.fdmgroup.gggo.model.Stone.E;
+import static com.fdmgroup.gggo.model.Stone.W;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
-import static com.fdmgroup.goboard.Stone.E;
-import static com.fdmgroup.goboard.Stone.W;
-import static com.fdmgroup.goboard.Stone.B;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fdmgroup.gggo.controller.EndOfStateStackException;
+import com.fdmgroup.gggo.controller.InvalidPlacementException;
+import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.model.State;
+import com.fdmgroup.gggo.model.Stone;
+
 public class GoGameTest {
 	
-	GoGame spyGoGame;
-	GoGame mockGoGame;
-	GoGame goGame;
+	Game spyGoGame;
+	Game mockGoGame;
+	Game goGame;
 	
 	@Before
 	public void setup() {
-		goGame = new GoGame();
-		mockGoGame = mock(GoGame.class);
+		goGame = new Game();
+		mockGoGame = mock(Game.class);
 		spyGoGame = spy(goGame);
 	}
 	
@@ -118,7 +124,7 @@ public class GoGameTest {
 			fail();
 		}
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard)));
+		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
 		
 		try {
 			goGame.place(4, 3);
@@ -154,7 +160,7 @@ public class GoGameTest {
 			fail();
 		}
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard)));
+		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
 		/*
 		 * On this board, the number of turn is 6 so it's Black's turn to place a stone.
 		 * When Black places at 2,4, White at 2,3 should be captured and removed from board.
@@ -196,7 +202,7 @@ public class GoGameTest {
 			fail();
 		}
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard)));
+		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
 		/*
 		 * On this board, the number of turn is 5 so it's White's turn to place a stone.
 		 * When White places at 3,0, Black at 2,0 should be captured and removed from board.
@@ -245,7 +251,7 @@ public class GoGameTest {
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard)));
+		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
 		
 		/*
 		 * On this board, the number of turn is 12 so it's Black's turn to place a stone.
@@ -419,7 +425,7 @@ public class GoGameTest {
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
 		
-		assertTrue(goGame.getCurState().equals(new State(expected)));
+		assertTrue(goGame.getCurState().equals(new State(expected, goGame.getNextTurn())));
 		
 		/*
 		 * On this board, the number of turn is 12 so it's Black's turn to place a stone.
@@ -445,6 +451,6 @@ public class GoGameTest {
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
 		
-		assertTrue(goGame.getCurState().equals(new State(expected)));
+		assertTrue(goGame.getCurState().equals(new State(expected, goGame.getNextTurn())));
 	}
 }

@@ -1,24 +1,28 @@
-package com.fdmgroup.goboard;
+package com.fdmgroup.gggo.model;
 
-import static com.fdmgroup.goboard.Stone.E;
-import static com.fdmgroup.goboard.Stone.B;
-import static com.fdmgroup.goboard.Stone.W;
+import static com.fdmgroup.gggo.model.Stone.B;
+import static com.fdmgroup.gggo.model.Stone.E;
+import static com.fdmgroup.gggo.model.Stone.W;
+
 import java.util.Stack;
 
-public class GoGame extends InteractiveGo implements Go {
+import com.fdmgroup.gggo.controller.GoUtils;
+import com.fdmgroup.gggo.controller.InvalidPlacementException;
+
+public class Game extends InteractiveGo implements Go {
 	
 	private final int SIZE;
 	private boolean passed;
 	private boolean finished;
 	
-	public GoGame(Stone[][] b) {
+	public Game(Stone[][] b) {
 		SIZE = b.length;
 		states = new Stack<State>();
 		futureStates = new Stack<State>();
-		states.push(new State(b));
+		states.push(new State(b, getNextTurn()));
 	}
 	
-	public GoGame() {
+	public Game() {
 		SIZE = 9;
 		Stone[][] board = new Stone[SIZE][SIZE];
 		states = new Stack<State>();
@@ -30,7 +34,7 @@ public class GoGame extends InteractiveGo implements Go {
 			}
 		}
 		
-		states.push(new State(board));
+		states.push(new State(board, getNextTurn()));
 	}
 
 	@Override
@@ -51,7 +55,7 @@ public class GoGame extends InteractiveGo implements Go {
 		
 		Stone[][] newBoard = createNewBoard(i, j, stone);
 		GoUtils.removeCaptured(newBoard, i, j);
-		states.push(new State(newBoard));
+		states.push(new State(newBoard, getNextTurn()));
 	}
 
 	@Override
@@ -69,7 +73,7 @@ public class GoGame extends InteractiveGo implements Go {
 		Stone[][] board = getBoard();
 		Stone[][] newBoard = copyBoard(board);
 		
-		states.push(new State(newBoard));
+		states.push(new State(newBoard, getNextTurn()));
 		passed = true;
 	}
 
