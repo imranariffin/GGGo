@@ -2,15 +2,15 @@ package com.fdmgroup.gggo.view;
 
 import java.util.Scanner;
 
-import com.fdmgroup.goboard.GoGame;
-import com.fdmgroup.goboard.GoUtils;
+import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.controller.GoUtils;
 
 public class GameView {
 
 	public void main() {
 		
 		Scanner in = new Scanner(System.in);
-		GoGame game = new GoGame();
+		Game game = new Game();
 		GoCommandHandler cmdHandler = new GoCommandHandler(game);
 		
 		print(welcome());
