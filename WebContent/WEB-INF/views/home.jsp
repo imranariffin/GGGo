@@ -25,12 +25,12 @@
 	        <img class="logo" alt="GGGo" src="img/go-symbol-logo.jpg">
 	      </a>
 	    </div>
-	    <a class="navbar-brand" href="main.html">
+	    <a class="navbar-brand" href="home">
         <img alt="GGGo">
       </a>
 			<ul class="nav navbar-nav navbar-right">
-        <li><a href="login.html">Login</a></li>
-        <li><a href="signup.html">Signup</a></li>
+        <li><a href="login">Login</a></li>
+        <li><a href="signup">Signup</a></li>
         <li>
         	<a class="navbar-brand" href="main.html">
 	        	<img class="profile-pic" alt="imranariffin" src="img/sai3.jpeg">
@@ -43,7 +43,7 @@
 		<div class="container container-center">
 			<h1>Welcome to GGGo</h1>
 			<p>An interactive platform for playing go</p>
-			<p><a class="btn btn-primary btn-lg" href="play.html" role="button">Play!</a></p>
+			<p><a class="btn btn-primary btn-lg" href="play" role="button">Play!</a></p>
 		</div>
 	</div>
 	<div class="main">
@@ -74,26 +74,26 @@
 		  	</tr>
 	    	<tr>
 	    		<td>4/12/2017</td>
-	    		<td><a href="invite.html">user1</a></td>
-	    		<td><a href="invite.html">user93</a></td>
+	    		<td><a href="invite">user1</a></td>
+	    		<td><a href="invite">user93</a></td>
 	    		<td>W+R</td>
 	    	</tr>
 	    	<tr>
 	    		<td>4/11/2017</td>
-	    		<td><a href="invite.html">user1123</a></td>
-	    		<td><a href="invite.html">user93</a></td>
+	    		<td><a href="invite">user1123</a></td>
+	    		<td><a href="invite">user93</a></td>
 	    		<td>B+R</td>
 	    	</tr>
 	    	<tr>
 	    		<td>4/10/2017</td>
-	    		<td><a href="invite.html">opuser</a></td>
-	    		<td><a href="invite.html">saifujiwara</a></td>
+	    		<td><a href="invite">opuser</a></td>
+	    		<td><a href="invite">saifujiwara</a></td>
 	    		<td>W+R</td>
 	    	</tr>
 	    	<tr>
 	    		<td>4/9/2017</td>
-	    		<td><a href="invite.html">yongha</a></td>
-	    		<td><a href="invite.html">hikarushindou</a></td>
+	    		<td><a href="invite">yongha</a></td>
+	    		<td><a href="invite">hikarushindou</a></td>
 	    		<td>B+0.5</td>
 	    	</tr>
 		  </table>
