@@ -1,14 +1,12 @@
 package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.gggo.model.Stone.*;
+import static com.fdmgroup.gggo.controller.Stone.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
-import com.fdmgroup.gggo.controller.GoUtils;
-import com.fdmgroup.gggo.model.Game;
-import com.fdmgroup.gggo.model.Stone;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 
 public class GoUtilsTest {
 	

@@ -1,4 +1,4 @@
-package com.fdmgroup.gggo.controller;
+package com.fdmgroup.gggo.dao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import javax.persistence.Query;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.fdmgroup.gggo.model.NamedQuerySet;
 import com.fdmgroup.gggo.model.User;
 
 public class UserDAO {
@@ -31,6 +32,7 @@ public class UserDAO {
 		return inst;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<User> getUsers() {
 		EntityManager em = emf.createEntityManager();
 		List<User> users = new ArrayList<>(); 

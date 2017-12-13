@@ -1,12 +1,11 @@
 package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.gggo.model.Stone.B;
-import static com.fdmgroup.gggo.model.Stone.E;
-import static com.fdmgroup.gggo.model.Stone.H;
-import static com.fdmgroup.gggo.model.Stone.W;
-
-import com.fdmgroup.gggo.model.Game;
-import com.fdmgroup.gggo.model.Stone;
+import static com.fdmgroup.gggo.controller.Stone.B;
+import static com.fdmgroup.gggo.controller.Stone.E;
+import static com.fdmgroup.gggo.controller.Stone.H;
+import static com.fdmgroup.gggo.controller.Stone.W;
+import com.fdmgroup.gggo.controller.Game;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 
 public class GoUtils {
 	

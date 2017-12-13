@@ -13,12 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fdmgroup.gggo.controller.GoUtils;
+import com.fdmgroup.gggo.controller.Stone;
 
 @Entity
 @Table(name="TBL_PLACEMENT")
 public class Placement {
 	@Id
-	@Column(name="placementId")
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int placementId;
 	
@@ -32,7 +32,7 @@ public class Placement {
 	@Enumerated(EnumType.STRING)
 	private Stone stone;
 	
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.ALL, optional=false, fetch=FetchType.EAGER)
 	private PersistentState persistentState;
 	
 	public Placement() {
@@ -45,8 +45,6 @@ public class Placement {
 		stone = s;
 		persistentState = ps;
 	}
-
-	
 	
 	public int getColNumber() {
 		return colNumber;
@@ -86,5 +84,36 @@ public class Placement {
 
 	public void setStone(Stone stone) {
 		this.stone = stone;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + colNumber;
+		result = prime * result + placementId;
+		result = prime * result + rowNumber;
+		result = prime * result + ((stone == null) ? 0 : stone.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Placement other = (Placement) obj;
+		if (colNumber != other.colNumber)
+			return false;
+		if (placementId != other.placementId)
+			return false;
+		if (rowNumber != other.rowNumber)
+			return false;
+		if (stone != other.stone)
+			return false;
+		return true;
 	}
 }

@@ -1,16 +1,11 @@
-package com.fdmgroup.gggo.model;
+package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.gggo.model.Stone.B;
-import static com.fdmgroup.gggo.model.Stone.E;
-import static com.fdmgroup.gggo.model.Stone.W;
+import static com.fdmgroup.gggo.controller.Stone.B;
+import static com.fdmgroup.gggo.controller.Stone.E;
+import static com.fdmgroup.gggo.controller.Stone.W;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import com.fdmgroup.gggo.controller.GoUtils;
-import com.fdmgroup.gggo.model.FinishedGame;
-import com.fdmgroup.gggo.model.Game;
-import com.fdmgroup.gggo.model.Stone;
 
 public class GoFinishedGameTest {
 	FinishedGame pastGame;

@@ -1,8 +1,6 @@
-package com.fdmgroup.gggo.model;
+package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.gggo.model.Stone.E;
-
-import java.util.Arrays;
+import static com.fdmgroup.gggo.controller.Stone.E;
 
 public class State {
 	private int turnNumber;
@@ -10,18 +8,18 @@ public class State {
 	Stone[][] board;
 	private final int stateId;
 	
-	public State() {
-		board = new Stone[DEFAULT_SIZE][DEFAULT_SIZE];
-		
-		for (int i = 0; i < DEFAULT_SIZE; i++) {
-			for (int j = 0; j < DEFAULT_SIZE; j++) {
-				board[i][j] = E;
-			}
-		}
-	
-		stateId = -1;
-		turnNumber = 1;
-	}
+//	public State() {
+//		board = new Stone[DEFAULT_SIZE][DEFAULT_SIZE];
+//		
+//		for (int i = 0; i < DEFAULT_SIZE; i++) {
+//			for (int j = 0; j < DEFAULT_SIZE; j++) {
+//				board[i][j] = E;
+//			}
+//		}
+//	
+//		stateId = -1;
+//		turnNumber = 1;
+//	}
 	
 	public State(Stone[][] b, int t) {
 		this(b, t, -1);
@@ -78,5 +76,10 @@ public class State {
 
 	public int getStateId() {
 		return stateId;
+	}
+
+	@Override
+	public String toString() {
+		return "State [turnNumber=" + turnNumber + ", stateId=" + stateId + "]";
 	}
 }

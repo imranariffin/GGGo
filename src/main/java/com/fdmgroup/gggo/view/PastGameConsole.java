@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import com.fdmgroup.gggo.controller.GoUtils;
-import com.fdmgroup.gggo.model.FinishedGame;
+import com.fdmgroup.gggo.controller.FinishedGame;
 
 public class PastGameConsole extends Console {
 	private static PastGameConsole inst;

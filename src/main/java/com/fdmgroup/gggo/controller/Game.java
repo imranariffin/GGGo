@@ -1,28 +1,30 @@
-package com.fdmgroup.gggo.model;
+package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.gggo.model.Stone.B;
-import static com.fdmgroup.gggo.model.Stone.E;
-import static com.fdmgroup.gggo.model.Stone.W;
+import static com.fdmgroup.gggo.controller.Stone.B;
+import static com.fdmgroup.gggo.controller.Stone.E;
+import static com.fdmgroup.gggo.controller.Stone.W;
 
 import java.util.Stack;
 
 import com.fdmgroup.gggo.controller.GoUtils;
-import com.fdmgroup.gggo.controller.InvalidPlacementException;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 
 public class Game extends InteractiveGo implements Go {
 	
+	private int gameId;
 	private final int SIZE;
 	private boolean passed;
 	private boolean finished;
 	
-	public Game(Stone[][] b) {
-		SIZE = b.length;
-		states = new Stack<State>();
-		futureStates = new Stack<State>();
-		states.push(new State(b, getNextTurn()));
-	}
+//	public Game(Stone[][] b) {
+//		SIZE = b.length;
+//		states = new Stack<State>();
+//		futureStates = new Stack<State>();
+//		states.push(new State(b, getNextTurn()));
+//	}
 	
-	public Game() {
+	public Game(int gid) {
+		gameId = gid;
 		SIZE = 9;
 		Stone[][] board = new Stone[SIZE][SIZE];
 		states = new Stack<State>();
@@ -34,7 +36,7 @@ public class Game extends InteractiveGo implements Go {
 			}
 		}
 		
-		states.push(new State(board, getNextTurn()));
+//		states.push(new State(board, getNextTurn()));
 	}
 
 	@Override
@@ -134,5 +136,50 @@ public class Game extends InteractiveGo implements Go {
 
 	public Stack<State> getStates() {
 		return states;
+	}
+
+	public int getGameId() {
+		return gameId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + SIZE;
+		result = prime * result + (finished ? 1231 : 1237);
+		result = prime * result + gameId;
+		result = prime * result + (passed ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Game other = (Game) obj;
+		if (SIZE != other.SIZE)
+			return false;
+		if (finished != other.finished)
+			return false;
+		if (gameId != other.gameId)
+			return false;
+		if (passed != other.passed)
+			return false;
+		if (!states.equals(other.states))
+			return false;
+		if (!futureStates.equals(other.futureStates))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Game [gameId=" + gameId + ", SIZE=" + SIZE + ", passed=" + passed + ", finished=" + finished
+				+ ", states=" + states + ", futureStates=" + futureStates + "]";
 	}
 }
