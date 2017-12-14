@@ -22,10 +22,10 @@ public class PlacementDAO {
 	private static EntityManagerFactory emf;
 	
 	private PlacementDAO() {
-		emf = Persistence.createEntityManagerFactory("GGGo");
 	}
 	
-	public static PlacementDAO getInstance() {
+	public static PlacementDAO getInstance(EntityManagerFactory _emf) {
+		emf = _emf;
 		if (inst == null) {
 			inst = new PlacementDAO();
 		}
@@ -34,7 +34,7 @@ public class PlacementDAO {
 	
 	public Placement createPlacement(int r, int c, Stone st, PersistentState ps) {
 		EntityManager em = emf.createEntityManager();
-		PersistentStateDAO sdao = PersistentStateDAO.getInstance();
+		PersistentStateDAO sdao = DAO.getPersistentStateDAO();
 		
 		Placement pt = new Placement(r, c, st, ps);;
 
@@ -52,23 +52,40 @@ public class PlacementDAO {
 		return pt;
 	}
 
-	public List<Placement> getPlacements(State curState) {
+	@SuppressWarnings("unchecked")
+	public List<Placement> getPlacements(int stateId) {
 		EntityManager em = emf.createEntityManager();
 		List<Placement> placements = new ArrayList<>();
 		
 		try {
 			Query query = em.createNamedQuery(NamedQuerySet.PLACEMENT_FIND_ALL);
-			PersistentState pState = em.find(PersistentState.class, curState.getStateId());
-			query.setParameter("pState", pState);
-			
-			for (Object obj: query.getResultList()) {
-				placements.add((Placement) obj);
-			}
+			PersistentState ps = em.find(PersistentState.class, stateId);
+			query.setParameter("ps", ps);
+			placements = query.getResultList();
 		} finally {
 			em.close();
 		}
 		
 		return placements;
+	}
+	
+	public Placement getPlacement(int placementId) {
+		EntityManager em = emf.createEntityManager();
+		Placement pt;
+		
+		try {
+			Query query = em.createNamedQuery(NamedQuerySet.PLACEMENT_FIND_ONE);
+			query.setParameter("ptid", placementId);
+			
+			em.getTransaction().begin();
+			pt = (Placement) query.getSingleResult();
+			em.getTransaction().commit();
+			
+		} finally {
+			em.close();
+		}
+		
+		return pt;
 	}
 	
 	public void deletePlacement(PersistentState ps, Placement pt) {

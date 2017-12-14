@@ -11,17 +11,14 @@ import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 
 public class Game extends InteractiveGo implements Go {
 	
-	private int gameId;
+	private final int gameId;
 	private final int SIZE;
 	private boolean passed;
 	private boolean finished;
 	
-//	public Game(Stone[][] b) {
-//		SIZE = b.length;
-//		states = new Stack<State>();
-//		futureStates = new Stack<State>();
-//		states.push(new State(b, getNextTurn()));
-//	}
+	public Game() {
+		this(-1);
+	}
 	
 	public Game(int gid) {
 		gameId = gid;

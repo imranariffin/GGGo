@@ -17,6 +17,7 @@ import com.fdmgroup.gggo.exceptions.EndOfStateStackException;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.controller.State;
+import com.fdmgroup.gggo.dao.DAO;
 import com.fdmgroup.gggo.dao.PersistentGameDAO;
 
 public class GameTest {
@@ -24,23 +25,22 @@ public class GameTest {
 	Game spyGoGame;
 	Game mockGoGame;
 	Game goGame;
-	private static PersistentGameDAO gdao;
 	
 	@BeforeClass
 	public static void setupOnce() {
-		gdao = PersistentGameDAO.getInstance();
 	}
 	
 	@Before
 	public void setup() {
-		goGame = gdao.createGame();
+		goGame = new Game();
 		mockGoGame = mock(Game.class);
 		spyGoGame = spy(goGame);
+		
+		goGame.states.push(new State());
 	}
 	
 	@After
 	public void tearDown() {
-		gdao.deleteGame(goGame);
 	}
 	
 	@Test

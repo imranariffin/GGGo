@@ -23,10 +23,10 @@ public class PersistentGameDAO {
 	private static EntityManagerFactory emf;
 	
 	private PersistentGameDAO() {
-		emf = Persistence.createEntityManagerFactory("GGGo");
 	}
 	
-	public static PersistentGameDAO getInstance() {
+	public static PersistentGameDAO getInstance(EntityManagerFactory _emf) {
+		emf = _emf;
 		if (inst == null) {
 			inst = new PersistentGameDAO();
 		}
@@ -107,7 +107,7 @@ public class PersistentGameDAO {
 
 	void deletePersistentGame(PersistentGame pg) {
 		EntityManager em = emf.createEntityManager();
-		PersistentStateDAO sdao = PersistentStateDAO.getInstance();
+		PersistentStateDAO sdao = DAO.getPersistentStateDAO();
 		
 		if (pg == null) {
 			return;

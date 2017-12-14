@@ -1,8 +1,11 @@
 package com.fdmgroup.gggo.dao;
 
 import static com.fdmgroup.gggo.controller.Stone.E;
+import static com.fdmgroup.gggo.controller.Stone.B;
+import static com.fdmgroup.gggo.controller.Stone.W;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -17,6 +20,8 @@ import com.fdmgroup.gggo.dao.PersistentGameDAO;
 import com.fdmgroup.gggo.dao.PersistentStateDAO;
 import com.fdmgroup.gggo.dao.PlacementDAO;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.PersistentGame;
+import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.Placement;
 
 public class PlacementDAOTest {
@@ -25,118 +30,99 @@ public class PlacementDAOTest {
 	private static PersistentStateDAO sdao;
 	private static PlacementDAO pdao;
 	
-	private static int[][] kifu;  
-	private static Game gameWithAFewStates;
-	private static Game emptyGame;
-	
 	@BeforeClass
 	public static void setupOnce() {
-		gdao = PersistentGameDAO.getInstance();
-		sdao = PersistentStateDAO.getInstance();
-		pdao = PlacementDAO.getInstance();
-		
-		emptyGame = gdao.createGame();
-		
-//		gameWithAFewStates = gdao.createGame();
-//		kifu = new int[][] {
-//			{4, 4},
-//			{7, 7},
-//			{4, 7},
-//			{7, 4},
-//		};
-//		try {
-//			for (int[] move: kifu) {
-//				gameWithAFewStates.place(move[0], move[1]);
-//			}
-//		} catch (InvalidPlacementException e) {
-//			e.printStackTrace();
-//		}
+		gdao = DAO.getPersistentGameDAO();
+		sdao = DAO.getPersistentStateDAO();
+		pdao = DAO.getPlacementDAO();
 	}
 	
 	@AfterClass
 	public static void tearDownOnce() {
-		gdao.deleteGame(gameWithAFewStates);
 	}
 	
 	@Test
 	public void test_CreatePlacement_ReturnsPlacementWithStateRowColAndTurnNumber_GivenSuch() {
-		Game g = gdao.createGame();
-		State s = sdao.createState(g);
-		int r = 4, c = 4;
-		Placement pt = pdao.createPlacement(r, c, s);
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
 		
-		assertEquals(c, pt.getColNumber());
-		assertEquals(r, pt.getRowNumber());
-		assertEquals(s.getTurn(), pt.getPersistentState().getTurnNumber());
-		assertEquals(s.getStateId(), pt.getPersistentState().getStateId());
+		int r = 4;
+		int c = 4; 
+		Stone st = B;
+		Placement expected = pdao.createPlacement(r, c, st, ps);
+		Placement actual = pdao.getPlacement(expected.getPlacementId()); 
+		
+		assertEquals(expected, actual);
+		assertEquals(ps, actual.getPersistentState());
+		assertEquals(pg, actual.getPersistentState().getPersistentGame());
+		
+		gdao.deletePersistentGame(pg);
 	}
 	
 	@Test
-	public void test_GetPlacements_ReturnsEmptyList_GivenStateOfEmptyGame() {
-		State s = emptyGame.getCurState();
+	public void test_CreatePlacement_AppendsToStateListOfPlacements_GivenAGameAndState() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
 		
-		int numPlacement = getNumOfPlacements(s);
+		int n = ps.getPlacements().size();
+		pdao.createPlacement(4, 4, B, ps);
 		
-		assertEquals(0, numPlacement);
+		assertEquals(n + 1, ps.getPlacements().size());
+		
+		gdao.deletePersistentGame(pg);
 	}
 	
 	@Test
-	public void test_GetPlacements_ReturnsAllPlacementsOfTheLatestState_GivenState() {
-		State curState = gameWithAFewStates.getCurState();
-		List<Placement> actual = pdao.getPlacements(curState);
+	public void test_GetPlacements_ReturnsEmptyList_GivenPersistentStateOfEmptyGame() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg); 
+		List<Placement> actual = pdao.getPlacements(ps.getStateId());
 		
-		int numPlacements = getNumOfPlacements(curState);
+		assertEquals(0, actual.size());
 		
-		assertEquals(numPlacements, actual.size());
-		for (Placement pt: actual) {
-			assertEquals(curState.getStateId(), pt.getPersistentState().getStateId());
-		}
+		gdao.deletePersistentGame(pg);
 	}
+	
 	
 	@Test
 	public void test_GetPlacements_ReturnsAllPlacementWithCorrectStone_GivenState() {
-		State state = gameWithAFewStates.getCurState();
-		List<Placement> actual = pdao.getPlacements(state);
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
+		Placement pt1 = pdao.createPlacement(4, 4, B, ps);
+		Placement pt2 = pdao.createPlacement(7, 7, W, ps);
 		
-		for (Placement pt: actual) {
-			boolean found = false;
-			for (int i = 0; i < kifu.length; i++) {
-				int[] move = kifu[i];
-				int r = move[0];
-				int c = move[1];
-				if (r == pt.getRowNumber() && c == pt.getColNumber()) {
-					found = true;
-				}
-			}
-			assertTrue(found);
-		}		
+		List<Placement> placements = pdao.getPlacements(ps.getStateId());
+		assertTrue(placements.contains(pt1));
+		assertTrue(placements.contains(pt2));
 	}
 	
 	@Test
-	public void test_GetPlacements_ReturnsAllPlacementsOfAMiddleState_GivenState() {
-		List<State> states = gameWithAFewStates.getStates();
-		State midState = states.get(states.size() / 2);
-		List<Placement> actual = pdao.getPlacements(midState);
+	public void test_DeletePlacement_RemovesAPlacementFromDB_GivenAGameAndAState() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
+		Placement pt = pdao.createPlacement(4, 4, B, ps);
 		
-		int numPlacements = getNumOfPlacements(midState);
 		
-		assertEquals(numPlacements, actual.size());
-		for (Placement pt: actual) {
-			assertEquals(midState.getStateId(), pt.getPersistentState().getStateId());
-		}
+		int n = pdao.getPlacements(ps.getStateId()).size();
+		pdao.deletePlacement(ps, pt);
+		
+		assertEquals(n - 1, pdao.getPlacements(ps.getStateId()).size());
+		
+		gdao.deletePersistentGame(pg);
 	}
 	
-	private int getNumOfPlacements(State s) {
-		int np = 0;
-		Stone[][] curBoard = s.getBoard();
-		for (int i = 0; i < curBoard.length; i++) {
-			for (int j = 0; j < curBoard.length; j++) {
-				if (curBoard[i][j] != E) {
-					np++;
-				}
-			}
-		}
+	@Test
+	public void test_DeletePlacement_RemovesAPlacementFromPersistentStateObject_GivenAGameAndAState() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
+		Placement pt = pdao.createPlacement(4, 4, B, ps);
 		
-		return np;
+		
+		int n = ps.getPlacements().size();
+		pdao.deletePlacement(ps, pt);
+		
+		assertEquals(n - 1, ps.getPlacements().size());
+		
+		gdao.deletePersistentGame(pg);
 	}
 }

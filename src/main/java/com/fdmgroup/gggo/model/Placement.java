@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.fdmgroup.gggo.controller.GoUtils;
@@ -17,6 +19,10 @@ import com.fdmgroup.gggo.controller.Stone;
 
 @Entity
 @Table(name="TBL_PLACEMENT")
+@NamedQueries({
+	@NamedQuery(name=NamedQuerySet.PLACEMENT_FIND_ONE, query="select pt from Placement pt where pt.placementId = :ptid"),
+	@NamedQuery(name=NamedQuerySet.PLACEMENT_FIND_ALL, query="select pt from Placement pt where pt.persistentState = :ps")
+})
 public class Placement {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

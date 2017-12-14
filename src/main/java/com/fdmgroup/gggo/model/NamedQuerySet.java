@@ -14,4 +14,5 @@ public class NamedQuerySet {
 	public static final String PERSISTENT_STATE_DELETE = "PersistentState.delete";
 	
 	public static final String PLACEMENT_FIND_ALL = "Placement.findAll";
+	public static final String PLACEMENT_FIND_ONE = "Placement.findOne";
 }

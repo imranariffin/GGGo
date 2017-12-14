@@ -138,4 +138,8 @@ public class PersistentState {
 			return false;
 		return true;
 	}
+
+	public PersistentGame getPersistentGame() {
+		return pGame;
+	}
 }

@@ -84,6 +84,7 @@ public class GoUtils {
 	
 	public static Game generateGoGame(int[][] kifu) {
 		Game goGame = new Game();
+		goGame.states.push(new State());
 		for (int[] pos: kifu) {
 			int i = pos[0];
 			int j = pos[1];

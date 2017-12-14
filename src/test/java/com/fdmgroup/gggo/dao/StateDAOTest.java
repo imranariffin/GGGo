@@ -28,44 +28,15 @@ public class StateDAOTest {
 	private static PersistentStateDAO sdao;
 	private static PlacementDAO pdao;
 	
-	private static PersistentGame existingGameWithAFewStates;
-	private static PersistentGame existingEmptyGame;
-	private static PersistentGame pg;
-	
-	private static PersistentState nonExistingState;
-	private static PersistentState existingEmptyState;
-	private static PersistentState stateWithAPlacement;
-	private static PersistentState stateWithAFewPlacements;
-	
 	@BeforeClass
 	public static void setupOnce() throws Exception {
-		gdao = PersistentGameDAO.getInstance();
-		sdao = PersistentStateDAO.getInstance();
-		pdao = PlacementDAO.getInstance();		
-		
-		existingEmptyGame = gdao.createPersistentGame();
-		existingGameWithAFewStates = gdao.createPersistentGame(); 
-		
-		pg = gdao.createPersistentGame();
-		existingEmptyState = sdao.createPersistentState(pg);
-		stateWithAPlacement = sdao.createPersistentState(pg);
-		pdao.createPlacement(3, 3, B, stateWithAPlacement);
-		stateWithAFewPlacements = sdao.createPersistentState(pg);
-		pdao.createPlacement(3, 3, B, stateWithAFewPlacements);
-				
-		PersistentGame existingGameWithAFewStates = gdao.createPersistentGame();
-		PersistentState ps1 = sdao.createPersistentState(existingGameWithAFewStates);
-		pdao.createPlacement(4, 4, B, ps1);
-		PersistentState ps2 = sdao.createPersistentState(existingGameWithAFewStates);
-		pdao.createPlacement(7, 7, B, ps2);
-		
-		nonExistingState = sdao.createPersistentState(pg);
-		sdao.deletePersistentState(pg, nonExistingState);
+		gdao = DAO.getPersistentGameDAO();
+		sdao = DAO.getPersistentStateDAO();
+		pdao = DAO.getPlacementDAO();	
 	}
 
 	@AfterClass
 	public static void tearDownOnce() throws Exception {
-
 	}
 
 	@Before
@@ -74,83 +45,88 @@ public class StateDAOTest {
 	
 	@After
 	public void tearDown() {
+	}
+	
+	@Test
+	public void test_CreatePersistentState_ReturnsStateWithZeroNumOfPlacements() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
+		
+		assertEquals(0, ps.getPlacements().size());
+		
+		gdao.deletePersistentGame(pg);
+	}
+	
+	@Test
+	public void test_CreateState_SavesStateAndItsPlacements_GivenStateWithPlacements() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
+		Placement pt = pdao.createPlacement(4, 4, B, ps);
+		
+		PersistentState actual = sdao.getPersistentState(ps.getStateId());
+		
+		assertEquals(1, actual.getPlacements().size());
+		assertEquals(pt, actual.getPlacements().get(0));
+		
+		gdao.deletePersistentGame(pg);
+	}
+	
+	@Test
+	public void test_CreateState_AppendsToGameListOfStates_GivenGame() {
+		PersistentGame pg = gdao.createPersistentGame();
+		
+		
+		int n = pg.getPersistentStates().size();
+		sdao.createPersistentState(pg);
+		
+		assertEquals(n + 1, pg.getPersistentStates().size());
+		
 		gdao.deletePersistentGame(pg);
 	}
 	
 	@Test
 	public void test_GetPersistentStateList_ReturnsEmpty_GivenEmptyGame() {
-		assertEquals(0, sdao.getPersistentStateList(existingEmptyGame).size());
+		PersistentGame pg = gdao.createPersistentGame();
+		assertEquals(0, sdao.getPersistentStateList(pg).size());
 	}
 	
 	@Test
-	public void test_CreatePersistentState_ReturnsStateWithZeroNumOfPlacements() {
-		PersistentState ps = sdao.createPersistentState(existingGameWithAFewStates);
-		assertEquals(0, ps.getPlacements().size());
+	public void test_DeleteState_RemovesAStateFromDatabase_GivenGameAndState() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
+		
+		int n = sdao.getPersistentStateList(pg).size();
+		sdao.deletePersistentState(pg, ps);
+		
+		assertEquals(n - 1, sdao.getPersistentStateList(pg).size());
+		
+		gdao.deletePersistentGame(pg);
 	}
-//	
-//	@Test
-//	public void test_PostState_SavesStateAndItsIntersections_GivenStateWithNonEmptyBoard() {
-//		stateWithPlacement = sdao.postState(stateWithPlacement);
-//		
-//		State actual = sdao.getState(stateWithPlacement.getStateId());
-//		
-////		System.out.println();
-////		System.out.println(GoUtils.toString(stateWithPlacement.getBoard()));
-//		
-////		System.out.println(stateWithPlacement.getBoard());
-//		System.out.println(GoUtils.toString(stateWithPlacement.getBoard()));
-//		System.out.println(GoUtils.toString(actual.getBoard()));
-//		
-//		assertTrue(GoUtils.compareBoard(
-//				stateWithPlacement.getBoard(),
-//				actual.getBoard()
-//		));
-//	}
-//	
-//	@Test
-//	public void test_PostState_SavesStateToDatabase() {
-//		int n = sdao.getStates().size();
-//		
-//		State state = new State(new Stone[][] {
-//			{E, E, E, E, E, E, E, E, E},
-//			{E, E, E, E, E, E, E, E, E},
-//			{E, E, E, E, E, E, E, E, E},
-//			{E, E, E, E, E, E, E, E, E},
-//			{E, E, E, E, E, E, E, E, E},
-//			{E, E, E, E, E, E, E, E, E},
-//			{E, E, E, E, E, E, B, E, E},
-//			{E, E, E, E, E, E, E, E, E},
-//			{E, E, E, E, E, E, E, E, E},
-//		}, 1);
-//		
-//		state = sdao.postState(state);
-//		
-//		assertEquals(n + 1, sdao.getStates().size());
-//		
-//		sdao.deleteState(state.getStateId());
-//	}
-//	
-//	@Test
-//	public void test_DeleteState_DeletesStateFromDatabase_GivenStateId() {
-//		int n = sdao.getStates().size();
-//		
-//		sdao.deleteState(existingState.getStateId());
-//		
-//		assertEquals(n - 1, sdao.getStates().size());
-//	}
-//	
-//	@Test
-//	public void test_DeleteState_CatchesNoResultException_GivenStateId() {
-//		int n = sdao.getStates().size();
-//		sdao.deleteState(nonExistingState.getStateId());
-//	}
-//	
-//	private boolean assertContains(List<State> actual, State item) {
-//		for (Object e: actual) {
-//			if (e.equals(item)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
+	
+	
+	@Test
+	public void test_DeleteState_RemovesAStateFromGameObject_GivenGameAndState() {
+		PersistentGame pg = gdao.createPersistentGame();
+		PersistentState ps = sdao.createPersistentState(pg);
+		
+		int n = sdao.getPersistentStateList(pg).size();
+		sdao.deletePersistentState(pg, ps);
+		
+		assertEquals(n - 1, pg.getPersistentStates().size());
+		
+		gdao.deletePersistentGame(pg);
+	}
+	
+	@Test
+	public void test_DeleteState_CatchesNoResultException_GivenStateId() {
+	}
+	
+	private boolean assertContains(List<State> actual, State item) {
+		for (Object e: actual) {
+			if (e.equals(item)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
