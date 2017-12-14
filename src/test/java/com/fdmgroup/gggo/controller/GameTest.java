@@ -1,33 +1,46 @@
-package com.fdmgroup.gggo.model;
+package com.fdmgroup.gggo.controller;
 
 import static org.junit.Assert.*;
-import static com.fdmgroup.gggo.model.Stone.B;
-import static com.fdmgroup.gggo.model.Stone.E;
-import static com.fdmgroup.gggo.model.Stone.W;
+import static com.fdmgroup.gggo.controller.Stone.B;
+import static com.fdmgroup.gggo.controller.Stone.E;
+import static com.fdmgroup.gggo.controller.Stone.W;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.fdmgroup.gggo.controller.EndOfStateStackException;
-import com.fdmgroup.gggo.controller.InvalidPlacementException;
-import com.fdmgroup.gggo.model.Game;
-import com.fdmgroup.gggo.model.State;
-import com.fdmgroup.gggo.model.Stone;
+import com.fdmgroup.gggo.exceptions.EndOfStateStackException;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.controller.Game;
+import com.fdmgroup.gggo.controller.State;
+import com.fdmgroup.gggo.dao.DAO;
+import com.fdmgroup.gggo.dao.PersistentGameDAO;
 
-public class GoGameTest {
+public class GameTest {
 	
 	Game spyGoGame;
 	Game mockGoGame;
 	Game goGame;
+	
+	@BeforeClass
+	public static void setupOnce() {
+	}
 	
 	@Before
 	public void setup() {
 		goGame = new Game();
 		mockGoGame = mock(Game.class);
 		spyGoGame = spy(goGame);
+		
+		goGame.states.push(new State());
+	}
+	
+	@After
+	public void tearDown() {
 	}
 	
 	@Test

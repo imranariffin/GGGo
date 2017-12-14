@@ -1,7 +1,7 @@
-package com.fdmgroup.gggo.model;
+package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.gggo.model.Stone.B;
-import static com.fdmgroup.gggo.model.Stone.W;
+import static com.fdmgroup.gggo.controller.Stone.B;
+import static com.fdmgroup.gggo.controller.Stone.W;
 
 import java.util.Stack;
 

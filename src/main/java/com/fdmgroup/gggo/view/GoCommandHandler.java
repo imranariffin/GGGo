@@ -1,8 +1,8 @@
 package com.fdmgroup.gggo.view;
 
-import com.fdmgroup.gggo.controller.EndOfStateStackException;
-import com.fdmgroup.gggo.controller.InvalidPlacementException;
-import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.exceptions.EndOfStateStackException;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.controller.Game;
 
 public class GoCommandHandler extends CommandHandler {
 

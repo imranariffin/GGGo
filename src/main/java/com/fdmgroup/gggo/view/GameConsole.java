@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import com.fdmgroup.gggo.controller.GoUtils;
-import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.controller.Game;
 
 public class GameConsole extends Console {
 	

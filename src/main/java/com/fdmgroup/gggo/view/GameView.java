@@ -2,7 +2,7 @@ package com.fdmgroup.gggo.view;
 
 import java.util.Scanner;
 
-import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.controller.GoUtils;
 
 public class GameView {

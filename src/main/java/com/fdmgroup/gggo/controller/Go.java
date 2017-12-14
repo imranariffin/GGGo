@@ -1,6 +1,6 @@
-package com.fdmgroup.gggo.model;
+package com.fdmgroup.gggo.controller;
 
-import com.fdmgroup.gggo.controller.InvalidPlacementException;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 
 public interface Go {
 	public abstract void place(int i, int j) throws InvalidPlacementException;

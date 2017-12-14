@@ -1,4 +1,4 @@
-package com.fdmgroup.gggo.controller;
+package com.fdmgroup.gggo.exceptions;
 
 public class InvalidPlacementException extends Exception {
 

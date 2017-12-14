@@ -1,20 +1,19 @@
 package com.fdmgroup.gggo.controller;
 
-import static com.fdmgroup.gggo.model.Stone.*;
+import static com.fdmgroup.gggo.controller.Stone.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
-import com.fdmgroup.gggo.controller.GoUtils;
-import com.fdmgroup.gggo.model.Game;
-import com.fdmgroup.gggo.model.Stone;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 
 public class GoUtilsTest {
 	
 	@Test
 	public void test_ToString_ReturnsCorrectEmptyBoardString_GivenEmptyBoard() {
-		Game newGame = new Game();
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -31,7 +30,7 @@ public class GoUtilsTest {
 				"║     ---  GGGo  ---     ║\n"+
 				"╚════════════════════════╝\n";
 		
-		String actual = GoUtils.toString(newGame.getBoard());
+		String actual = GoUtils.toString(goGame.getBoard());
 		assertEquals(expected, actual);
 	}
 
@@ -39,6 +38,7 @@ public class GoUtilsTest {
 	@Test
 	public void test_ToString_ReturnsCorrectBoardString_GivenOnePlacement() {
 		Game goGame = new Game();
+		goGame.states.push(new State());
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -68,6 +68,7 @@ public class GoUtilsTest {
 	@Test
 	public void test_ToString_ReturnsCorrectBoardString_GivenAFewPlacements() {
 		Game goGame = new Game();
+		goGame.states.push(new State());
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -99,6 +100,7 @@ public class GoUtilsTest {
 	@Test
 	public void test_ToString_ReturnsCorrectBoardString_GivenACapture() {
 		Game goGame = new Game();
+		goGame.states.push(new State());
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -136,7 +138,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsTrue_GivenAGroupThatHasNoLiberty() {
-		Game goGame = new Game();		
+		Game goGame = new Game();	
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -162,6 +165,7 @@ public class GoUtilsTest {
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAGroupThatStillHasLiberty() {
 		Game goGame = new Game();		
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -186,7 +190,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAGroupThatStillHasLibertyButHasACapturedGroupCloseby() {
-		Game goGame = new Game();		
+		Game goGame = new Game();	
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -211,7 +216,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAGroupThatStillHasLibertyButHasACapturedGroupCloseby2() {
-		Game goGame = new Game();		
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -236,7 +242,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAStoneAtFringeOfCapturedGroup() {
-		Game goGame = new Game();		
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -261,7 +268,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_RemoveCaptured_ReplacesCapturedOneSizeGroupsWithEmptyStones_AfterAPlacement() {
-		Game goGame = new Game();		
+		Game goGame = new Game();	
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -297,7 +305,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_RemoveCaptured_ReplacesCapturedTwoSizeGroupsWithEmptyStones_AfterAPlacement() {
-		Game goGame = new Game();		
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -333,7 +342,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_RemoveCaptured_ReplacesCapturedTwoSizeGroupsWithEmptyStonesOnly_AfterAPlacement() {
-		Game goGame = new Game();		
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -370,6 +380,7 @@ public class GoUtilsTest {
 	@Test
 	public void test_Remove_RepplacesAStoneWithEmpty_GivenAStoneThatIsSurroundedByFourStonesOfOppositeColors() {
 		Game goGame = new Game();		
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -408,7 +419,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByASingleColor_GivenBlackAndBoard() {
-		Game goGame = new Game();		
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -432,7 +444,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByAWallAndASingleColor_GivenWhiteAndBoard() {
-		Game goGame = new Game();		
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -457,6 +470,7 @@ public class GoUtilsTest {
 	@Test
 	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByAWallAndASingleColor_GivenWhiteAndBoardMultipleTerritory() {
 		Game goGame = new Game();		
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -481,6 +495,7 @@ public class GoUtilsTest {
 	@Test
 	public void test_CountTerritory_DoesNotCountIfGroupHasMoreThanOneLiberty() {
 		Game goGame = new Game();		
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -504,7 +519,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_DoesCountIfOccupiedGroupAtCorner() {
-		Game goGame = new Game();		
+		Game goGame = new Game();
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -528,7 +544,8 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_DoesNotCountIfGroupSurroundedByMoreThanOneColor() {
-		Game goGame = new Game();		
+		Game goGame = new Game();	
+		goGame.states.push(new State());
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {

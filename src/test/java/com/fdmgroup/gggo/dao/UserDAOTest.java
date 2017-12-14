@@ -1,4 +1,4 @@
-package com.fdmgroup.gggo.controller;
+package com.fdmgroup.gggo.dao;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.model.User;
 
 public class UserDAOTest {

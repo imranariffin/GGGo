@@ -1,4 +1,4 @@
-package com.fdmgroup.gggo.model;
+package com.fdmgroup.gggo.controller;
 
 public enum Stone {
 	E, // Empty  

@@ -3,7 +3,7 @@ package com.fdmgroup.gggo.view;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import com.fdmgroup.gggo.model.Game;
+import com.fdmgroup.gggo.controller.Game;
 
 public class MainConsole extends Console {
 	private static MainConsole inst;
