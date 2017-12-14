@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.tomcat.util.descriptor.web.ErrorPage;
+
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.dao.DAO;
 import com.fdmgroup.gggo.model.User;
@@ -62,7 +64,7 @@ public class LoginServlet extends HttpServlet {
 					sendPasswordDoesNotMatchError(request, response);
 				}
 			} else {
-				sendUsernameDoesNotExistError(request, response, username);
+				sendUsernameDoesNotExistError(request, response);
 			}
 		} else {
 			sendPasswordAndUserNameEmptyError(request, response);
@@ -72,18 +74,18 @@ public class LoginServlet extends HttpServlet {
 	private void sendPasswordDoesNotMatchError(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		out.println("<p style='color:red;'>Password does not match</p>");
+		out.println(ServletErrorResponsePages.PASSWORD_NOT_MATCH);
 	}
 
-	private void sendUsernameDoesNotExistError(HttpServletRequest request, HttpServletResponse response, String username) 
+	private void sendUsernameDoesNotExistError(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		out.println("<p style='color:red;'>Username " + username + " does not exist</p>");
+		out.println(ServletErrorResponsePages.USERNAME_DOES_NOT_EXIST);
 	}
 
 	private void sendPasswordAndUserNameEmptyError(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		out.println("<p style='color:red;'>Username or password cannot be empty</p>");
+		out.println(ServletErrorResponsePages.USERNAME_AND_PASSWORD_CANNOT_BE_EMPTY);
 	}
 }

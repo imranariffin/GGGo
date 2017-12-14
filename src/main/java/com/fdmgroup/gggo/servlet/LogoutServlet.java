@@ -47,7 +47,7 @@ public class LogoutServlet extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login.jsp");
 			rd.forward(request, response);
 		} else {
-			response.getWriter().append("<p style='color:red;'>Dude, you're not even logged in.</p>");
+			response.getWriter().println(ServletErrorResponsePages.MUST_LOGIN_TO_LOGOUT);
 		}
 	}
 

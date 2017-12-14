@@ -3,6 +3,9 @@ package com.fdmgroup.gggo.servlet;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -70,5 +73,32 @@ public class LogoutServletTest {
 			fail();
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void test_DoPost_RespondsWithErrorMessage_GivenSessionDoesNotHaveCurrentUserAttribute() {
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+		HttpSession session = Mockito.mock(HttpSession.class);
+		PrintWriter out = Mockito.mock(PrintWriter.class);
+		
+		Mockito.when(request.getSession()).thenReturn(session);
+		Mockito.when(session.getAttribute(SessionAttributes.CURRENT_USER)).thenReturn(null);
+		 
+		try {
+			Mockito.when(response.getWriter()).thenReturn(out);
+		} catch (IOException e) {
+			fail();
+			e.printStackTrace();
+		}
+
+		try {
+			new LogoutServlet().doPost(request, response);
+		} catch (ServletException | IOException e) {
+			fail();
+			e.printStackTrace();
+		}
+		
+		Mockito.verify(out, Mockito.times(1)).println(ServletErrorResponsePages.MUST_LOGIN_TO_LOGOUT);
 	}
 }

@@ -3,6 +3,7 @@ package com.fdmgroup.gggo.servlet;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -64,7 +65,6 @@ public class LoginServletTest {
 		Mockito.when(request.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(request.getParameter("password")).thenReturn(password);
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(SessionAttributes.CURRENT_USER)).thenReturn(user);
 		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/home.jsp")).thenReturn(rd);
 		
 		try {
@@ -74,6 +74,7 @@ public class LoginServletTest {
 			e1.printStackTrace();
 		}
 		
+		Mockito.verify(session, Mockito.times(1)).setAttribute(SessionAttributes.CURRENT_USER, user);
 		Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/WEB-INF/views/home.jsp");
 		try {
 			Mockito.verify(rd, Mockito.times(1)).forward(request, response);
@@ -81,5 +82,125 @@ public class LoginServletTest {
 			fail();
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void test_DoPost_RespondWithUsernotNotExistErrorMessage_GivenNonExistingUsername() {
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+		HttpSession session = Mockito.mock(HttpSession.class);
+		RequestDispatcher rd = Mockito.mock(RequestDispatcher.class);
+		PrintWriter out = Mockito.mock(PrintWriter.class);
+
+		UserDAO udao = DAO.getUserDAO();
+		String username = "fukui";
+		String password = "pazzword";
+		User user = new User(username, SCryptUtil.scrypt(password, 2 << 13, 3, 7));
+		udao.postUser(user);
+		udao.deleteUser(user);
+		
+		Mockito.when(request.getParameter("username")).thenReturn(user.getUsername());
+		Mockito.when(request.getParameter("password")).thenReturn(password);
+		try {
+			Mockito.when(response.getWriter()).thenReturn(out);
+		} catch (IOException e1) {
+			fail();
+			e1.printStackTrace();
+		}
+		
+		LoginServlet servlet = new LoginServlet(); 
+		try {
+			servlet.doPost(request, response);
+		} catch (ServletException | IOException e) {
+			fail();
+			e.printStackTrace();
+		}
+		
+		try {
+			Mockito.verify(response, Mockito.times(1)).getWriter();
+			Mockito.verify(out, Mockito.times(1)).println(ServletErrorResponsePages.USERNAME_DOES_NOT_EXIST);
+		} catch (IOException e) {
+			fail();
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void test_DoPost_RespondsWithWrongPasswordErrorMessage_GivenExsitingUsernameAndWrongPassword() {
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+		PrintWriter out = Mockito.mock(PrintWriter.class);
+
+		UserDAO udao = DAO.getUserDAO();
+		String username = "fukui";
+		String password = "pazzword";
+		String wrongPassword = "wrong!";
+		User user = new User(username, SCryptUtil.scrypt(password, 2 << 13, 3, 7));
+		udao.postUser(user);
+		
+		Mockito.when(request.getParameter("username")).thenReturn(user.getUsername());
+		Mockito.when(request.getParameter("password")).thenReturn(wrongPassword);
+		try {
+			Mockito.when(response.getWriter()).thenReturn(out);
+		} catch (IOException e1) {
+			fail();
+			e1.printStackTrace();
+		}
+		
+		LoginServlet servlet = new LoginServlet(); 
+		try {
+			servlet.doPost(request, response);
+		} catch (ServletException | IOException e) {
+			fail();
+			e.printStackTrace();
+		}
+		
+		try {
+			Mockito.verify(response, Mockito.times(1)).getWriter();
+			Mockito.verify(out, Mockito.times(1)).println("<p style='color:red;'>Password does not match</p>");
+		} catch (IOException e) {
+			fail();
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void test_DoPost_RespondsWithUsernameAndPasswordCannotBeEmptyErrorMessage_GivenEmptyStringUsernameAndPassword() {
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+		PrintWriter out = Mockito.mock(PrintWriter.class);
+
+		UserDAO udao = DAO.getUserDAO();
+		String username = "fukui";
+		String password = "pazzword";
+		String emptyUsername = "";
+		String emptyPassword = "";
+		User user = new User(username, SCryptUtil.scrypt(password, 2 << 13, 3, 7));
+		udao.postUser(user);
+		
+		Mockito.when(request.getParameter("username")).thenReturn(emptyUsername);
+		Mockito.when(request.getParameter("password")).thenReturn(emptyPassword);
+		try {
+			Mockito.when(response.getWriter()).thenReturn(out);
+		} catch (IOException e1) {
+			fail();
+			e1.printStackTrace();
+		}
+		
+		LoginServlet servlet = new LoginServlet(); 
+		try {
+			servlet.doPost(request, response);
+		} catch (ServletException | IOException e) {
+			fail();
+			e.printStackTrace();
+		}
+		
+		try {
+			Mockito.verify(response, Mockito.times(1)).getWriter();
+			Mockito.verify(out, Mockito.times(1)).println(ServletErrorResponsePages.USERNAME_AND_PASSWORD_CANNOT_BE_EMPTY);
+		} catch (IOException e) {
+			fail();
+			e.printStackTrace();
+		}		
 	}
 }
