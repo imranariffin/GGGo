@@ -74,7 +74,7 @@ public class LoginServlet extends HttpServlet {
 	private void sendPasswordDoesNotMatchError(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		out.println(ServletErrorResponsePages.PASSWORD_NOT_MATCH);
+		out.println(ServletErrorResponsePages.PASSWORD_WRONG);
 	}
 
 	private void sendUsernameDoesNotExistError(HttpServletRequest request, HttpServletResponse response) 

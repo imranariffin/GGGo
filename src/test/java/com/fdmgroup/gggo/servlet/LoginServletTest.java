@@ -82,6 +82,8 @@ public class LoginServletTest {
 			fail();
 			e.printStackTrace();
 		}
+		
+		udao.deleteUser(user);
 	}
 	
 	@Test
@@ -157,11 +159,13 @@ public class LoginServletTest {
 		
 		try {
 			Mockito.verify(response, Mockito.times(1)).getWriter();
-			Mockito.verify(out, Mockito.times(1)).println("<p style='color:red;'>Password does not match</p>");
+			Mockito.verify(out, Mockito.times(1)).println(ServletErrorResponsePages.PASSWORD_WRONG);
 		} catch (IOException e) {
 			fail();
 			e.printStackTrace();
 		}
+		
+		udao.deleteUser(user);
 	}
 	
 	@Test
@@ -201,6 +205,8 @@ public class LoginServletTest {
 		} catch (IOException e) {
 			fail();
 			e.printStackTrace();
-		}		
+		}
+		
+		udao.deleteUser(user);
 	}
 }
