@@ -69,7 +69,7 @@ public class SignupServlet extends HttpServlet {
 						sendPasswordsDoNotMatch(request, response);
 					}		
 				} else {
-					sendUsernameNotAvailable(request, response, username);
+					sendUsernameNotAvailable(request, response);
 				}
 			} else {
 				sendEmptyInputsError(request, response);
@@ -82,25 +82,25 @@ public class SignupServlet extends HttpServlet {
 	private void sendPasswordsDoNotMatch(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		PrintWriter out = response.getWriter();
-		out.println("<p style='color:red;'>Passwords not match</p>");
+		out.println(ServletErrorResponsePages.PASSWORD_NOT_MATCH);
 	}
 
-	private void sendUsernameNotAvailable(HttpServletRequest request, HttpServletResponse response, String username) 
+	private void sendUsernameNotAvailable(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		PrintWriter out = response.getWriter();
-		out.println("<p style='color:red;'>username " + username + " not available</p>");
+		out.println(ServletErrorResponsePages.USERNAME_NOT_AVAILABLE);
 	}
 
 	private void sendEmptyInputsError(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		PrintWriter out = response.getWriter();
-		out.println("<p style='color:red;'>Inputs should not be empty</p>");
+		out.println(ServletErrorResponsePages.USERNAME_AND_PASSWORD_CANNOT_BE_EMPTY);
 	}
 
 	private void sendInvalidParametersError(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		PrintWriter out = response.getWriter();
-		out.println("<p style='color:red;'>Invalid parameters given</p>");
+		out.println(ServletErrorResponsePages.INVALID_PARAMETERS);
 	}
 
 }
