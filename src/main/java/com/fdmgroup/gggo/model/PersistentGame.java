@@ -21,7 +21,7 @@ import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.controller.State;
 
 @Entity
-@Table(name="TBL_GO_GAME")
+@Table(name=GoEntities.TBL_GO_GAME)
 @NamedQueries({
 	@NamedQuery(name=NamedQuerySet.GAME_FIND_ALL, query="select pg from PersistentGame pg"),
 	@NamedQuery(name=NamedQuerySet.GAME_FIND_ONE, query="select pg from PersistentGame pg where pg.gameId = :gid"),

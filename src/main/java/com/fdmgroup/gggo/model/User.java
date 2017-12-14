@@ -10,7 +10,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="TBL_GO_USER")
+@Table(name=GoEntities.TBL_GO_USER)
 @NamedQueries({
 	@NamedQuery(name=NamedQuerySet.USER_FIND_ALL, query="select u from User u"),
 	@NamedQuery(name=NamedQuerySet.USER_DELETE, query="delete from User where username = :uname"),
@@ -26,7 +26,7 @@ public class User {
 	@Column(name="username", nullable=false, length=50, unique=true)
 	private String username;
 	
-	@Column(name="password", nullable=false, length=50)
+	@Column(name="password", nullable=false, length=200)
 	private String password;
 	
 	public User() { 

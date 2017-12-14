@@ -25,7 +25,7 @@ public class UserDAOTest {
 	@BeforeClass
 	public static void setupOnce() {
 		
-		udao = UserDAO.getInstance();
+		udao = DAO.getUserDAO();
 
 		existingUser = new User("akira.touya", "whoisshindou");
 		udao.postUser(existingUser);
@@ -36,7 +36,7 @@ public class UserDAOTest {
 		updateableUser = new User("updateable", "updateablepassword");
 		udao.postUser(updateableUser);
 		
-		initNumUsers = UserDAO.getInstance().getUsers().size();
+		initNumUsers = udao.getUsers().size();
 	}
 	
 	@AfterClass
@@ -47,15 +47,12 @@ public class UserDAOTest {
 	
 	@Test
 	public void test_GetUsers_ReturnsAllUsersFromDatabase() {
-		udao = UserDAO.getInstance();
-		
 		List<User> actual = udao.getUsers();
 		assertEquals(initNumUsers, actual.size());
 	}
 	
 	@Test
 	public void test_PostUser_SavesGivenUserOnDatabase() {
-		udao = UserDAO.getInstance();
 		user1 = new User("imranariffin", "password123");
 		
 		assertEquals(initNumUsers, udao.getUsers().size());

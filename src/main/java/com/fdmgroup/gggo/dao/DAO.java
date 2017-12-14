@@ -6,6 +6,13 @@ import javax.persistence.Persistence;
 public class DAO {
 	private static EntityManagerFactory emf;
 	
+	public static UserDAO getUserDAO() {
+		if (emf == null) {
+			emf = createEntityManagerFactor();
+		}
+		return UserDAO.getInstance(emf);
+	}
+	
 	public static PersistentGameDAO getPersistentGameDAO() {
 		if (emf == null) {
 			emf = createEntityManagerFactor();

@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.fdmgroup.gggo.controller.UserDAO;
+import com.fdmgroup.gggo.dao.UserDAO;
+import com.fdmgroup.gggo.dao.DAO;
 import com.fdmgroup.gggo.model.User;
 
 import com.lambdaworks.crypto.SCryptUtil;
@@ -53,13 +54,13 @@ public class SignupServlet extends HttpServlet {
 		
 		if (username != null && password != null && confirmPassword != null) {
 			if (!username.equals("") && !password.equals("") && !confirmPassword.equals("")) {
-				UserDAO sdao = UserDAO.getInstance();
-				if (sdao.getUser(username) == null) {
+				UserDAO udao = DAO.getUserDAO();
+				if (udao.getUser(username) == null) {
 					if (password.equals(confirmPassword)) {
 						
 						String hashedPassword = SCryptUtil.scrypt(password, 2 << 13, 3, 7);
 						User user = new User(username, hashedPassword);
-						sdao.postUser(user);
+						udao.postUser(user);
 						session.setAttribute(SessionAttributes.CURRENT_USER, user);
 						
 						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");

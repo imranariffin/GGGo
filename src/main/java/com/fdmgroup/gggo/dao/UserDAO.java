@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
@@ -17,18 +16,16 @@ import com.fdmgroup.gggo.model.User;
 
 public class UserDAO {
 	private static UserDAO inst;
-	private EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 	
 	private UserDAO() {
-		emf = Persistence.createEntityManagerFactory("GGGo");
 	}
 	
-	public static UserDAO getInstance() {
-		System.out.println("START UserDAO.getInstance()");
+	public static UserDAO getInstance(EntityManagerFactory _emf) {
+		emf = _emf;
 		if (inst == null) {
 			inst = new UserDAO();
 		}
-		System.out.println("END UserDAO.getInstance()");
 		return inst;
 	}
 
@@ -56,8 +53,10 @@ public class UserDAO {
 			
 			em.getTransaction().commit();
 		} catch(PersistenceException pe) {
+			pe.printStackTrace();
 			return;
 		} catch(ConstraintViolationException cve) {
+			cve.printStackTrace();
 			return;
 		} finally {
 			em.close();
