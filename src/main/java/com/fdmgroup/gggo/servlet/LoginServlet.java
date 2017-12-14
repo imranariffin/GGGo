@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import com.fdmgroup.gggo.controller.UserDAO;
 import com.fdmgroup.gggo.model.User;
+import com.lambdaworks.crypto.SCryptUtil;
 
 /**
  * Servlet implementation class LoginServlet
@@ -52,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 		if (!username.equals("") && !password.equals("")) {
 			User user = sdao.getUser(username);
 			if (user != null) {
-				if (user.getPassword().equals(password)) {
+				if (SCryptUtil.check(password, user.getPassword())) {
 					session.setAttribute("currentUser", user);
 					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
 					rd.forward(request, response);
