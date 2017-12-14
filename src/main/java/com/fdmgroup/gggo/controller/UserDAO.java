@@ -23,9 +23,11 @@ public class UserDAO {
 	}
 	
 	public static UserDAO getInstance() {
+		System.out.println("START UserDAO.getInstance()");
 		if (inst == null) {
 			inst = new UserDAO();
 		}
+		System.out.println("END UserDAO.getInstance()");
 		return inst;
 	}
 
