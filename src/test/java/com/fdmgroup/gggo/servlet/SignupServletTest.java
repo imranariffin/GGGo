@@ -55,7 +55,7 @@ public class SignupServletTest {
 		String password = "pazzword";
 		User user = new User(username, password);
 		
-		udao.postUser(user);
+		udao.createUser(user);
 		udao.deleteUser(user);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(username);
@@ -94,7 +94,7 @@ public class SignupServletTest {
 		String password = "pazzword";
 		String confirmPassword = password;
 		User user = new User(username, password);
-		udao.postUser(user);
+		udao.createUser(user);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(username);
 		Mockito.when(request.getParameter("password")).thenReturn(password);

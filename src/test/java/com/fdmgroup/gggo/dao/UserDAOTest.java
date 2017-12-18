@@ -28,13 +28,13 @@ public class UserDAOTest {
 		udao = DAO.getUserDAO();
 
 		existingUser = new User("akira.touya", "whoisshindou");
-		udao.postUser(existingUser);
+		udao.createUser(existingUser);
 		
 		nonExistingUser = new User("nonexistinguser", "somenonexistingpassword");
 		udao.deleteUser(nonExistingUser);
 		
 		updateableUser = new User("updateable", "updateablepassword");
-		udao.postUser(updateableUser);
+		udao.createUser(updateableUser);
 		
 		initNumUsers = udao.getUsers().size();
 	}
@@ -52,11 +52,11 @@ public class UserDAOTest {
 	}
 	
 	@Test
-	public void test_PostUser_SavesGivenUserOnDatabase() {
+	public void test_CreateUser_SavesGivenUserOnDatabase() {
 		user1 = new User("imranariffin", "password123");
 		
 		assertEquals(initNumUsers, udao.getUsers().size());
-		udao.postUser(user1);
+		udao.createUser(user1);
 		assertEquals(initNumUsers + 1, udao.getUsers().size());
 		
 		udao.deleteUser(user1);
@@ -65,13 +65,15 @@ public class UserDAOTest {
 	@Test
 	public void test_DeleteUser_RemovesGivenUserFromDatabase() {
 		User removableUser = new User("saifujiwara", "divinemove");
+		udao.deleteUser(removableUser);
 		
-		udao.postUser(removableUser);
-		assertEquals(initNumUsers + 1, udao.getUsers().size());
+		int n = udao.getUsers().size();
+		udao.createUser(removableUser);
+		assertEquals(n + 1, udao.getUsers().size());
 		int ret = udao.deleteUser(removableUser);
 		
 		assertEquals(1, ret);
-		assertEquals(initNumUsers, udao.getUsers().size());
+		assertEquals(n, udao.getUsers().size());
 	}
 	
 	@Test
@@ -108,9 +110,10 @@ public class UserDAOTest {
 	@Test
 	public void test_PostUser_CannotAddUserWithExistingUsername() {
 		User newuser = new User(existingUser.getUsername(), "somepassword");
+		int n = udao.getUsers().size();
 		
-		udao.postUser(newuser);	
+		udao.createUser(newuser);	
 		
-		assertEquals(initNumUsers, udao.getUsers().size());
+		assertEquals(n, udao.getUsers().size());
 	}
 }
