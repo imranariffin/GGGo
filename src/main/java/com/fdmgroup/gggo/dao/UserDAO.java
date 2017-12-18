@@ -43,7 +43,7 @@ public class UserDAO {
 		return users;
 	}
 
-	public void postUser(User user) {
+	public void createUser(User user) {
 		EntityManager em = emf.createEntityManager();
 		
 		try {

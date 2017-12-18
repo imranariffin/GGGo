@@ -55,7 +55,7 @@ public class LoginServletTest {
 		String password = "pazzword";
 		User user = new User(username, SCryptUtil.scrypt(password, 2 << 13, 3, 7));
 		udao.deleteUser(user);
-		udao.postUser(user);
+		udao.createUser(user);
 		
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
@@ -98,7 +98,7 @@ public class LoginServletTest {
 		String username = "fukui";
 		String password = "pazzword";
 		User user = new User(username, SCryptUtil.scrypt(password, 2 << 13, 3, 7));
-		udao.postUser(user);
+		udao.createUser(user);
 		udao.deleteUser(user);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(user.getUsername());
@@ -138,7 +138,7 @@ public class LoginServletTest {
 		String password = "pazzword";
 		String wrongPassword = "wrong!";
 		User user = new User(username, SCryptUtil.scrypt(password, 2 << 13, 3, 7));
-		udao.postUser(user);
+		udao.createUser(user);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(request.getParameter("password")).thenReturn(wrongPassword);
@@ -180,7 +180,7 @@ public class LoginServletTest {
 		String emptyUsername = "";
 		String emptyPassword = "";
 		User user = new User(username, SCryptUtil.scrypt(password, 2 << 13, 3, 7));
-		udao.postUser(user);
+		udao.createUser(user);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(emptyUsername);
 		Mockito.when(request.getParameter("password")).thenReturn(emptyPassword);
