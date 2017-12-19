@@ -18,6 +18,9 @@ import javax.persistence.Table;
 			name=NamedQuerySet.INVITE_FIND_ALL, 
 			query="select inv from Invite inv where inv.invitee = :user or inv.invitor = :user"),
 	@NamedQuery(
+			name=NamedQuerySet.INVITE_SENT_FIND_ALL, 
+			query="select inv from Invite inv where inv.invitor = :invitor"),
+	@NamedQuery(
 			name=NamedQuerySet.INVITE_FIND_ONE, 
 			query="select inv from Invite inv where inv.inviteId = :invid"),
 })

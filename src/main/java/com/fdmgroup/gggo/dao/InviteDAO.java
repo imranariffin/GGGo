@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -118,9 +119,36 @@ public class InviteDAO {
 			em.getTransaction().begin();
 			em.remove(em.contains(inv) ? inv : em.merge(inv));
 			em.getTransaction().commit();
+		} catch (EntityNotFoundException enfe) {
+			return;
+		} finally {
+			em.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Invite> getInvites(String invitorUsername) {
+		EntityManager em = emf.createEntityManager();
+		List<Invite> res = new ArrayList<>();
+		
+		UserDAO udao = DAOFactory.getUserDAO();
+		User invitor = udao.getUser(invitorUsername);
+		
+		if (invitor == null) {
+			return res;
+		}
+		
+		try {
+//			em.getTransaction().begin();
+			Query q = em.createNamedQuery(NamedQuerySet.INVITE_SENT_FIND_ALL);
+			q.setParameter("invitor", invitor);
+			res = q.getResultList();
+//			em.getTransaction().commit();
 			
 		} finally {
 			em.close();
 		}
+		
+		return res;
 	}
 }
