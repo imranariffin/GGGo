@@ -7,6 +7,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,11 +29,27 @@ public class InviteDAOTest {
 		idao = DAOFactory.getInviteDAO();
 	}
 	
+	@Before
+	public void setup() throws DeleteInviteInvitorInviteeMismatchException {
+		udao.deleteUser("imran.ariffin");
+		udao.deleteUser("amir.ariffin");
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
+		udao.deleteUser("empty-invitor");
+	}
+	
+	@After
+	public void tearDown() throws DeleteInviteInvitorInviteeMismatchException {
+		udao.deleteUser("imran.ariffin");
+		udao.deleteUser("amir.ariffin");
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
+		udao.deleteUser("empty-invitor");
+	}
+	
 	@Test
 	public void test_CreateInvite_ConstructAndSavesInvite_GivenInvitorAndInviteeUsernames() throws DeleteInviteInvitorInviteeMismatchException {
 		
-		udao.deleteUser("imran.ariffin");
-		udao.deleteUser("amir.ariffin");
 		User imran = udao.createUser("imran.ariffin", "pazzword");
 		User amir = udao.createUser("amir.ariffin", "pazzword");
 		
@@ -40,14 +60,10 @@ public class InviteDAOTest {
 		
 		assertEquals(n + 1, idao.getInvites(imran).size());
 		assertEquals(m + 1, idao.getInvites(amir).size());
-		
-		udao.deleteUser("imran.ariffin");
-		udao.deleteUser("amir.ariffin");
 	}
 	
 	@Test
 	public void test_CreateInvite_ReturnsNullAndDidNotCreateInvite_GivenInviteeNull() throws DeleteInviteInvitorInviteeMismatchException {
-		udao.deleteUser("imran.ariffin");
 		User imran = udao.createUser("imran.ariffin", "pazzword");
 		
 		int n = idao.getInvites(imran).size();
@@ -61,7 +77,9 @@ public class InviteDAOTest {
 	}
 	
 	@Test
-	public void test_GetInvite_ReturnsInvite_GivenInviteId() throws DeleteInviteInvitorInviteeMismatchException {
+	public void test_GetInvite_ReturnsInvite_GivenInviteId() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
 		User invitor = udao.createUser("invitor", "pazzword");
 		User invitee = udao.createUser("invitee", "pazzword");
 		Invite inv = idao.createInvite(invitor, invitee);
@@ -74,7 +92,11 @@ public class InviteDAOTest {
 	}
 	
 	@Test
-	public void test_GetInvite_ReturnsNull_GivenNonExistingInviteId() throws DeleteInviteInvitorInviteeMismatchException {
+	public void test_GetInvite_ReturnsNull_GivenNonExistingInviteId() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
 		User invitor = udao.createUser("invitor", "pazzword");
 		User invitee = udao.createUser("invitee", "pazzword");
 		Invite inv = idao.createInvite(invitor, invitee);
@@ -83,27 +105,83 @@ public class InviteDAOTest {
 		
 		assertNotNull(inv);
 		assertNull(idao.getInvite(inv.getInviteId()));
-		
-		udao.deleteUser(invitor);
-		udao.deleteUser(invitee);
 	}
 	
 	@Test
-	public void test_DeleteInvite_RemovesInviteFromDb_GivenInvitorInviteeAndInvite() {
+	public void test_GetInvites_ReturnsEmptyListOfInvites_GivenUserWhoSentNoInvites() 
+			throws DeleteInviteInvitorInviteeMismatchException {
 		
+		String username = "empty-invitor";
+		String password = "pazzword";
+		User invitor = udao.createUser(username, password);
+		
+		List<Invite> invites = idao.getInvites(invitor.getUsername()); 
+		assertNotNull(invites);
+		assertEquals(0, invites.size());
+		
+		udao.deleteUser(invitor.getUsername());
 	}
 	
 	@Test
-	public void test_DeleteInvite_ThrowsInvitorInviteeMismatchException_GivenInvitorAndInviteeSwitchedPlaceInArgument() throws DeleteInviteInvitorInviteeMismatchException {
-
-		udao.deleteUser("invitor");
-		udao.deleteUser("invitee");
+	public void test_GetInvites_ReturnsListOfInvitesOfSizeOne_GivenUserWhoAnInvite() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		List<Invite> invites = idao.getInvites(invitor.getUsername()); 
+		assertNotNull(invites);
+		assertEquals(1, invites.size());
+		assertTrue(invites.contains(inv));
+	}
+	
+	@Test
+	public void test_GetInvites_ReturnsListOfInvitesOfAFewInvites_GivenUserWhoDidAFewInvites() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		Invite inv3 = idao.createInvite(invitor, invitee);
+		
+		List<Invite> invites = idao.getInvites(invitor.getUsername());
+		
+		assertNotNull(invites);
+		assertEquals(3, invites.size());
+		assertTrue(invites.contains(inv1));
+		assertTrue(invites.contains(inv2));
+		assertTrue(invites.contains(inv3));
+	}
+	
+	@Test
+	public void test_DeleteInvite_RemovesInviteFromDb_GivenInvitorInviteeAndInvite() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		idao.deleteInvite(invitor, invitee, inv);
+		
+		assertNull(idao.getInvite(inv.getInviteId()));
+	}
+	
+	@Test
+	public void test_DeleteInvite_ThrowsInvitorInviteeMismatchException_GivenInvitorAndInviteeSwitchedPlaceInArgument() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
 		User invitor = udao.createUser("invitor", "pazzword");
 		User invitee = udao.createUser("invitee", "pazzword");
 		Invite inv = idao.createInvite(invitor, invitee);
 		
 		try {
-//			Invitor and Invitor swapped place as arguments
+			// Invitor and Invitor swapped place as arguments
 			assertNotNull(invitor);
 			assertNotNull(invitee);
 			assertNotNull(inv);
@@ -120,14 +198,7 @@ public class InviteDAOTest {
 		} catch (DeleteInviteInvitorInviteeMismatchException diiime) {
 			assertTrue(invitor.getSentInvites().contains(inv));
 			assertTrue(invitee.getReceivedInvites().contains(inv));
-			
-			try {
-				udao.deleteUser(invitor);
-				udao.deleteUser(invitee);
-			} catch (DeleteInviteInvitorInviteeMismatchException diiime2) {
-				diiime2.printStackTrace();
-				fail();
-			}
 		}
 	}
 }
+
