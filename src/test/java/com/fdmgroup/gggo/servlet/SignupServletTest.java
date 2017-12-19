@@ -15,8 +15,9 @@ import org.apache.tools.ant.taskdefs.condition.Http;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.fdmgroup.gggo.dao.DAO;
+import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.UserDAO;
+import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.User;
 
 public class SignupServletTest {
@@ -44,18 +45,17 @@ public class SignupServletTest {
 	}
 	
 	@Test
-	public void test_DoPost_ForwardsToJSPHomePage_GivenAvailableUserNameAndValidPasswordAndConfirmationPassword() {
+	public void test_DoPost_ForwardsToJSPHomePage_GivenAvailableUserNameAndValidPasswordAndConfirmationPassword() throws DeleteInviteInvitorInviteeMismatchException {
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 		HttpSession session = Mockito.mock(HttpSession.class);
 		RequestDispatcher rd = Mockito.mock(RequestDispatcher.class);
 
-		UserDAO udao = DAO.getUserDAO();
+		UserDAO udao = DAOFactory.getUserDAO();
 		String username = "isumi-san";
 		String password = "pazzword";
-		User user = new User(username, password);
+		User user = udao.createUser(username, password);
 		
-		udao.createUser(user);
 		udao.deleteUser(user);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(username);
@@ -84,17 +84,16 @@ public class SignupServletTest {
 	}
 	
 	@Test
-	public void test_DoPost_RespondsWithUsernameNotAvailablePage_GivenExistingUsername() {
+	public void test_DoPost_RespondsWithUsernameNotAvailablePage_GivenExistingUsername() throws DeleteInviteInvitorInviteeMismatchException {
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 		PrintWriter out = Mockito.mock(PrintWriter.class);
 		
-		UserDAO udao = DAO.getUserDAO();
+		UserDAO udao = DAOFactory.getUserDAO();
 		String username = "isumi-san";
 		String password = "pazzword";
 		String confirmPassword = password;
-		User user = new User(username, password);
-		udao.createUser(user);
+		User user = udao.createUser(username, password);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(username);
 		Mockito.when(request.getParameter("password")).thenReturn(password);
@@ -124,11 +123,9 @@ public class SignupServletTest {
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 		PrintWriter out = Mockito.mock(PrintWriter.class);
 		
-		UserDAO udao = DAO.getUserDAO();
 		String username = "isumi-san";
 		String password = "pazzword";
 		String confirmPassword = "DifferentPassword";
-		User user = new User(username, password);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(username);
 		Mockito.when(request.getParameter("password")).thenReturn(password);
@@ -156,11 +153,9 @@ public class SignupServletTest {
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 		PrintWriter out = Mockito.mock(PrintWriter.class);
 		
-		UserDAO udao = DAO.getUserDAO();
 		String username = "";
 		String password = "";
 		String confirmPassword = "DifferentPassword";
-		User user = new User(username, password);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(username);
 		Mockito.when(request.getParameter("password")).thenReturn(password);
@@ -187,12 +182,10 @@ public class SignupServletTest {
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 		PrintWriter out = Mockito.mock(PrintWriter.class);
-		
-		UserDAO udao = DAO.getUserDAO();
+
 		String username = null;
 		String password = null;
 		String confirmPassword = "DifferentPassword";
-		User user = new User(username, password);
 		
 		Mockito.when(request.getParameter("username")).thenReturn(username);
 		Mockito.when(request.getParameter("password")).thenReturn(password);

@@ -107,7 +107,7 @@ public class PersistentGameDAO {
 
 	void deletePersistentGame(PersistentGame pg) {
 		EntityManager em = emf.createEntityManager();
-		PersistentStateDAO sdao = DAO.getPersistentStateDAO();
+		PersistentStateDAO sdao = DAOFactory.getPersistentStateDAO();
 		
 		if (pg == null) {
 			return;

@@ -30,9 +30,9 @@ public class StateDAOTest {
 	
 	@BeforeClass
 	public static void setupOnce() throws Exception {
-		gdao = DAO.getPersistentGameDAO();
-		sdao = DAO.getPersistentStateDAO();
-		pdao = DAO.getPlacementDAO();	
+		gdao = DAOFactory.getPersistentGameDAO();
+		sdao = DAOFactory.getPersistentStateDAO();
+		pdao = DAOFactory.getPlacementDAO();	
 	}
 
 	@AfterClass

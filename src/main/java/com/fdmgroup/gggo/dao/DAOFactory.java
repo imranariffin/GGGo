@@ -3,7 +3,7 @@ package com.fdmgroup.gggo.dao;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public class DAO {
+public class DAOFactory {
 	private static EntityManagerFactory emf;
 	
 	public static UserDAO getUserDAO() {
@@ -36,5 +36,12 @@ public class DAO {
 	
 	private static EntityManagerFactory createEntityManagerFactor() {
 		return Persistence.createEntityManagerFactory("GGGo");
+	}
+
+	public static InviteDAO getInviteDAO() {
+		if (emf == null) {
+			emf = createEntityManagerFactor();
+		}
+		return InviteDAO.getInstance(emf);
 	}
 }

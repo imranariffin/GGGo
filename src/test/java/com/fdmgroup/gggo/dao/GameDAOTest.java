@@ -27,9 +27,9 @@ public class GameDAOTest {
 	
 	@BeforeClass
 	public static void setupOnce() {
-		gdao = DAO.getPersistentGameDAO();
-		sdao = DAO.getPersistentStateDAO();
-		pdao = DAO.getPlacementDAO();
+		gdao = DAOFactory.getPersistentGameDAO();
+		sdao = DAOFactory.getPersistentStateDAO();
+		pdao = DAOFactory.getPlacementDAO();
 
 		nGames = gdao.getPersistentGames().size();
 	}

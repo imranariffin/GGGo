@@ -18,7 +18,7 @@ import com.fdmgroup.gggo.controller.GoUtils;
 import com.fdmgroup.gggo.controller.Stone;
 
 @Entity
-@Table(name=GoEntities.TBL_PLACEMENT)
+@Table(name=GoEntities.TBL_GO_PLACEMENT)
 @NamedQueries({
 	@NamedQuery(name=NamedQuerySet.PLACEMENT_FIND_ONE, query="select pt from Placement pt where pt.placementId = :ptid"),
 	@NamedQuery(name=NamedQuerySet.PLACEMENT_FIND_ALL, query="select pt from Placement pt where pt.persistentState = :ps")

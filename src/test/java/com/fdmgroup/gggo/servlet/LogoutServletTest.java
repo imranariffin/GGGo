@@ -17,7 +17,7 @@ import org.apache.catalina.ha.session.SessionMessage;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.fdmgroup.gggo.dao.DAO;
+import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.model.User;
 

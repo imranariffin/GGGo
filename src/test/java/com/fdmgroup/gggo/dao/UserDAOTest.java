@@ -4,13 +4,12 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.hibernate.exception.ConstraintViolationException;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.fdmgroup.gggo.dao.UserDAO;
+import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.User;
 
 public class UserDAOTest {
@@ -23,24 +22,22 @@ public class UserDAOTest {
 	private static int initNumUsers;
 	
 	@BeforeClass
-	public static void setupOnce() {
+	public static void setupOnce() throws DeleteInviteInvitorInviteeMismatchException {
 		
-		udao = DAO.getUserDAO();
+		udao = DAOFactory.getUserDAO();
 
-		existingUser = new User("akira.touya", "whoisshindou");
-		udao.createUser(existingUser);
+		existingUser = udao.createUser("akira.touya", "whoisshindou");
 		
 		nonExistingUser = new User("nonexistinguser", "somenonexistingpassword");
 		udao.deleteUser(nonExistingUser);
 		
-		updateableUser = new User("updateable", "updateablepassword");
-		udao.createUser(updateableUser);
+		updateableUser = udao.createUser("updateable", "updateablepassword");
 		
 		initNumUsers = udao.getUsers().size();
 	}
 	
 	@AfterClass
-	public static void tearDownOnce() {
+	public static void tearDownOnce() throws DeleteInviteInvitorInviteeMismatchException {
 		udao.deleteUser(existingUser);
 		udao.deleteUser(updateableUser);
 	}
@@ -52,28 +49,23 @@ public class UserDAOTest {
 	}
 	
 	@Test
-	public void test_CreateUser_SavesGivenUserOnDatabase() {
-		user1 = new User("imranariffin", "password123");
+	public void test_CreateUser_SavesGivenUserOnDatabase() throws DeleteInviteInvitorInviteeMismatchException {
 		
-		assertEquals(initNumUsers, udao.getUsers().size());
-		udao.createUser(user1);
+		user1 = udao.createUser("imranariffin", "password123");
 		assertEquals(initNumUsers + 1, udao.getUsers().size());
 		
 		udao.deleteUser(user1);
 	}
 	
 	@Test
-	public void test_DeleteUser_RemovesGivenUserFromDatabase() {
-		User removableUser = new User("saifujiwara", "divinemove");
-		udao.deleteUser(removableUser);
-		
+	public void test_DeleteUser_RemovesGivenUserFromDatabase() throws DeleteInviteInvitorInviteeMismatchException {
+		User removableUser = udao.createUser("saifujiwara", "divinemove");
 		int n = udao.getUsers().size();
-		udao.createUser(removableUser);
-		assertEquals(n + 1, udao.getUsers().size());
+
 		int ret = udao.deleteUser(removableUser);
 		
 		assertEquals(1, ret);
-		assertEquals(n, udao.getUsers().size());
+		assertEquals(n - 1, udao.getUsers().size());
 	}
 	
 	@Test
@@ -109,11 +101,8 @@ public class UserDAOTest {
 	
 	@Test
 	public void test_PostUser_CannotAddUserWithExistingUsername() {
-		User newuser = new User(existingUser.getUsername(), "somepassword");
+		udao.createUser(existingUser.getUsername(), "somepassword");
 		int n = udao.getUsers().size();
-		
-		udao.createUser(newuser);	
-		
 		assertEquals(n, udao.getUsers().size());
 	}
 }

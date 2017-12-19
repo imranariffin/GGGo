@@ -15,4 +15,7 @@ public class NamedQuerySet {
 	
 	public static final String PLACEMENT_FIND_ALL = "Placement.findAll";
 	public static final String PLACEMENT_FIND_ONE = "Placement.findOne";
+	
+	public static final String INVITE_FIND_ALL = "Invite.findAll";
+	public static final String INVITE_FIND_ONE = "Invite.findOne";
 }

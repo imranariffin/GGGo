@@ -26,7 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Entity
-@Table(name=GoEntities.TBL_PERSISTENT_STATE)
+@Table(name=GoEntities.TBL_GO_STATE)
 @NamedQueries({
 	@NamedQuery(name=NamedQuerySet.PERSISTENT_STATE_FIND_ALL, query="select ps from PersistentState ps where ps.pGame = :pGame"),
 	@NamedQuery(name=NamedQuerySet.PERSISTENT_STATE_DELETE, query="delete from PersistentState ps where ps.stateId = :stid"),
