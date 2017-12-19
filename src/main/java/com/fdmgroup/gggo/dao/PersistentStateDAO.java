@@ -125,7 +125,7 @@ public class PersistentStateDAO {
 		pg.getPersistentStates().remove(ps);
 		ps.setPersistentGame(null);
 		
-		PlacementDAO pdao = DAO.getPlacementDAO();
+		PlacementDAO pdao = DAOFactory.getPlacementDAO();
 		while (!ps.getPlacements().isEmpty()) {
 			Placement pt = ps.getPlacements().get(0);
 			pdao.deletePlacement(ps, pt);

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.descriptor.web.ErrorPage;
 
 import com.fdmgroup.gggo.dao.UserDAO;
-import com.fdmgroup.gggo.dao.DAO;
+import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.model.User;
 import com.lambdaworks.crypto.SCryptUtil;
 
@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		UserDAO sdao = DAO.getUserDAO();
+		UserDAO sdao = DAOFactory.getUserDAO();
 		HttpSession session = request.getSession();
 		
 		String username = request.getParameter("username");

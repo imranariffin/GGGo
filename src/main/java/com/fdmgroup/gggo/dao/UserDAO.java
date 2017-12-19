@@ -11,6 +11,8 @@ import javax.persistence.Query;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.NamedQuerySet;
 import com.fdmgroup.gggo.model.User;
 
@@ -43,9 +45,9 @@ public class UserDAO {
 		return users;
 	}
 
-	public void createUser(User user) {
+	public User createUser(String username, String password) {
 		EntityManager em = emf.createEntityManager();
-		
+		User user = new User(username, password);
 		try {
 			em.getTransaction().begin();
 			
@@ -54,34 +56,14 @@ public class UserDAO {
 			em.getTransaction().commit();
 		} catch(PersistenceException pe) {
 			pe.printStackTrace();
-			return;
+			return null;
 		} catch(ConstraintViolationException cve) {
 			cve.printStackTrace();
-			return;
+			return null;
 		} finally {
 			em.close();
 		}
-	}
-
-	public int deleteUser(User removableUser) {
-		EntityManager em = emf.createEntityManager();
-		int ret = 0;
-		
-		try {
-			Query query = em.createNamedQuery(NamedQuerySet.USER_DELETE);
-			em.getTransaction().begin();
-			
-			if (query != null) {
-				query.setParameter("uname", removableUser.getUsername());
-				ret = query.executeUpdate();	
-			}
-			
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-		
-		return ret;
+		return user;
 	}
 
 	public User getUser(String uname) {
@@ -120,5 +102,53 @@ public class UserDAO {
 		}
 		
 		return ret;
+	}
+
+	public int deleteUser(User user) throws DeleteInviteInvitorInviteeMismatchException {
+		EntityManager em = emf.createEntityManager();
+		int ret = 0;
+
+		if (user == null) {
+			return ret;
+		}
+		
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		
+		List<Invite> sentInvites = user.getSentInvites();
+		while (!sentInvites.isEmpty()) {
+			Invite inv = sentInvites.get(0);
+			User invitor = user;
+			User invitee = inv.getInvitee();
+			idao.deleteInvite(invitor, invitee, inv);
+		}
+		
+		List<Invite> receivedInvites = user.getReceivedInvites();
+		while (!receivedInvites.isEmpty()) {
+			Invite inv = receivedInvites.get(0);
+			User invitor = inv.getInvitor();
+			User invitee = user;
+			idao.deleteInvite(invitor, invitee, inv);
+		}
+		
+		try {
+			Query query = em.createNamedQuery(NamedQuerySet.USER_DELETE);
+			em.getTransaction().begin();
+			
+			if (query != null) {
+				query.setParameter("uname", user.getUsername());
+				ret = query.executeUpdate();	
+			}
+			
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+		
+		return ret;
+	}
+	
+	public int deleteUser(String uname) throws DeleteInviteInvitorInviteeMismatchException {
+		User user = getUser(uname);
+		return deleteUser(user);
 	}
 }

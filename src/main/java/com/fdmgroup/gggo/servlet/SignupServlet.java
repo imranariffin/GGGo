@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.fdmgroup.gggo.dao.UserDAO;
-import com.fdmgroup.gggo.dao.DAO;
+import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.model.User;
 
 import com.lambdaworks.crypto.SCryptUtil;
@@ -54,13 +54,12 @@ public class SignupServlet extends HttpServlet {
 		
 		if (username != null && password != null && confirmPassword != null) {
 			if (!username.equals("") && !password.equals("") && !confirmPassword.equals("")) {
-				UserDAO udao = DAO.getUserDAO();
+				UserDAO udao = DAOFactory.getUserDAO();
 				if (udao.getUser(username) == null) {
 					if (password.equals(confirmPassword)) {
 						
 						String hashedPassword = SCryptUtil.scrypt(password, 2 << 13, 3, 7);
-						User user = new User(username, hashedPassword);
-						udao.createUser(user);
+						User user = udao.createUser(username, hashedPassword);
 						session.setAttribute(SessionAttributes.CURRENT_USER, user);
 						
 						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
