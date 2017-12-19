@@ -1,25 +1,26 @@
 package com.fdmgroup.gggo.dao;
 
-import static com.fdmgroup.gggo.controller.Stone.B;
-import static com.fdmgroup.gggo.controller.Stone.E;
-import static com.fdmgroup.gggo.controller.Stone.W;
 import static org.junit.Assert.*;
 
-import java.util.List;
 
+import com.fdmgroup.gggo.model.User;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.fdmgroup.gggo.controller.GoUtils;
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.PersistentGameDAO;
+import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
 
 public class GameDAOTest {
 
+	private static UserDAO udao;
+	private static InviteDAO idao;
 	private static PersistentGameDAO gdao;
 	private static PersistentStateDAO sdao;
 	private static PlacementDAO pdao;
@@ -27,6 +28,8 @@ public class GameDAOTest {
 	
 	@BeforeClass
 	public static void setupOnce() {
+		udao = DAOFactory.getUserDAO();
+		idao = DAOFactory.getInviteDAO();
 		gdao = DAOFactory.getPersistentGameDAO();
 		sdao = DAOFactory.getPersistentStateDAO();
 		pdao = DAOFactory.getPlacementDAO();
@@ -35,7 +38,9 @@ public class GameDAOTest {
 	}
 	
 	@Before
-	public void setup() {
+	public void setup() throws DeleteInviteInvitorInviteeMismatchException {
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
 	}
 	
 	@After
@@ -105,5 +110,28 @@ public class GameDAOTest {
 		gdao.deletePersistentGame(pg);
 		
 		assertEquals(n, gdao.getPersistentGames().size());
+	}
+	
+	@Test
+	public void test_CreateGame_InitGameAndPersistentGameThenReturnsGame_GivenInviteWithNullGame() {
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		int n = gdao.getPersistentGames().size();
+		
+		Game g = gdao.createGame(inv);
+		
+		assertNotNull(g);
+		
+		PersistentGame pg = gdao.getPersistentGame(g.getGameId());
+		
+		assertNotNull(pg);
+		assertEquals(pg.getGameId(), g.getGameId());
+		assertEquals(pg.getPersistentStates().size(), g.getStates().size());
+		assertEquals(n + 1, gdao.getPersistentGames().size());
+		
+		gdao.deletePersistentGame(pg);
 	}
 }

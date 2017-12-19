@@ -4,10 +4,18 @@ import static com.fdmgroup.gggo.controller.Stone.B;
 import static com.fdmgroup.gggo.controller.Stone.E;
 import static com.fdmgroup.gggo.controller.Stone.W;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Stack;
 
 import com.fdmgroup.gggo.controller.GoUtils;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.PersistentGame;
+import com.fdmgroup.gggo.model.PersistentState;
+import com.fdmgroup.gggo.model.Placement;
+import com.mchange.v2.c3p0.impl.NewProxyCallableStatement;
 
 public class Game extends InteractiveGo implements Go {
 	
@@ -18,6 +26,43 @@ public class Game extends InteractiveGo implements Go {
 	
 	public Game() {
 		this(-1);
+	}
+	
+	public Game(PersistentGame pg) {
+		SIZE = 9;
+		gameId = pg.getGameId();
+		Stone[][] board = new Stone[SIZE][SIZE];
+		states = new Stack<State>();
+		futureStates = new Stack<State>();
+		
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+				board[i][j] = E;
+			}
+		}
+		
+		List<State> sortedStates = new ArrayList<>();
+		for (PersistentState ps: pg.getPersistentStates()) {
+			for (Placement pt: ps.getPlacements()) {
+				int i = pt.getRowNumber();
+				int j = pt.getColNumber();
+				Stone st = pt.getStone();
+				board[i][j] = st;
+			}
+			State s = new State(board, ps.getTurnNumber(), ps.getStateId());
+			states.add(s);
+		}
+		
+		Collections.sort(sortedStates, new Comparator<State>() {
+			@Override
+			public int compare(State s1, State s2) {
+				return s1.getTurn() - s2.getTurn();
+			}
+		});
+		
+		for (State s: sortedStates) {
+			states.push(s);
+		}
 	}
 	
 	public Game(int gid) {

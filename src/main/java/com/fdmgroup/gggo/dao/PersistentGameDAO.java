@@ -12,7 +12,9 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import com.fdmgroup.gggo.controller.Game;
+import com.fdmgroup.gggo.controller.GoUtils;
 import com.fdmgroup.gggo.controller.State;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.NamedQuerySet;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
@@ -124,5 +126,11 @@ public class PersistentGameDAO {
 		} finally {
 			em.close();
 		}
+	}
+
+	public Game createGame(Invite inv) {
+		PersistentGame pg = createPersistentGame();
+		
+		return new Game(pg);
 	}	
 }
