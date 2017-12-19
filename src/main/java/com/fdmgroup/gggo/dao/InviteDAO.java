@@ -128,7 +128,31 @@ public class InviteDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Invite> getInvites(String invitorUsername) {
+	public List<Invite> getInvites(String username) {
+		EntityManager em = emf.createEntityManager();
+		List<Invite> res = new ArrayList<>();
+		
+		UserDAO udao = DAOFactory.getUserDAO();
+		User user = udao.getUser(username);
+		
+		if (user == null) {
+			return res;
+		}
+		
+		try {
+			Query q = em.createNamedQuery(NamedQuerySet.INVITE_FIND_ALL);
+			q.setParameter("user", user);
+			res = q.getResultList();
+			
+		} finally {
+			em.close();
+		}
+		
+		return res;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Invite> getSentInvites(String invitorUsername) {
 		EntityManager em = emf.createEntityManager();
 		List<Invite> res = new ArrayList<>();
 		
@@ -140,11 +164,33 @@ public class InviteDAO {
 		}
 		
 		try {
-//			em.getTransaction().begin();
 			Query q = em.createNamedQuery(NamedQuerySet.INVITE_SENT_FIND_ALL);
 			q.setParameter("invitor", invitor);
 			res = q.getResultList();
-//			em.getTransaction().commit();
+			
+		} finally {
+			em.close();
+		}
+		
+		return res;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Invite> getReceivedInvites(String inviteeUsername) {
+		EntityManager em = emf.createEntityManager();
+		List<Invite> res = new ArrayList<>();
+		
+		UserDAO udao = DAOFactory.getUserDAO();
+		User invitee = udao.getUser(inviteeUsername);
+		
+		if (invitee == null) {
+			return res;
+		}
+		
+		try {
+			Query q = em.createNamedQuery(NamedQuerySet.INVITE_RECEIVED_FIND_ALL);
+			q.setParameter("invitee", invitee);
+			res = q.getResultList();
 			
 		} finally {
 			em.close();
