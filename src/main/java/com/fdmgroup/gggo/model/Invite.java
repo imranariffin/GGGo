@@ -12,7 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name=GoEntities.TBL_INVITE)
+@Table(name=GoEntities.TBL_GO_INVITE)
 @NamedQueries({
 	@NamedQuery(
 			name=NamedQuerySet.INVITE_FIND_ALL, 
