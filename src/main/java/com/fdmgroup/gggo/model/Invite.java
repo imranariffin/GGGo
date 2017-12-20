@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -35,8 +36,8 @@ public class Invite {
 	@ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private User invitee;
 	
-//	@OneToOne(orphanRemoval=true, fetch=FetchType.EAGER)
-//	private PersistentGame game;
+	@OneToOne(orphanRemoval=true, optional=true, fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	private PersistentGame game;
 	
 	public Invite() {}
 
@@ -56,13 +57,13 @@ public class Invite {
 		this.invitee = invitee;
 	}
 
-//	public PersistentGame getGame() {
-//		return game;
-//	}
-//
-//	public void setGame(PersistentGame game) {
-//		this.game = game;
-//	}
+	public PersistentGame getGame() {
+		return game;
+	}
+
+	public void setGame(PersistentGame game) {
+		this.game = game;
+	}
 
 	public int getInviteId() {
 		return inviteId;

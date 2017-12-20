@@ -3,9 +3,7 @@ package com.fdmgroup.gggo.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,14 +15,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fdmgroup.gggo.controller.Game;
-import com.fdmgroup.gggo.controller.State;
-
 @Entity
 @Table(name=GoEntities.TBL_GO_GAME)
 @NamedQueries({
-	@NamedQuery(name=NamedQuerySet.GAME_FIND_ALL, query="select pg from PersistentGame pg"),
-	@NamedQuery(name=NamedQuerySet.GAME_FIND_ONE, query="select pg from PersistentGame pg where pg.gameId = :gid"),
+	@NamedQuery(
+			name=NamedQuerySet.GAME_FIND_ALL, 
+			query="select pg from PersistentGame pg"),
+	@NamedQuery(
+			name=NamedQuerySet.GAME_FIND_ONE, 
+			query="select pg from PersistentGame pg where pg.gameId = :gid"),
 })
 public class PersistentGame extends PersistentInteractiveGo {
 	@Id
@@ -33,7 +32,7 @@ public class PersistentGame extends PersistentInteractiveGo {
 	
 	@OneToMany(mappedBy="pGame", fetch=FetchType.EAGER, orphanRemoval=true)
 	protected List<PersistentState> pStates;
-	
+
 	public PersistentGame() {
 		pStates = new ArrayList<>();
 	}

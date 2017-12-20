@@ -12,10 +12,14 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import com.fdmgroup.gggo.controller.Game;
+import com.fdmgroup.gggo.controller.GoUtils;
 import com.fdmgroup.gggo.controller.State;
+import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.NamedQuerySet;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
+import com.fdmgroup.gggo.model.User;
 
 public class PersistentGameDAO {
 	
@@ -53,6 +57,34 @@ public class PersistentGameDAO {
 		return pGames;
 	}
 	
+	@SuppressWarnings("unchecked")
+	List<PersistentGame> getPersistentGames(User user) {
+		EntityManager em = emf.createEntityManager();
+		List<PersistentGame> pGames = new ArrayList<>();
+		List<Invite> invites = new ArrayList<>();
+		
+		try {
+			Query query = em.createNamedQuery(NamedQuerySet.INVITE_FIND_ALL);
+			query.setParameter("user", user);
+			em.getTransaction().begin();
+			
+			invites = query.getResultList();
+			
+			em.getTransaction().commit();
+		} finally { 
+			em.close();
+		}
+		
+		
+		for (Invite inv: invites) {
+			if (inv.getGame() != null) {
+				pGames.add(inv.getGame());
+			}
+		}
+		
+		return pGames;
+	}	
+	
 	PersistentGame getPersistentGame(int gameId) {
 		EntityManager em = emf.createEntityManager();
 		PersistentGame pg;
@@ -70,7 +102,7 @@ public class PersistentGameDAO {
 		return pg;	
 	}
 	
-	PersistentGame createPersistentGame() {
+	PersistentGame createPersistentGame(Invite inv) {
 		PersistentGame pg = new PersistentGame();
 		EntityManager em = emf.createEntityManager();
 		
@@ -82,6 +114,10 @@ public class PersistentGameDAO {
 			em.close();
 		}
 
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		inv.setGame(pg);
+		idao.updateInvite(inv);
+		
 		return pg;
 	}
 	
@@ -105,7 +141,7 @@ public class PersistentGameDAO {
 //		return game;
 //	}
 
-	void deletePersistentGame(PersistentGame pg) {
+	void deletePersistentGame(PersistentGame pg, Invite inv) {
 		EntityManager em = emf.createEntityManager();
 		PersistentStateDAO sdao = DAOFactory.getPersistentStateDAO();
 		
@@ -117,6 +153,10 @@ public class PersistentGameDAO {
 			sdao.deletePersistentState(pg, pg.getPersistentStates().get(0));
 		}
 		
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		inv.setGame(null);
+		idao.updateInvite(inv);
+		
 		try {
 			em.getTransaction().begin();
 			em.remove(em.contains(pg) ? pg : em.merge(pg));
@@ -124,5 +164,22 @@ public class PersistentGameDAO {
 		} finally {
 			em.close();
 		}
-	}	
+	}
+
+	public Game createGame(Invite inv) {
+		PersistentGame pg = createPersistentGame(inv);
+		Game g = new Game(pg);
+		
+		return g;
+	}
+
+	public List<Game> getGames(User user) {
+		List<Game> res = new ArrayList<>();
+		
+		for (PersistentGame pg: getPersistentGames(user)) {
+			res.add(new Game(pg));
+		}
+		
+		return res;
+	}
 }
