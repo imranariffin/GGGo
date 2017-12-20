@@ -48,6 +48,10 @@ public class User {
 		password = pw;
 	}
 
+	public int getUserId() {
+		return userId;
+	}
+	
 	public String getUsername() {
 		return username;
 	}

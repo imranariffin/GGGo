@@ -7,6 +7,7 @@ public class NamedQuerySet {
 	public static final String USER_UPDATE = "User.update";
 	
 	public static final String GAME_FIND_ALL = "Game.findAll";
+//	public static final String GAME_FIND_ALL_BY_USERID = "Game.findAllByUserId";
 	public static final String GAME_FIND_ONE = "Game.findOne";
 	
 	public static final String PERSISTENT_STATE_FIND_ALL = "PersistentState.findAll";

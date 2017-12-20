@@ -120,6 +120,9 @@ public class PersistentStateDAO {
 //	}
 	
 	public void deletePersistentState(PersistentGame pg, PersistentState ps) {
+		
+		if (pg == null || ps == null) { return; }
+		
 		EntityManager em = emf.createEntityManager();
 		
 		pg.getPersistentStates().remove(ps);

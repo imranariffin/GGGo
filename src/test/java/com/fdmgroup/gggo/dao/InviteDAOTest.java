@@ -199,6 +199,9 @@ public class InviteDAOTest {
 			assertTrue(invitor.getSentInvites().contains(inv));
 			assertTrue(invitee.getReceivedInvites().contains(inv));
 		}
+		
+//		@Test
+//		public void test_DeleteInvite_RemovesInviteOnlyNotItsGame_Given
 	}
 }
 

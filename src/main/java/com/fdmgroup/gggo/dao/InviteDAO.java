@@ -106,6 +106,7 @@ public class InviteDAO {
 	public void deleteInvite(User invitor, User invitee, Invite inv) 
 			throws DeleteInviteInvitorInviteeMismatchException {
 		
+		if (inv == null) { return; }
 		if (!invitor.getSentInvites().contains(inv) && !invitee.getReceivedInvites().contains(inv)) {
 			throw new DeleteInviteInvitorInviteeMismatchException();
 		}
@@ -150,5 +151,33 @@ public class InviteDAO {
 		}
 		
 		return res;
+	}
+
+	public void updateInvite(Invite inv) {
+		EntityManager em = emf.createEntityManager();
+		
+		try { 
+			em.getTransaction().begin();
+			
+			inv.setInvitor(em.contains(inv.getInvitor()) 
+					? inv.getInvitor() 
+					: em.merge(inv.getInvitor()));
+			inv.setInvitee(em.contains(inv.getInvitee()) 
+					? inv.getInvitee() 
+					: em.merge(inv.getInvitee()));
+			em.persist(em.contains(inv) ? inv : em.merge(inv));
+			
+			em.getTransaction().commit();
+		} catch(PersistenceException pe) {
+			pe.printStackTrace();
+			return;
+		} catch(ConstraintViolationException cve) {
+			cve.printStackTrace();
+			return;
+		} finally {
+			em.close();
+		}
+		
+		return;
 	}
 }
