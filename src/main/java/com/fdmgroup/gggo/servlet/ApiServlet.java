@@ -2,7 +2,9 @@ package com.fdmgroup.gggo.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -36,17 +38,15 @@ public class ApiServlet extends HttpServlet {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	void respondWithOnelineUserList(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
+
+		ServletContext context = request.getSession().getServletContext();
+		Map<String, User> users = (Map<String, User>) context.getAttribute("online-users");
+		users = (users == null) ? new HashMap<>(): users;
 		
-		int n = 10;
-		
-		UserDAO udao = DAOFactory.getUserDAO();
-		List<User> users = udao.getUsers();
-		
-		String json = new Gson().toJson(users);
-		
-		System.out.println(json);
+		String json = new Gson().toJson(users.values());
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");

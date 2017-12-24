@@ -10,7 +10,7 @@ import org.mockito.Spy;
 
 import com.fdmgroup.gggo.model.User;
 
-public class OnlinePlayerServletTest {
+public class ApiServletTest {
 	@Before
 	public void setup() {
 		
