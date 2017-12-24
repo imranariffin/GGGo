@@ -2,8 +2,10 @@ package com.fdmgroup.gggo.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -57,9 +59,11 @@ public class LoginServlet extends HttpServlet {
 			User user = sdao.getUser(username);
 			if (user != null) {
 				if (SCryptUtil.check(password, user.getPassword())) {
+					
 					session.setAttribute(SessionAttributes.CURRENT_USER, user);
 					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
 					rd.forward(request, response);
+					
 				} else {
 					sendPasswordDoesNotMatchError(request, response);
 				}
