@@ -31,6 +31,7 @@ public class UserDAOTest {
 	@Before
 	public void setup() throws DeleteInviteInvitorInviteeMismatchException {
 		udao.deleteUser("imranariffin");
+		udao.deleteUser("saifujiwara");
 		
 		existingUser = udao.createUser("akira.touya", "whoisshindou");
 		
