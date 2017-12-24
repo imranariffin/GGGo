@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,9 +25,13 @@ public class UserDAOTest {
 	
 	@BeforeClass
 	public static void setupOnce() throws DeleteInviteInvitorInviteeMismatchException {
-		
 		udao = DAOFactory.getUserDAO();
-
+	}
+	
+	@Before
+	public void setup() throws DeleteInviteInvitorInviteeMismatchException {
+		udao.deleteUser("imranariffin");
+		
 		existingUser = udao.createUser("akira.touya", "whoisshindou");
 		
 		nonExistingUser = new User("nonexistinguser", "somenonexistingpassword");
@@ -34,6 +40,15 @@ public class UserDAOTest {
 		updateableUser = udao.createUser("updateable", "updateablepassword");
 		
 		initNumUsers = udao.getUsers().size();
+	}
+	
+	@After
+	public void tearDown() throws DeleteInviteInvitorInviteeMismatchException {
+		udao.deleteUser("imranariffin");
+		udao.deleteUser("existingUser");
+		udao.deleteUser("nonexistinguser");
+		udao.deleteUser("akira.touya");
+		udao.deleteUser("updateable");
 	}
 	
 	@AfterClass
