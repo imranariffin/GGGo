@@ -18,6 +18,21 @@ import com.fdmgroup.gggo.model.User;
 
 @WebServlet("/send-invite")
 public class SendInviteServlet extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		String invitee = request.getParameter("invitee"); 
+		if (invitee == null || invitee.equals("")) {
+			ErrorResponse.respondWithErrorPage(request, response, "Invitee username required");
+			return;
+		}
+		
+		request.setAttribute("invitee", invitee);
+		request.getRequestDispatcher("WEB-INF/views/send-invite.jsp").forward(request, response);
+	}
+	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {

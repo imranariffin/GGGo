@@ -58,6 +58,34 @@
 	    	</tr>
 		  </table>
 		</div>
+		<div class="panel panel-default">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading">
+		  	<div class="row">
+		  		<div class="col-md-6">
+		  			<span>Online users</span>
+		  		</div>
+		  		<div class="col-md-6">
+		  			<div class="input-group">
+				      <span class="input-group-btn">
+				        <button class="btn btn-default" type="button">Go!</button>
+				      </span>
+				      <input type="text" class="form-control" placeholder="Search for...">
+				    </div>
+		  		</div>
+		  	</div>
+		  </div>
+		  <!-- Table -->
+		  <table class="table" id="online-users-table">
+		  	<tr>
+		  		<th>Username</th>
+		  		<th>Board size</th>
+		  		<th>Rank</th>
+		  		<th>Action</th>
+		  	</tr>
+		  </table>
+		</div>
 	</div>
 	<div class="footer"></div>
+	<script src="js/mainPage.js"></script>
 </body>

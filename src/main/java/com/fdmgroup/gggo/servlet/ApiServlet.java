@@ -16,7 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.User;
+import com.fdmgroup.gggo.serializer.GGJson;
 import com.google.gson.Gson;
 
 @WebServlet("/api/*")
@@ -46,10 +48,13 @@ public class ApiServlet extends HttpServlet {
 		Map<String, User> users = (Map<String, User>) context.getAttribute("online-users");
 		users = (users == null) ? new HashMap<>(): users;
 		
-		String json = new Gson().toJson(users.values());
+//		String json = new Gson().toJson(users.values());
+		String json = GGJson.toJson(users);
+		
+		System.out.println(json.toString());
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json);
+		response.getWriter().write(json.toString());
 	}
 }
