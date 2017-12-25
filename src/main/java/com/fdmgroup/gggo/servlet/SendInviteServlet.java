@@ -69,7 +69,8 @@ public class SendInviteServlet extends HttpServlet {
 		InviteDAO idao = DAOFactory.getInviteDAO();
 		Invite inv = idao.createInvite(invitor, invitee);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/invite.jsp");
-		rd.forward(request, response);
+//		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/view-invite.jsp");
+//		rd.forward(request, response);
+		new ViewInviteServlet().doGet(request, response);
 	}
 }
