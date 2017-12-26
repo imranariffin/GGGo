@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 
 import com.fdmgroup.gggo.model.User;
-import com.fdmgroup.gggo.servlet.SessionAttributes;
+import com.fdmgroup.gggo.servlet.Attributes;
 
 @WebListener
 public class UserOnlineListener implements HttpSessionAttributeListener {
@@ -18,7 +18,7 @@ public class UserOnlineListener implements HttpSessionAttributeListener {
 		System.out.println("Listening to session.add(" + e.getName() + ", " + e.getValue() + ")");
 		String attribute = e.getName();
 		switch (attribute) {
-			case SessionAttributes.CURRENT_USER:
+			case Attributes.CURRENT_USER:
 				User user = (User) e.getValue();
 				ServletContext context = e.getSession().getServletContext();
 				handleUserLogin(context, user);
@@ -34,7 +34,7 @@ public class UserOnlineListener implements HttpSessionAttributeListener {
 		String attribute = e.getName();
 		
 		switch (attribute) {
-			case SessionAttributes.CURRENT_USER:
+			case Attributes.CURRENT_USER:
 				User user = (User) e.getValue();
 				ServletContext context = e.getSession().getServletContext();
 				handleUserLogout(context, user);

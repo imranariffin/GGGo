@@ -65,7 +65,7 @@ public class AcceptInviteServletTest {
 		
 		Mockito.when(request.getParameter("inviteId")).thenReturn(Integer.toString(inv.getInviteId()));
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(SessionAttributes.CURRENT_USER)).thenReturn(invitee);
+		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(invitee);
 		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/home.jsp")).thenReturn(rd);
 		
 		try {

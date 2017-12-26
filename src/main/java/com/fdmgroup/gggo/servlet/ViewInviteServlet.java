@@ -40,7 +40,7 @@ public class ViewInviteServlet extends HttpServlet {
 			return;
 		}
 		
-		User invitor = (User) session.getAttribute(SessionAttributes.CURRENT_USER);
+		User invitor = (User) session.getAttribute(Attributes.CURRENT_USER);
 		
 		if (invitor == null) {
 			ErrorResponse.respondWithErrorPage(request, response, "Must have user in session");

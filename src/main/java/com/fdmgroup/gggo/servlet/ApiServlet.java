@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.UserDAO;
@@ -29,30 +30,41 @@ public class ApiServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
-		String url = request.getRequestURI().replace("/GGGo/api", "");
-		System.out.println(url);
-				
-		switch (url) {
-			case "/online-users": 
-				respondWithOnelineUserList(request, response);
-				break;
-			default: ErrorResponse.respond404(request, response);
-		}
+		doGet(request, response, new ErrorResponse());
 	}
 	
-	@SuppressWarnings("unchecked")
-	void respondWithOnelineUserList(HttpServletRequest request, HttpServletResponse response) 
+	void doGet(HttpServletRequest request, HttpServletResponse response, ErrorResponse errorResponse) 
 			throws IOException {
+		
+		String url = request.getRequestURI().replace("/GGGo/api", "");
+		
+		switch (url) {
+			case "/online-users": 
+				GGJson ggjson = new GGJson();
+				respondWithOnelineUserList(request, response, ggjson);
+				break;
+			default:
+				errorResponse.respond404(request, response);
+		}
+	}
 
+	@SuppressWarnings("unchecked")
+	void respondWithOnelineUserList(HttpServletRequest request, HttpServletResponse response, GGJson ggjson) 
+			throws IOException {
+		
 		ServletContext context = request.getSession().getServletContext();
-		Map<String, User> users = (Map<String, User>) context.getAttribute("online-users");
+		Map<String, User> users = (Map<String, User>) context.getAttribute(Attributes.Context.ONLINE_USERS);
 		users = (users == null) ? new HashMap<>(): users;
 		
-//		String json = new Gson().toJson(users.values());
-		GGJson ggjson = new GGJson();
+		HttpSession session = request.getSession();
+		if (session != null) {
+			User currentUser = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
+			if (currentUser != null && users.containsKey(currentUser.getUsername())) {
+				users.remove(currentUser.getUsername());
+			}
+		}
+
 		String json = ggjson.toJson(users);
-		
-		System.out.println(json.toString());
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");

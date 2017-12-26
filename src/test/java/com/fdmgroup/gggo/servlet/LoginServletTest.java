@@ -97,7 +97,7 @@ public class LoginServletTest {
 			e1.printStackTrace();
 		}
 		
-		Mockito.verify(session, Mockito.times(1)).setAttribute(SessionAttributes.CURRENT_USER, fukui);
+		Mockito.verify(session, Mockito.times(1)).setAttribute(Attributes.CURRENT_USER, fukui);
 		Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/WEB-INF/views/home.jsp");
 		try {
 			Mockito.verify(rd, Mockito.times(1)).forward(request, response);

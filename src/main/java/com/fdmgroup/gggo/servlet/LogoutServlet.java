@@ -40,8 +40,8 @@ public class LogoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		if (session.getAttribute(SessionAttributes.CURRENT_USER) != null) { 
-			session.removeAttribute(SessionAttributes.CURRENT_USER);
+		if (session.getAttribute(Attributes.CURRENT_USER) != null) { 
+			session.removeAttribute(Attributes.CURRENT_USER);
 			session.invalidate();
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login.jsp");

@@ -60,7 +60,7 @@ public class SignupServlet extends HttpServlet {
 						
 						String hashedPassword = SCryptUtil.scrypt(password, 2 << 13, 3, 7);
 						User user = udao.createUser(username, hashedPassword);
-						session.setAttribute(SessionAttributes.CURRENT_USER, user);
+						session.setAttribute(Attributes.CURRENT_USER, user);
 						
 						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
 						rd.forward(request, response);
