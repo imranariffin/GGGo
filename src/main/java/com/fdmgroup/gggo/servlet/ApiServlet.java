@@ -53,18 +53,22 @@ public class ApiServlet extends HttpServlet {
 			throws IOException {
 		
 		ServletContext context = request.getSession().getServletContext();
-		Map<String, User> users = (Map<String, User>) context.getAttribute(Attributes.Context.ONLINE_USERS);
-		users = (users == null) ? new HashMap<>(): users;
+		Map<String, User> userMap = (Map<String, User>) context.getAttribute(Attributes.Context.ONLINE_USERS);
+		userMap = (userMap == null) ? new HashMap<>(): userMap;
+		
+		List<User> users = new ArrayList<>();
 		
 		HttpSession session = request.getSession();
 		if (session != null) {
 			User currentUser = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
-			if (currentUser != null && users.containsKey(currentUser.getUsername())) {
-				users.remove(currentUser.getUsername());
+			for (User user: userMap.values()) {
+				if (!user.equals(currentUser)) {
+					users.add(user);
+				}	
 			}
 		}
 
-		String json = ggjson.toJson(users);
+		String json = ggjson.toJsonUserList(users);
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");

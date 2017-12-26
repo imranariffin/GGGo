@@ -18,7 +18,7 @@ public class UserOnlineListener implements HttpSessionAttributeListener {
 		System.out.println("Listening to session.add(" + e.getName() + ", " + e.getValue() + ")");
 		String attribute = e.getName();
 		switch (attribute) {
-			case Attributes.CURRENT_USER:
+			case Attributes.Session.CURRENT_USER:
 				User user = (User) e.getValue();
 				ServletContext context = e.getSession().getServletContext();
 				handleUserLogin(context, user);
@@ -34,7 +34,7 @@ public class UserOnlineListener implements HttpSessionAttributeListener {
 		String attribute = e.getName();
 		
 		switch (attribute) {
-			case Attributes.CURRENT_USER:
+			case Attributes.Session.CURRENT_USER:
 				User user = (User) e.getValue();
 				ServletContext context = e.getSession().getServletContext();
 				handleUserLogout(context, user);
@@ -50,17 +50,18 @@ public class UserOnlineListener implements HttpSessionAttributeListener {
 	
 	private void handleUserLogin(ServletContext context, User user) {
 		@SuppressWarnings("unchecked")
-		HashMap<String, User> onlineUsers = context.getAttribute("online-users") == null 
+		HashMap<String, User> onlineUsers = context.getAttribute(Attributes.Context.ONLINE_USERS) == null 
 				? new HashMap<>()
-				: (HashMap<String, User>) context.getAttribute("online-users");
+				: (HashMap<String, User>) context.getAttribute(Attributes.Context.ONLINE_USERS);
 		onlineUsers.put(user.getUsername(), user);
-		context.setAttribute("online-users", onlineUsers);		
+		context.setAttribute(Attributes.Context.ONLINE_USERS, onlineUsers);		
 	}
 
+	@SuppressWarnings("unchecked")
 	private void handleUserLogout(ServletContext context, User user) {
-		@SuppressWarnings("unchecked")
-		HashMap<String, User> onlineUsers = (HashMap<String, User>) context.getAttribute("online-users");
+		HashMap<String, User> onlineUsers;
+		onlineUsers = (HashMap<String, User>) context.getAttribute(Attributes.Context.ONLINE_USERS);
 		onlineUsers.remove(user.getUsername());
-		context.setAttribute("online-users", onlineUsers);
+		context.setAttribute(Attributes.Context.ONLINE_USERS, onlineUsers);
 	}
 }

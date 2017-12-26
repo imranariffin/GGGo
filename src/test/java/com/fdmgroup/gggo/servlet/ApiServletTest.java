@@ -2,9 +2,12 @@ package com.fdmgroup.gggo.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.OneToOne;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -119,26 +122,31 @@ public class ApiServletTest {
 			throws IOException {
 
 		String url = new String("/GGGo/api/online-users");
-		Map<String, User> onlineUsers = new HashMap<>();
+		Map<String, User> onlineUserMap = new HashMap<>();
 		
-		onlineUsers.put("currentUser", currentUser);
-		onlineUsers.put("user2", user2);
-		onlineUsers.put("user3", user3);
-		onlineUsers.put("user4", user4);
+		onlineUserMap.put("currentUser", currentUser);
+		onlineUserMap.put("user2", user2);
+		onlineUserMap.put("user3", user3);
+		onlineUserMap.put("user4", user4);
 		
 		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(currentUser);
 		Mockito.when(request.getRequestURI()).thenReturn(url);
 		Mockito.when(request.getSession()).thenReturn(session);
 		Mockito.when(session.getServletContext()).thenReturn(context);
-		Mockito.when(context.getAttribute(Attributes.Context.ONLINE_USERS)).thenReturn(onlineUsers);
+		Mockito.when(context.getAttribute(Attributes.Context.ONLINE_USERS)).thenReturn(onlineUserMap);
 		Mockito.when(response.getWriter()).thenReturn(out);
 		
 		ApiServlet servlet = Mockito.spy(new ApiServlet());
 		
 		servlet.doGet(request, response, errResponse);
 
-		onlineUsers.remove(currentUser.getUsername());
-		String expected = new GGJson().toJson(onlineUsers);
+		onlineUserMap.remove(currentUser.getUsername());
+		List<User> users = new ArrayList<>();
+		for (User user: onlineUserMap.values()) {
+			users.add(user);
+		}
+		
+		String expected = new GGJson().toJsonUserList(users);
 		Mockito.verify(out, Mockito.times(1)).write(expected);
 	}
 }

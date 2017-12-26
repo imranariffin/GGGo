@@ -74,9 +74,9 @@ public class GGJsonTest {
 		GGJson ggjson = Mockito.spy(new GGJson()); 
 		
 		String expected = "{\"inviteId\":1,\"invitor\":\"saifujiwara\",\"invitee\":\"shindouhikaru\"}";
-		String actual = ggjson.toJson(inv);
+		String actual = ggjson.toJsonInvite(inv);
 		
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(inv);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInvite(inv);
 		assertEquals(expected, actual);
 	}
 	
@@ -92,11 +92,11 @@ public class GGJsonTest {
 			.append("[{\"inviteId\":1,\"invitor\":\"saifujiwara\",\"invitee\":\"shindouhikaru\"}")
 			.append(",{\"inviteId\":2,\"invitor\":\"saifujiwara\",\"invitee\":\"shindouhikaru\"}]")
 		.toString(); 
-		String actual = ggjson.toJson(invites);
+		String actual = ggjson.toJsonInviteList(invites);
 		
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(invites);
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(inv);
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(inv2);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInviteList(invites);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInvite(inv);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInvite(inv2);
 		
 		assertEquals(expected, actual);
 	}
@@ -113,11 +113,11 @@ public class GGJsonTest {
 				.append("[]")
 			.append("}")
 		.toString();
-		String actual = ggjson.toJson(invitor);
+		String actual = ggjson.toJsonUser(invitor);
 
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(invitor);
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(inv);
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(inv2);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonUser(invitor);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInvite(inv);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInvite(inv2);
 		
 		assertEquals(expected, actual);
 	}
@@ -134,11 +134,11 @@ public class GGJsonTest {
 				.append("{\"inviteId\":2,\"invitor\":\"saifujiwara\",\"invitee\":\"shindouhikaru\"}]")
 			.append("}")
 		.toString();
-		String actual = ggjson.toJson(invitee);
+		String actual = ggjson.toJsonUser(invitee);
 		
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(invitee);
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(inv);
-		Mockito.verify(ggjson, Mockito.times(1)).toJson(inv2);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonUser(invitee);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInvite(inv);
+		Mockito.verify(ggjson, Mockito.times(1)).toJsonInvite(inv2);
 		
 		assertEquals(expected, actual);
 	}
