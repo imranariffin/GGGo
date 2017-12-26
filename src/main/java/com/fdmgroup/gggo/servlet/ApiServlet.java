@@ -49,7 +49,8 @@ public class ApiServlet extends HttpServlet {
 		users = (users == null) ? new HashMap<>(): users;
 		
 //		String json = new Gson().toJson(users.values());
-		String json = GGJson.toJson(users);
+		GGJson ggjson = new GGJson();
+		String json = ggjson.toJson(users);
 		
 		System.out.println(json.toString());
 		

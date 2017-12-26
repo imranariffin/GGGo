@@ -8,7 +8,7 @@ import com.fdmgroup.gggo.model.User;
 
 public class GGJson {
 	
-	public static String toJson(List<Invite> invites) {
+	public String toJson(List<Invite> invites) {
 		StringBuilder json = new StringBuilder().append("[");
 		
 		for (int i = 0; i < invites.size(); i++) {
@@ -23,20 +23,20 @@ public class GGJson {
 		return json.toString();
 	}
 	
-	public static String toJson(Invite inv) {
+	public String toJson(Invite inv) {
 		StringBuilder json = new StringBuilder(); 
 		
 		json
 		.append("{")
-			.append("\"inviteId\": " + inv.getInviteId() + ",")
-			.append("\"invitee\": \"" + inv.getInvitee().getUsername() + "\",")
-			.append("\"invitor\": \"" + inv.getInvitor().getUsername() + "\"")
+			.append("\"inviteId\":" + inv.getInviteId() + ",")
+			.append("\"invitor\":\"" + inv.getInvitor().getUsername() + "\",")
+			.append("\"invitee\":\"" + inv.getInvitee().getUsername() + "\"")
 		.append("}");
 		
 		return json.toString();
 	}
 	
-	public static String toJson(Map<String, User> users) {
+	public String toJson(Map<String, User> users) {
 		
 		StringBuilder json = new StringBuilder().append("[");
 		int k = 0;
@@ -54,16 +54,16 @@ public class GGJson {
 		return json.toString();
 	}
 	
-	public static String toJson(User user) {
+	public String toJson(User user) {
 		StringBuilder json = new StringBuilder();
 		
 		String receivedInvites = toJson(user.getReceivedInvites());
 		String sentInvites = toJson(user.getSentInvites());
 		json = json
 				.append("{")
-					.append("\"username\": \"" + user.getUsername() + "\",")
-					.append("\"receivedInvites\": " + receivedInvites.toString() + ",")
-					.append("\"sentInvites\": " + sentInvites.toString())
+					.append("\"username\":\"" + user.getUsername() + "\",")
+					.append("\"sentInvites\":" + sentInvites.toString() + ",")
+					.append("\"receivedInvites\":" + receivedInvites.toString())
 				.append("}");
 		
 		return json.toString();
