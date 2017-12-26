@@ -61,7 +61,7 @@ public class SendInviteServletTest {
 			throws IOException, ServletException {
 
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(null);
+		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(null);
 		Mockito.when(response.getWriter()).thenReturn(out);
 
 		new SendInviteServlet().doPost(request, response, errResponse);
@@ -75,7 +75,7 @@ public class SendInviteServletTest {
 			throws IOException, ServletException {
 		
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(invitor);
+		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(invitor);
 		Mockito.when(request.getParameter("invitee")).thenReturn(null);
 		Mockito.when(response.getWriter()).thenReturn(out);
 
@@ -90,7 +90,7 @@ public class SendInviteServletTest {
 			throws IOException, ServletException {
 		
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(invitor);
+		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(invitor);
 		Mockito.when(request.getParameter("invitee")).thenReturn("");
 		Mockito.when(response.getWriter()).thenReturn(out);
 
@@ -107,7 +107,7 @@ public class SendInviteServletTest {
 		udao.deleteUser("nonexistinguser");
 		
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(invitor);
+		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(invitor);
 		Mockito.when(request.getParameter("invitee")).thenReturn("nonexistinguser");
 		Mockito.when(response.getWriter()).thenReturn(out);
 

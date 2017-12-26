@@ -37,7 +37,7 @@ public class AcceptInviteServlet extends HttpServlet {
 		Invite inv = idao.getInvite(Integer.parseInt(inviteId));
 		
 		HttpSession session = request.getSession();
-		User invitee = (User) session.getAttribute(Attributes.CURRENT_USER);
+		User invitee = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
 		
 //		some db stuffs to update invite
 		

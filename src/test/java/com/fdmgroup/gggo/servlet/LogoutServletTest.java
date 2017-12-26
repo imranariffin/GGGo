@@ -56,7 +56,7 @@ public class LogoutServletTest {
 
 		Mockito.when(request.getSession()).thenReturn(session);
 		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/login.jsp")).thenReturn(rd);
-		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(user);
+		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(user);
 		
 		LogoutServlet servlet = new LogoutServlet(); 
 		try {
@@ -65,7 +65,7 @@ public class LogoutServletTest {
 			fail();
 		}
 		
-		Mockito.verify(session, Mockito.times(1)).removeAttribute(Attributes.CURRENT_USER);
+		Mockito.verify(session, Mockito.times(1)).removeAttribute(Attributes.Session.CURRENT_USER);
 		Mockito.verify(session, Mockito.times(1)).invalidate();
 		try {
 			Mockito.verify(rd, Mockito.times(1)).forward(request, response);
@@ -83,7 +83,7 @@ public class LogoutServletTest {
 		PrintWriter out = Mockito.mock(PrintWriter.class);
 		
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(null);
+		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(null);
 		 
 		try {
 			Mockito.when(response.getWriter()).thenReturn(out);

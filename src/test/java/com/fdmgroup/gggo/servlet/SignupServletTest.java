@@ -45,15 +45,19 @@ public class SignupServletTest {
 	}
 	
 	@Test
-	public void test_DoPost_ForwardsToJSPHomePage_GivenAvailableUserNameAndValidPasswordAndConfirmationPassword() throws DeleteInviteInvitorInviteeMismatchException {
+	public void test_DoPost_ForwardsToJSPHomePage_GivenAvailableUserNameAndValidPasswordAndConfirmationPassword() 
+			throws DeleteInviteInvitorInviteeMismatchException, IOException {
+		
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 		HttpSession session = Mockito.mock(HttpSession.class);
 		RequestDispatcher rd = Mockito.mock(RequestDispatcher.class);
+		PrintWriter out = Mockito.mock(PrintWriter.class);
 
 		UserDAO udao = DAOFactory.getUserDAO();
 		String username = "isumi-san";
 		String password = "pazzword";
+		udao.deleteUser("isumi-san");
 		User user = udao.createUser(username, password);
 		
 		udao.deleteUser(user);
@@ -63,6 +67,7 @@ public class SignupServletTest {
 		Mockito.when(request.getParameter("confirmPassword")).thenReturn(password);
 		Mockito.when(request.getSession()).thenReturn(session);
 		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/home.jsp")).thenReturn(rd);
+		Mockito.when(response.getWriter()).thenReturn(out);
 		
 		
 		try {

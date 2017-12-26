@@ -36,14 +36,14 @@ public class ViewInviteServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		if (session == null) {
-			ErrorResponse.respondWithErrorPage(request, response, "Must have session");
+			(new ErrorResponse()).respondWithErrorPage(request, response, "Must have session");
 			return;
 		}
 		
-		User invitor = (User) session.getAttribute(Attributes.CURRENT_USER);
+		User invitor = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
 		
 		if (invitor == null) {
-			ErrorResponse.respondWithErrorPage(request, response, "Must have user in session");
+			(new ErrorResponse()).respondWithErrorPage(request, response, "Must have user in session");
 			return;
 		}
 		

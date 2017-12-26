@@ -50,7 +50,7 @@ public class SendInviteServlet extends HttpServlet {
 			return;
 		}
 		
-		User invitor = (User) session.getAttribute(Attributes.CURRENT_USER);
+		User invitor = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
 		
 		if (invitor == null) {
 			errorResponse.respondWithErrorPage(request, response, "Session must have user");

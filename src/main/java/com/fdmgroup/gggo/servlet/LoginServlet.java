@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
 			if (user != null) {
 				if (SCryptUtil.check(password, user.getPassword())) {
 					
-					session.setAttribute(Attributes.CURRENT_USER, user);
+					session.setAttribute(Attributes.Session.CURRENT_USER, user);
 					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
 					rd.forward(request, response);
 					

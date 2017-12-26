@@ -63,7 +63,7 @@ public class ViewInviteServletTest {
 		rd = Mockito.mock(RequestDispatcher.class);
 		
 		Mockito.when(request.getSession()).thenReturn(session);
-		Mockito.when(session.getAttribute(Attributes.CURRENT_USER)).thenReturn(invitor);
+		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(invitor);
 		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/view-invite.jsp")).thenReturn(rd);
 	}
 	
@@ -84,7 +84,7 @@ public class ViewInviteServletTest {
 			fail();
 		}
 		
-		Mockito.verify(session, Mockito.times(1)).getAttribute(Attributes.CURRENT_USER);
+		Mockito.verify(session, Mockito.times(1)).getAttribute(Attributes.Session.CURRENT_USER);
 		Mockito.verify(request, Mockito.times(1)).setAttribute("sentInvites", sentInvites);
 		Mockito.verify(request, Mockito.times(1)).setAttribute("receivedInvites", receivedInvites);
 		Mockito.verify(rd, Mockito.times(1)).forward(request, response);

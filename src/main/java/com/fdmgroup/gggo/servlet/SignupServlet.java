@@ -60,7 +60,7 @@ public class SignupServlet extends HttpServlet {
 						
 						String hashedPassword = SCryptUtil.scrypt(password, 2 << 13, 3, 7);
 						User user = udao.createUser(username, hashedPassword);
-						session.setAttribute(Attributes.CURRENT_USER, user);
+						session.setAttribute(Attributes.Session.CURRENT_USER, user);
 						
 						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
 						rd.forward(request, response);
@@ -87,7 +87,11 @@ public class SignupServlet extends HttpServlet {
 	private void sendUsernameNotAvailable(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		PrintWriter out = response.getWriter();
+		System.out.println("===========================");
+		System.out.println(out);
+		System.out.println("===========================");
 		out.println(ServletErrorResponsePages.USERNAME_NOT_AVAILABLE);
+		
 	}
 
 	private void sendEmptyInputsError(HttpServletRequest request, HttpServletResponse response)
