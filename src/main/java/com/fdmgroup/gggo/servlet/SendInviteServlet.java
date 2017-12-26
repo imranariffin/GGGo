@@ -25,7 +25,7 @@ public class SendInviteServlet extends HttpServlet {
 		
 		String invitee = request.getParameter("invitee"); 
 		if (invitee == null || invitee.equals("")) {
-			ErrorResponse.respondWithErrorPage(request, response, "Invitee username required");
+			new ErrorResponse().respondWithErrorPage(request, response, "Invitee username required");
 			return;
 		}
 		
@@ -37,17 +37,23 @@ public class SendInviteServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
+		doPost(request, response, new ErrorResponse());
+	}
+	
+	void doPost(HttpServletRequest request, HttpServletResponse response, ErrorResponse errorResponse) 
+			throws IOException, ServletException {
+
 		HttpSession session = request.getSession();
 		
 		if (session == null) {
-			ErrorResponse.respondWithErrorPage(request, response, "Must have session");
+			errorResponse.respondWithErrorPage(request, response, "Must have session");
 			return;
 		}
 		
 		User invitor = (User) session.getAttribute(SessionAttributes.CURRENT_USER);
 		
 		if (invitor == null) {
-			ErrorResponse.respondWithErrorPage(request, response, "Session must have user");
+			errorResponse.respondWithErrorPage(request, response, "Session must have user");
 			return;
 		}
 		
@@ -55,16 +61,21 @@ public class SendInviteServlet extends HttpServlet {
 		String inviteeUsername = request.getParameter("invitee");
 		
 		if (inviteeUsername == null || inviteeUsername.equals("")) {
-			ErrorResponse.respondWithErrorPage(request, response, "Invite field cannot be empty");
+			errorResponse.respondWithErrorPage(request, response, "Invitee field cannot be empty");
 			return;
 		}
 		
 		User invitee = udao.getUser(inviteeUsername);
 		
 		if (invitee == null) {
-			ErrorResponse.respondWithErrorPage(request, response, "Invitee doesn't exist");
+			errorResponse.respondWithErrorPage(request, response, "Invitee doesn't exist");
 			return;
 		}
+		
+//		if (invitee.equals(invitor)) {
+//			ErrorResponse.respondWithErrorPage(request, response, "Cannot invite one's own self");
+//			return;
+//		}
 		
 		InviteDAO idao = DAOFactory.getInviteDAO();
 		Invite inv = idao.createInvite(invitor, invitee);
