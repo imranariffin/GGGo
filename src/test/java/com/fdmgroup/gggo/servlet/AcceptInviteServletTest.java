@@ -66,13 +66,13 @@ public class AcceptInviteServletTest {
 		Mockito.when(request.getParameter("inviteId")).thenReturn(Integer.toString(inv.getInviteId()));
 		Mockito.when(request.getSession()).thenReturn(session);
 		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(invitee);
-		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/home.jsp")).thenReturn(rd);
+		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/play.jsp")).thenReturn(rd);
 		
 		try {
 			new AcceptInviteServlet().doPost(request, response);
 			
 //			assertNotNull(idao.getInvite(inv.getInviteId()).getGame());
-			Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/WEB-INF/views/home.jsp");
+			Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/WEB-INF/views/play.jsp");
 			Mockito.verify(rd, Mockito.times(1)).forward(request, response);
 			
 		} catch (ServletException | IOException e) {
