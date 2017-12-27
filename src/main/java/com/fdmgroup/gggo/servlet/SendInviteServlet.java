@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -72,16 +73,14 @@ public class SendInviteServlet extends HttpServlet {
 			return;
 		}
 		
-//		if (invitee.equals(invitor)) {
-//			ErrorResponse.respondWithErrorPage(request, response, "Cannot invite one's own self");
-//			return;
-//		}
+		if (invitee.equals(invitor)) {
+			errorResponse.respondWithErrorPage(request, response, "Cannot invite one's own self");
+			return;
+		}
 		
 		InviteDAO idao = DAOFactory.getInviteDAO();
 		Invite inv = idao.createInvite(invitor, invitee);
 		
-//		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/view-invite.jsp");
-//		rd.forward(request, response);
 		new ViewInviteServlet().doGet(request, response);
 	}
 }

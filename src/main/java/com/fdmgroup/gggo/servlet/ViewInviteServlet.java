@@ -51,8 +51,9 @@ public class ViewInviteServlet extends HttpServlet {
 
 		System.out.println(request.getRequestURI());
 		
+		User invitee = invitor;
 		List<Invite> sentInvites = idao.getSentInvites(invitor.getUsername());
-		List<Invite> receivedInvites = idao.getSentInvites(invitor.getUsername());
+		List<Invite> receivedInvites = idao.getReceivedInvites(invitee.getUsername());
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/view-invite.jsp");
 		request.setAttribute("sentInvites", sentInvites);

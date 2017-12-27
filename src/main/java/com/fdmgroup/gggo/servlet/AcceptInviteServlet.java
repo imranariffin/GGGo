@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.InviteDAO;
 import com.fdmgroup.gggo.dao.PersistentGameDAO;
@@ -24,10 +25,30 @@ public class AcceptInviteServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
+		doPost(request, response, new ErrorResponse());
+	}
+
+	private void doPost(HttpServletRequest request, HttpServletResponse response, ErrorResponse errorResponse) 
+			throws ServletException, IOException {
+		
 		String inviteId = request.getParameter("inviteId");
+		
 		if (inviteId == null || inviteId.equals("")) {
-			// respondWithError;
-			System.out.println("respond with error!!!");
+			errorResponse.respondWithErrorPage(request, response, "inviteId field must not be empty");
+			return;
+		}
+		
+		HttpSession session = request.getSession();
+		
+		if (session == null) {
+			errorResponse.respondWithErrorPage(request, response, "Must have session");
+			return;
+		}
+		
+		User invitee = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
+		
+		if (invitee == null) {
+			errorResponse.respondWithErrorPage(request, response, "User must be in session");
 			return;
 		}
 		
@@ -36,12 +57,15 @@ public class AcceptInviteServlet extends HttpServlet {
 		
 		Invite inv = idao.getInvite(Integer.parseInt(inviteId));
 		
-		HttpSession session = request.getSession();
-		User invitee = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
+		if (inv == null) {
+			errorResponse.respondWithErrorPage(request, response, "No such invite exist");
+			return;
+		}
 		
-//		some db stuffs to update invite
+		/* Create Game and Update Invite */
+//		Game game = gdao.createGame(inv);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/play.jsp");
 		rd.forward(request, response);
 	}
 }
