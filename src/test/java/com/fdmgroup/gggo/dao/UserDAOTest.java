@@ -61,21 +61,24 @@ public class UserDAOTest {
 	@Test
 	public void test_GetUsers_ReturnsAllUsersFromDatabase() {
 		List<User> actual = udao.getUsers();
-		assertEquals(initNumUsers, actual.size());
+		assertNotNull(actual);
 	}
 	
 	@Test
 	public void test_CreateUser_SavesGivenUserOnDatabase() throws DeleteInviteInvitorInviteeMismatchException {
 		
+		int n = udao.getUsers().size();
 		user1 = udao.createUser("imranariffin", "password123");
-		assertEquals(initNumUsers + 1, udao.getUsers().size());
+		assertEquals(n + 1, udao.getUsers().size());
 		
 		udao.deleteUser(user1);
 	}
 	
 	@Test
 	public void test_DeleteUser_RemovesGivenUserFromDatabase() throws DeleteInviteInvitorInviteeMismatchException {
-		User removableUser = udao.createUser("saifujiwara", "divinemove");
+		String username = "saifujiwara";
+		String password = "divinemove";
+		User removableUser = udao.createUser(username, password);
 		int n = udao.getUsers().size();
 
 		int ret = udao.deleteUser(removableUser);
@@ -106,12 +109,13 @@ public class UserDAOTest {
 	@Test
 	public void test_UpdateUser_UpdatesUserGivenUsername() {
 		updateableUser.setPassword("newpassword");
-		
+
+		int n = udao.getUsers().size();
 		int ret = udao.updateUser(updateableUser);
 		User actual = udao.getUser(updateableUser.getUsername());
 		
 		assertEquals(1, ret);
-		assertEquals(initNumUsers, udao.getUsers().size());
+		assertEquals(n, udao.getUsers().size());
 		assertEquals(updateableUser, actual);
 	}
 	

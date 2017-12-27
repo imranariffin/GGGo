@@ -19,5 +19,6 @@ public class NamedQuerySet {
 	
 	public static final String INVITE_FIND_ALL = "Invite.findAll";
 	public static final String INVITE_SENT_FIND_ALL = "Invite.Sent.findAll";
+	public static final String INVITE_RECEIVED_FIND_ALL = "Invite.Received.findAll";
 	public static final String INVITE_FIND_ONE = "Invite.findOne";
 }
