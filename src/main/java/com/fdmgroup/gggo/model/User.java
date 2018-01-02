@@ -34,10 +34,10 @@ public class User {
 	@Column(name="password", nullable=false, length=200)
 	private String password;
 	
-	@OneToMany(mappedBy="invitor", fetch=FetchType.EAGER, orphanRemoval=true)
+	@OneToMany(mappedBy="invitor", fetch=FetchType.EAGER)
 	private List<Invite> sentInvites = new ArrayList<>();
 
-	@OneToMany(mappedBy="invitee", fetch=FetchType.EAGER, orphanRemoval=true)
+	@OneToMany(mappedBy="invitee", fetch=FetchType.EAGER)
 	private List<Invite> receivedInvites = new ArrayList<>();
 	
 	public User() { 

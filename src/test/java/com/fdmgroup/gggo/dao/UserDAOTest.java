@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.User;
 
 public class UserDAOTest {
@@ -124,5 +125,31 @@ public class UserDAOTest {
 		udao.createUser(existingUser.getUsername(), "somepassword");
 		int n = udao.getUsers().size();
 		assertEquals(n, udao.getUsers().size());
+	}
+	
+	@Test
+	public void test_DeleteUser_RemovesAllInvitesByAndForGivenUserFromDatabase() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		
+		int n = udao.getUsers().size();
+
+		int ret = udao.deleteUser(invitor);
+		
+		assertEquals(1, ret);
+		assertEquals(n - 1, udao.getUsers().size());
+		assertNull(udao.getUser(invitor.getUsername()));
+		
+		assertNull(idao.getInvite(inv1.getInviteId()));
+		assertNull(idao.getInvite(inv2.getInviteId()));
+		
+		udao.deleteUser(invitee.getUsername());
 	}
 }
