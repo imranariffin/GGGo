@@ -23,7 +23,7 @@ import com.lambdaworks.crypto.SCryptUtil;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/login")
+@WebServlet(Path.Url.LOGIN)
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(Path.Page.LOGIN);
 		rd.forward(request, response);
 	}
 
@@ -61,7 +61,7 @@ public class LoginServlet extends HttpServlet {
 				if (SCryptUtil.check(password, user.getPassword())) {
 					
 					session.setAttribute(Attributes.Session.CURRENT_USER, user);
-					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
+					RequestDispatcher rd = request.getRequestDispatcher(Path.Page.HOME);
 					rd.forward(request, response);
 					
 				} else {

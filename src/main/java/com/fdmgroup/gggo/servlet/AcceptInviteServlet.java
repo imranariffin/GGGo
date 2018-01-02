@@ -2,7 +2,6 @@ package com.fdmgroup.gggo.servlet;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +16,7 @@ import com.fdmgroup.gggo.dao.PersistentGameDAO;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.User;
 
-@WebServlet("/invite/accept")
+@WebServlet(Path.Url.INVITE_ACCEPT)
 public class AcceptInviteServlet extends HttpServlet {
 	private static final long serialVersionUID = -3969080346703959089L;
 
@@ -65,7 +64,7 @@ public class AcceptInviteServlet extends HttpServlet {
 		/* Create Game and Update Invite */
 		Game game = gdao.createGame(inv);
 		
-		/* Redirec to Game page */	
-		response.sendRedirect("/GGGo/game?gameId=" + game.getGameId());
+		/* Redirect to Game page */	
+		response.sendRedirect(Path.Url.ROOT + Path.Url.GAME + "?gameId=" + game.getGameId());
 	}
 }

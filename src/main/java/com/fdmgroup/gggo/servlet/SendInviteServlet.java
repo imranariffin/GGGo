@@ -17,7 +17,7 @@ import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.User;
 
-@WebServlet("/send-invite")
+@WebServlet(Path.Url.INVITE_SEND)
 public class SendInviteServlet extends HttpServlet {
 	
 	@Override
@@ -31,7 +31,7 @@ public class SendInviteServlet extends HttpServlet {
 		}
 		
 		request.setAttribute("invitee", invitee);
-		request.getRequestDispatcher("WEB-INF/views/send-invite.jsp").forward(request, response);
+		request.getRequestDispatcher(Path.Page.INVITE_SEND).forward(request, response);
 	}
 	
 	@Override

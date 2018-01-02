@@ -2,7 +2,6 @@ package com.fdmgroup.gggo.servlet;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +14,7 @@ import com.fdmgroup.gggo.dao.InviteDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
 
-@WebServlet("/invite/reject")
+@WebServlet(Path.Url.INVITE_REJECT)
 public class RejectInviteServlet extends HttpServlet {
 	private static final long serialVersionUID = 7850139517917583754L;
 
