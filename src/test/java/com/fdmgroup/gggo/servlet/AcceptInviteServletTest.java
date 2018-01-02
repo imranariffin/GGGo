@@ -17,11 +17,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.InviteDAO;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
+import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.User;
 
 public class AcceptInviteServletTest {
@@ -70,10 +72,9 @@ public class AcceptInviteServletTest {
 		
 		try {
 			new AcceptInviteServlet().doPost(request, response);
-			
-//			assertNotNull(idao.getInvite(inv.getInviteId()).getGame());
-			Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/WEB-INF/views/play.jsp");
-			Mockito.verify(rd, Mockito.times(1)).forward(request, response);
+			PersistentGame pg = idao.getInvite(inv.getInviteId()).getGame();
+			assertNotNull(pg);
+			Mockito.verify(response, Mockito.times(1)).sendRedirect("/GGGo/game?gameId=" + pg.getGameId());
 			
 		} catch (ServletException | IOException e) {
 			e.printStackTrace();
