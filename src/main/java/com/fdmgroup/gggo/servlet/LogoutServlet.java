@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LogoutServlet
  */
-@WebServlet("/logout")
+@WebServlet(Path.Url.LOGOUT)
 public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -30,7 +30,7 @@ public class LogoutServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/logout.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(Path.Page.LOGOUT);
 		rd.forward(request, response);
 	}
 
@@ -44,7 +44,7 @@ public class LogoutServlet extends HttpServlet {
 			session.removeAttribute(Attributes.Session.CURRENT_USER);
 			session.invalidate();
 			
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher(Path.Page.LOGIN);
 			rd.forward(request, response);
 		} else {
 			response.getWriter().println(ServletErrorResponsePages.MUST_LOGIN_TO_LOGOUT);

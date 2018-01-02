@@ -22,7 +22,7 @@ import com.fdmgroup.gggo.model.User;
 import com.fdmgroup.gggo.serializer.GGJson;
 import com.google.gson.Gson;
 
-@WebServlet("/api/*")
+@WebServlet(Path.Url.API)
 public class ApiServlet extends HttpServlet {
 //	private static final long serialVersionUID = -6048565360004251760L;
 

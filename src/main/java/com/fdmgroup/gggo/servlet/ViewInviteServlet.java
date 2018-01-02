@@ -22,7 +22,7 @@ import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.User;
 
-@WebServlet("/invites")
+@WebServlet(Path.Url.INVITES)
 public class ViewInviteServlet extends HttpServlet {
 	
 	public ViewInviteServlet() {
@@ -53,7 +53,7 @@ public class ViewInviteServlet extends HttpServlet {
 		List<Invite> sentInvites = idao.getSentInvites(invitor.getUsername());
 		List<Invite> receivedInvites = idao.getReceivedInvites(invitee.getUsername());
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/view-invite.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(Path.Page.INVITE_VIEW);
 		request.setAttribute("sentInvites", sentInvites);
 		request.setAttribute("receivedInvites", receivedInvites);
 		rd.forward(request, response);

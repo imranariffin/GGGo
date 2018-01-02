@@ -20,7 +20,7 @@ import com.lambdaworks.crypto.SCryptUtil;
 /**
  * Servlet implementation class SignupServlet
  */
-@WebServlet("/signup")
+@WebServlet(Path.Url.SIGNUP)
 public class SignupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -37,7 +37,7 @@ public class SignupServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/signup.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(Path.Page.SIGNUP);
 		rd.forward(request, response);
 	}
 
@@ -62,7 +62,7 @@ public class SignupServlet extends HttpServlet {
 						User user = udao.createUser(username, hashedPassword);
 						session.setAttribute(Attributes.Session.CURRENT_USER, user);
 						
-						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
+						RequestDispatcher rd = request.getRequestDispatcher(Path.Page.HOME);
 						rd.forward(request, response);
 					} else {
 						sendPasswordsDoNotMatch(request, response);
@@ -87,9 +87,6 @@ public class SignupServlet extends HttpServlet {
 	private void sendUsernameNotAvailable(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		PrintWriter out = response.getWriter();
-		System.out.println("===========================");
-		System.out.println(out);
-		System.out.println("===========================");
 		out.println(ServletErrorResponsePages.USERNAME_NOT_AVAILABLE);
 		
 	}

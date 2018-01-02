@@ -58,7 +58,6 @@ public class AcceptInviteServletTest {
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 		HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 		HttpSession session = Mockito.mock(HttpSession.class);
-		RequestDispatcher rd = Mockito.mock(RequestDispatcher.class);
 		
 		String password = "pazzword";
 		User invitor = udao.createUser("invitor", password);
@@ -68,7 +67,6 @@ public class AcceptInviteServletTest {
 		Mockito.when(request.getParameter("inviteId")).thenReturn(Integer.toString(inv.getInviteId()));
 		Mockito.when(request.getSession()).thenReturn(session);
 		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(invitee);
-		Mockito.when(request.getRequestDispatcher("/WEB-INF/views/play.jsp")).thenReturn(rd);
 		
 		try {
 			new AcceptInviteServlet().doPost(request, response);

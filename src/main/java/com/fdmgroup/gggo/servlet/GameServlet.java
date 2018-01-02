@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/game")
+@WebServlet(Path.Url.GAME)
 public class GameServlet extends HttpServlet {
 	private static final long serialVersionUID = 6649352721475661962L;
 	
@@ -36,7 +36,7 @@ public class GameServlet extends HttpServlet {
 		
 		int gameId = Integer.parseInt(gameIdString);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/game.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(Path.Page.GAME);
 		rd.forward(request, response);
 	}
 }

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class HomeServlet
  */
-@WebServlet("/home") 
+@WebServlet(Path.Url.HOME) 
 public class HomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -29,7 +29,7 @@ public class HomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/home.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(Path.Page.HOME);
 		rd.forward(request, response);	
 	}
 
