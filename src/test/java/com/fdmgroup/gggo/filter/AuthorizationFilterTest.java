@@ -1,6 +1,8 @@
 package com.fdmgroup.gggo.filter;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -25,6 +27,7 @@ public class AuthorizationFilterTest {
 	private HttpServletResponse response;
 	private HttpSession session;
 	private FilterConfig fConfig;
+	private Pattern pattern;
 	private FilterChain fc;
 	private RequestDispatcher rd;
 	private User user;
@@ -39,13 +42,25 @@ public class AuthorizationFilterTest {
 		fc = Mockito.mock(FilterChain.class);
 		rd = Mockito.mock(RequestDispatcher.class);
 		user = Mockito.mock(User.class);
+		pattern = Pattern.compile(
+				"(/GGGo/)|" +
+				"(/GGGo/font/.*)|" + 
+				"(/GGGo/css/.*)|" + 
+				"(/GGGo/js/.*)|" + 
+				"(/GGGo/api/.*)|" + 
+				"(/GGGo/img/.*)|" + 
+				"(/GGGo/signup[/]*)|" + 
+				"(/GGGo/login[/]*)"
+		);
+		
 		
 		Mockito.when(request.getSession()).thenReturn(session);
 		Mockito.when(session.getAttribute(Attributes.Session.CURRENT_USER)).thenReturn(user);
 		Mockito.when(request.getRequestDispatcher(Path.Page.LOGIN)).thenReturn(rd);
+		Mockito.when(request.getRequestURI()).thenReturn("/GGGo/invite");
 		
 		authFilter = new AuthorizationFilter();
-		authFilter.init(fConfig);
+		authFilter.init(pattern);
 	}
 	
 	@Test
@@ -76,7 +91,7 @@ public class AuthorizationFilterTest {
 	public void test_DoFilter_DoesNotRedirectToLoginPage_GivenNullSessionAndPathExcluded() 
 			throws IOException, ServletException {
 		
-		Mockito.when(request.getServletPath()).thenReturn("/home");
+		Mockito.when(request.getRequestURI()).thenReturn("/GGGo/");
 		Mockito.when(request.getSession()).thenReturn(null);
 		
 		authFilter.doFilter(request, response, fc);
@@ -89,7 +104,7 @@ public class AuthorizationFilterTest {
 	public void test_DoFilter_DoesNotRedirectToLoginPage_GivenSessionAndCurrentUserAndPathNotExcluded() 
 			throws IOException, ServletException {
 		
-		Mockito.when(request.getServletPath()).thenReturn("/invite");
+		Mockito.when(request.getRequestURI()).thenReturn("/GGGo/invite/");
 		
 		authFilter.doFilter(request, response, fc);
 		

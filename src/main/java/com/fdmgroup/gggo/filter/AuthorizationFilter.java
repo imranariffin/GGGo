@@ -25,17 +25,8 @@ import com.fdmgroup.gggo.servlet.Path;
 @WebFilter("/*")
 public class AuthorizationFilter implements Filter {
 
-	List<String> excludedPaths = new ArrayList<>();
-	Pattern excludingPattern = Pattern.compile(
-			"(/GGGo/)|" +
-			"(/GGGo/font/.*)|" + 
-			"(/GGGo/css/.*)|" + 
-			"(/GGGo/js/.*)|" + 
-			"(/GGGo/api/.*)|" + 
-			"(/GGGo/img/.*)|" + 
-			"(/GGGo/signup[/]*)|" + 
-			"(/GGGo/login[/]*)"
-	);
+	private Pattern excludingPattern;
+	
 	@Override
 	public void destroy() {		
 	}
@@ -43,10 +34,6 @@ public class AuthorizationFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain fc)
 			throws IOException, ServletException {
-
-		System.out.println("\n=====\nAuthFilter");
-		System.out.println(((HttpServletRequest) req).getRequestURI());
-		
 		
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
@@ -55,12 +42,9 @@ public class AuthorizationFilter implements Filter {
 		Matcher m = excludingPattern.matcher(path);
 		if (
 				(session == null || session.getAttribute(Attributes.Session.CURRENT_USER) == null) 
-//				&& !excludedPaths.contains(path)
 				&& !m.matches()
 				
 		) {
-			System.out.println(" filtered out!");
-			System.out.println("====\n");		
 			request.setAttribute(Attributes.Request.PLEASE_LOGIN, ErrorResponse.PLEASE_LOGIN);
 			RequestDispatcher rd = request.getRequestDispatcher(Path.Page.LOGIN);
 			rd.forward(req, res);
@@ -71,16 +55,19 @@ public class AuthorizationFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		excludedPaths.add("/font/*");
-		excludedPaths.add("/img/*");
-		excludedPaths.add("/css/*");
-		excludedPaths.add("/js/go.js");
-		excludedPaths.add("/api/*");
-		excludedPaths.add("/");
-		excludedPaths.add("/home");
-		excludedPaths.add("/signup");
-		excludedPaths.add("login.jsp");
-		excludedPaths.add("/login");
+		 init(Pattern.compile(
+					"(/GGGo/)|" +
+					"(/GGGo/font/.*)|" + 
+					"(/GGGo/css/.*)|" + 
+					"(/GGGo/js/.*)|" + 
+					"(/GGGo/api/.*)|" + 
+					"(/GGGo/img/.*)|" + 
+					"(/GGGo/signup[/]*)|" + 
+					"(/GGGo/login[/]*)"
+			));
 	}
 
+	void init(Pattern pattern) {
+		excludingPattern = pattern;
+	}
 }
