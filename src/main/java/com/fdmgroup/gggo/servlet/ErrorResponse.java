@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ErrorResponse {
+	public static final String PLEASE_LOGIN = "Please login";
+
 	public void respondWithErrorPage(HttpServletRequest request, HttpServletResponse response, String errMsg) 
 			throws IOException {
 		PrintWriter out = response.getWriter();
