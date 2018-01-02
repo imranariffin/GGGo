@@ -49,8 +49,6 @@ public class ViewInviteServlet extends HttpServlet {
 		
 		InviteDAO idao = DAOFactory.getInviteDAO();
 
-		System.out.println(request.getRequestURI());
-		
 		User invitee = invitor;
 		List<Invite> sentInvites = idao.getSentInvites(invitor.getUsername());
 		List<Invite> receivedInvites = idao.getReceivedInvites(invitee.getUsername());

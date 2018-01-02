@@ -63,9 +63,9 @@ public class AcceptInviteServlet extends HttpServlet {
 		}
 		
 		/* Create Game and Update Invite */
-//		Game game = gdao.createGame(inv);
+		Game game = gdao.createGame(inv);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/play.jsp");
-		rd.forward(request, response);
+		/* Redirec to Game page */	
+		response.sendRedirect("/GGGo/game?gameId=" + game.getGameId());
 	}
 }

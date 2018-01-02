@@ -48,11 +48,12 @@
 					<td>19x19</td>
 					<td>25 kyu</td>
 					<td>
-						<form action="invite/accept-invite" method="POST" style="margin: 0; padding: 0; display:inline;">
+						"${ inv.inviteId }"
+						<form action="invite/accept" method="POST" style="margin: 0; padding: 0; display:inline;">
 							<input type="text" name="inviteId" value="${ inv.inviteId }" hidden="true">
 							<input type="submit" value="Accept" style="display:inline;" class="btn btn-default">
 						</form> / 
-						<form action="invite/reject-invite" method="POST" style="margin: 0; padding: 0; display:inline;">
+						<form action="invite/reject" method="POST" style="margin: 0; padding: 0; display:inline;">
 							<input type="text" name="inviteId" value="${ inv.inviteId }" hidden="true">
 							<input type="submit" value="Reject" style="display:inline;" class="btn btn-default">
 						</form>
