@@ -20,10 +20,10 @@ import javax.persistence.Table;
 			query="select inv from Invite inv where inv.invitee = :user or inv.invitor = :user"),
 	@NamedQuery(
 			name=NamedQuerySet.INVITE_SENT_FIND_ALL, 
-			query="select inv from Invite inv where inv.invitor = :invitor"),
+			query="select inv from Invite inv where inv.invitor = :invitor and inv.game = NULL"),
 	@NamedQuery(
 			name=NamedQuerySet.INVITE_RECEIVED_FIND_ALL, 
-			query="select inv from Invite inv where inv.invitee = :invitee"),
+			query="select inv from Invite inv where inv.invitee = :invitee and inv.game = NULL"),
 	@NamedQuery(
 			name=NamedQuerySet.INVITE_FIND_ONE, 
 			query="select inv from Invite inv where inv.inviteId = :invid"),
