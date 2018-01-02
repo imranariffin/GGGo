@@ -22,6 +22,10 @@
 				<input type="password" name="confirmPassword" placeholder="Confirm Password">
 				<input type="submit" class="login loginmodal-submit" value="Signup">
 			  </form>
+			  
+			  <div class="login-help">
+				<a href="login">Login</a>
+			  </div>
 			</div>
 	</div>
 	<div class="footer"></div>
