@@ -289,9 +289,23 @@ public class InviteDAOTest {
 			assertTrue(invitor.getSentInvites().contains(inv));
 			assertTrue(invitee.getReceivedInvites().contains(inv));
 		}
+	}
+	
+	@Test
+	public void test_DeleteInvite_RemovesInviteOnlyNotItsInviteeNorInvitor_GivenInvitorId() 
+			throws DeleteInviteInvitorInviteeMismatchException {
 		
-//		@Test
-//		public void test_DeleteInvite_RemovesInviteOnlyNotItsGame_Given
+		User invitor = udao.createUser("invitor", "pazzword");
+		User invitee = udao.createUser("invitee", "pazzword");
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		idao.deleteInvite(invitor, invitee, inv);
+		
+		assertNull(idao.getInvite(inv.getInviteId()));
+		assertNotNull(udao.getUser(invitor.getUsername()));
+		assertNotNull(udao.getUser(invitee.getUsername()));
+		assertFalse(invitor.getSentInvites().contains(inv));
+		assertFalse(invitee.getReceivedInvites().contains(inv));
 	}
 }
 

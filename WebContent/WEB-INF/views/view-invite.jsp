@@ -15,12 +15,19 @@
 		  		<th>Username</th>
 		  		<th>Board size</th>
 		  		<th>Rank</th>
+		  		<th>Action</th>
 		  	</tr>
 		  	<c:forEach items="${ sentInvites }" var="inv">
 				<tr>
-					<td>"${ inv.invitee.username }"</td>
+					<td>${ inv.invitee.username }</td>
 					<td>19x19</td>
 					<td>25 kyu</td>
+					<td>
+						<form action="invite/cancel" method="POST" style="margin: 0; padding: 0; display:inline;">
+							<input type="text" name="inviteId" value="${ inv.inviteId }" hidden="true">
+							<input type="submit" value="Cancel" style="display:inline;" class="btn btn-warning">
+						</form>
+					</td>
 				</tr>
 			</c:forEach>
 		  </table>
@@ -44,11 +51,10 @@
 		  	</tr>
 		  	<c:forEach items="${ receivedInvites }" var="inv">
 				<tr>
-					<td>"${ inv.invitor.username }"</td>
+					<td>${ inv.invitor.username }</td>
 					<td>19x19</td>
 					<td>25 kyu</td>
 					<td>
-						"${ inv.inviteId }"
 						<form action="invite/accept" method="POST" style="margin: 0; padding: 0; display:inline;">
 							<input type="text" name="inviteId" value="${ inv.inviteId }" hidden="true">
 							<input type="submit" value="Accept" style="display:inline;" class="btn btn-default">

@@ -33,10 +33,10 @@ public class Invite {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int inviteId;
 
-	@ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
 	private User invitor;
 	
-	@ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
 	private User invitee;
 	
 	@OneToOne(orphanRemoval=true, optional=true, fetch=FetchType.EAGER, cascade=CascadeType.ALL)

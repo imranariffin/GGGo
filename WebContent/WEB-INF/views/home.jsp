@@ -3,7 +3,7 @@
 		<div class="container container-center">
 			<h1>Welcome to GGGo</h1>
 			<p>An interactive platform for playing go</p>
-			<p><a class="btn btn-primary btn-lg" href="invites" role="button">Play!</a></p>
+			<p><a class="btn btn-primary btn-lg" href="invite" role="button">Play!</a></p>
 		</div>
 	</div>
 	<div class="main">

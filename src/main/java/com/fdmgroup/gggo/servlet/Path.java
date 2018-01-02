@@ -16,10 +16,11 @@ public class Path {
 	public class Url {
 		public static final String ROOT = "/GGGo";
 		public static final String HOME = "/home";
-		public static final String INVITES = "/invites";
+		public static final String INVITES = "/invite";
 		public static final String INVITE_SEND = "/send-invite";
 		public static final String INVITE_ACCEPT = "/invite/accept";
 		public static final String INVITE_REJECT = "/invite/reject";
+		public static final String INVITE_CANCEL = "/invite/cancel";
 		public static final String GAME = "/game";
 		public static final String API = "/api/*";
 		
