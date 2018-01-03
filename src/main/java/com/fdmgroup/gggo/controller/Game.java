@@ -231,4 +231,20 @@ public class Game extends InteractiveGo implements Go {
 		return "Game [gameId=" + gameId + ", SIZE=" + SIZE + ", passed=" + passed + ", finished=" + finished
 				+ ", states=" + states + ", futureStates=" + futureStates + "]";
 	}
+	
+	public User getBlack() {
+		return black;
+	}
+
+	public void setBlack(User black) {
+		this.black = black;
+	}
+
+	public User getWhite() {
+		return white;
+	}
+
+	public void setWhite(User white) {
+		this.white = white;
+	}
 }
