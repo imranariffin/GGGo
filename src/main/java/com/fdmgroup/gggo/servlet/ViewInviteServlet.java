@@ -15,8 +15,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.catalina.connector.Request;
 
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.InviteDAO;
+import com.fdmgroup.gggo.dao.PersistentGameDAO;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
@@ -48,14 +50,17 @@ public class ViewInviteServlet extends HttpServlet {
 		}
 		
 		InviteDAO idao = DAOFactory.getInviteDAO();
+		PersistentGameDAO gdao = DAOFactory.getPersistentGameDAO();
 
 		User invitee = invitor;
 		List<Invite> sentInvites = idao.getSentInvites(invitor.getUsername());
 		List<Invite> receivedInvites = idao.getReceivedInvites(invitee.getUsername());
+		List<Game> activeGames = gdao.getGames(invitor.getUsername());
 		
 		RequestDispatcher rd = request.getRequestDispatcher(Path.Page.INVITE_VIEW);
 		request.setAttribute("sentInvites", sentInvites);
 		request.setAttribute("receivedInvites", receivedInvites);
+		request.setAttribute("activeGames", activeGames);
 		rd.forward(request, response);
 	}
 }

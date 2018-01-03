@@ -14,19 +14,23 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
+import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.User;
 
 public class InviteDAOTest {
 	
 	private static InviteDAO idao;
 	private static UserDAO udao;
+	private static PersistentGameDAO gdao;
 	
 	@BeforeClass
 	public static void setupOnce() {
 		udao = DAOFactory.getUserDAO();
 		idao = DAOFactory.getInviteDAO();
+		gdao = DAOFactory.getPersistentGameDAO();
 	}
 	
 	@Before
@@ -201,6 +205,27 @@ public class InviteDAOTest {
 	}
 	
 	@Test
+	public void test_GetSentInvites_ReturnsListOfInvitesExcludingAcceptedOnes_GivenUser() {
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		Invite inv3 = idao.createInvite(invitor, invitee);
+		
+		Game game = gdao.createGame(inv3);
+		
+		List<Invite> invites = idao.getSentInvites(invitor.getUsername());
+		
+		assertNotNull(invites);
+		assertEquals(2, invites.size());
+		assertTrue(invites.contains(inv1));
+		assertTrue(invites.contains(inv2));
+		assertFalse(invites.contains(inv3));
+	}
+	
+	@Test
 	public void test_GetReceivedInvites_ReturnsEmptyList_GivenUserWhoReceivedNoInvite() {
 		
 		String password = "pazzword";
@@ -211,6 +236,22 @@ public class InviteDAOTest {
 		
 		assertNotNull(invites);
 		assertEquals(0, invites.size());
+	}
+	
+	@Test
+	public void test_GetReceivedInvites_ReturnsListOfInvitesOfSizeOne_GivenUserWhoReceivedAnInvite() {
+		
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		List<Invite> invites = idao.getReceivedInvites(invitee.getUsername());
+		
+		assertNotNull(invites);
+		assertEquals(1, invites.size());
+		assertTrue(invites.contains(inv));
 	}
 	
 	@Test
@@ -233,19 +274,24 @@ public class InviteDAOTest {
 	}
 	
 	@Test
-	public void test_GetReceivedInvites_ReturnsListOfInvitesOfSizeOne_GivenUserWhoReceivedAnInvite() {
-		
+	public void test_GetReceivedInvites_ReturnsListOfInvitesExcludingAcceptedOnes_GivenUser() {
 		String password = "pazzword";
 		User invitor = udao.createUser("invitor", password);
 		User invitee = udao.createUser("invitee", password);
 		
-		Invite inv = idao.createInvite(invitor, invitee);
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		Invite inv3 = idao.createInvite(invitor, invitee);
+		
+		Game game = gdao.createGame(inv3);
 		
 		List<Invite> invites = idao.getReceivedInvites(invitee.getUsername());
 		
 		assertNotNull(invites);
-		assertEquals(1, invites.size());
-		assertTrue(invites.contains(inv));
+		assertEquals(2, invites.size());
+		assertTrue(invites.contains(inv1));
+		assertTrue(invites.contains(inv2));
+		assertFalse(invites.contains(inv3));
 	}
 	
 	@Test
@@ -306,6 +352,51 @@ public class InviteDAOTest {
 		assertNotNull(udao.getUser(invitee.getUsername()));
 		assertFalse(invitor.getSentInvites().contains(inv));
 		assertFalse(invitee.getReceivedInvites().contains(inv));
+	}
+	
+	@Test
+	public void test_GetAcceptedInvites_ReturnsListOfInvitesAcceptedByEitherParty() {
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		Invite inv3 = idao.createInvite(invitor, invitee);
+		
+		Game game1 = gdao.createGame(inv1);
+		Game game2 = gdao.createGame(inv2);
+		Game game3 = gdao.createGame(inv3);
+		
+		List<Invite> invites = idao.getAcceptedInvites(invitee.getUsername());
+		
+		assertNotNull(invites);
+		assertEquals(3, invites.size());
+		assertTrue(invites.contains(inv1));
+		assertTrue(invites.contains(inv2));
+		assertTrue(invites.contains(inv3));		
+	}
+	
+	@Test
+	public void test_GetAcceptedInvites_ReturnsListOfInvitesExcludingUnacceptedOnes() {
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		Invite inv3 = idao.createInvite(invitor, invitee);
+		
+		Game game1 = gdao.createGame(inv1);
+		Game game2 = gdao.createGame(inv2);
+		
+		List<Invite> invites = idao.getAcceptedInvites(invitee.getUsername());
+		
+		assertNotNull(invites);
+		assertEquals(2, invites.size());
+		assertTrue(invites.contains(inv1));
+		assertTrue(invites.contains(inv2));
+		assertFalse(invites.contains(inv3));		
 	}
 }
 

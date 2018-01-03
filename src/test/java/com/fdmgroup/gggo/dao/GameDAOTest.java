@@ -170,7 +170,7 @@ public class GameDAOTest {
 		Game game1 = gdao.createGame(inv1);
 		Game game2 = gdao.createGame(inv2);
 		
-		assertNotNull(gdao.getGames(imran));
-		assertEquals(2, gdao.getGames(imran).size());
+		assertNotNull(gdao.getGames(imran.getUsername()));
+		assertEquals(2, gdao.getGames(imran.getUsername()).size());
 	}
 }
