@@ -19,8 +19,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.InviteDAO;
+import com.fdmgroup.gggo.dao.PersistentGameDAO;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
@@ -30,17 +32,20 @@ public class ViewInviteServletTest {
 	
 	private static UserDAO udao;
 	private static InviteDAO idao;
+	private static PersistentGameDAO gdao;
 	
 	@BeforeClass
 	public static void setupOnce() {
 		 udao = DAOFactory.getUserDAO();
 		 idao = DAOFactory.getInviteDAO();
+		 gdao = DAOFactory.getPersistentGameDAO();
 	}
 	
 	private User invitor;
 	private User invitee;
 	private List<Invite> sentInvites;
 	private List<Invite> receivedInvites;
+	private List<Game> activeGames;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -56,6 +61,7 @@ public class ViewInviteServletTest {
 		invitee = udao.createUser(inviteeUsername, password);
 		sentInvites = idao.getSentInvites(invitor.getUsername());
 		receivedInvites = idao.getReceivedInvites(invitee.getUsername());
+		activeGames = gdao.getGames(invitor.getUsername());
 		
 		request = Mockito.mock(HttpServletRequest.class);
 		response = Mockito.mock(HttpServletResponse.class);
@@ -74,7 +80,7 @@ public class ViewInviteServletTest {
 	}
 	
 	@Test
-	public void test_ViewInvites_RespondsWithPageWithListOfInvitesSent_GivenUser() 
+	public void test_ViewInvites_RespondsWithPageWithListOfSentAndReceivedInvitesAndActiveGames_GivenUser() 
 			throws ServletException, IOException, DeleteInviteInvitorInviteeMismatchException {
 		
 		try {
@@ -87,6 +93,7 @@ public class ViewInviteServletTest {
 		Mockito.verify(session, Mockito.times(1)).getAttribute(Attributes.Session.CURRENT_USER);
 		Mockito.verify(request, Mockito.times(1)).setAttribute("sentInvites", sentInvites);
 		Mockito.verify(request, Mockito.times(1)).setAttribute("receivedInvites", receivedInvites);
+		Mockito.verify(request, Mockito.times(1)).setAttribute("activeGames", activeGames);
 		Mockito.verify(rd, Mockito.times(1)).forward(request, response);
 	}
 }

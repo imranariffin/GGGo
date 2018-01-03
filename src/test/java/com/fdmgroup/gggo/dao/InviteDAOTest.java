@@ -353,5 +353,50 @@ public class InviteDAOTest {
 		assertFalse(invitor.getSentInvites().contains(inv));
 		assertFalse(invitee.getReceivedInvites().contains(inv));
 	}
+	
+	@Test
+	public void test_GetAcceptedInvites_ReturnsListOfInvitesAcceptedByEitherParty() {
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		Invite inv3 = idao.createInvite(invitor, invitee);
+		
+		Game game1 = gdao.createGame(inv1);
+		Game game2 = gdao.createGame(inv2);
+		Game game3 = gdao.createGame(inv3);
+		
+		List<Invite> invites = idao.getAcceptedInvites(invitee.getUsername());
+		
+		assertNotNull(invites);
+		assertEquals(3, invites.size());
+		assertTrue(invites.contains(inv1));
+		assertTrue(invites.contains(inv2));
+		assertTrue(invites.contains(inv3));		
+	}
+	
+	@Test
+	public void test_GetAcceptedInvites_ReturnsListOfInvitesExcludingUnacceptedOnes() {
+		String password = "pazzword";
+		User invitor = udao.createUser("invitor", password);
+		User invitee = udao.createUser("invitee", password);
+		
+		Invite inv1 = idao.createInvite(invitor, invitee);
+		Invite inv2 = idao.createInvite(invitor, invitee);
+		Invite inv3 = idao.createInvite(invitor, invitee);
+		
+		Game game1 = gdao.createGame(inv1);
+		Game game2 = gdao.createGame(inv2);
+		
+		List<Invite> invites = idao.getAcceptedInvites(invitee.getUsername());
+		
+		assertNotNull(invites);
+		assertEquals(2, invites.size());
+		assertTrue(invites.contains(inv1));
+		assertTrue(invites.contains(inv2));
+		assertFalse(invites.contains(inv3));		
+	}
 }
 

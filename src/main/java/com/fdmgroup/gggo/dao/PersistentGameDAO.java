@@ -173,8 +173,11 @@ public class PersistentGameDAO {
 		return g;
 	}
 
-	public List<Game> getGames(User user) {
+	public List<Game> getGames(String username) {
 		List<Game> res = new ArrayList<>();
+		
+		UserDAO udao = DAOFactory.getUserDAO();
+		User user = udao.getUser(username);
 		
 		for (PersistentGame pg: getPersistentGames(user)) {
 			res.add(new Game(pg));

@@ -226,4 +226,28 @@ public class InviteDAO {
 		
 		return;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Invite> getAcceptedInvites(String username) {
+		EntityManager em = emf.createEntityManager();
+		List<Invite> res = new ArrayList<>();
+		
+		UserDAO udao = DAOFactory.getUserDAO();
+		User user = udao.getUser(username);
+		
+		if (user == null) {
+			return res;
+		}
+		
+		try {
+			Query q = em.createNamedQuery(NamedQuerySet.INVITE_ACCEPTED_FIND_ALL);
+			q.setParameter("user", user);
+			res = q.getResultList();
+			
+		} finally {
+			em.close();
+		}
+		
+		return res;
+	}
 }
