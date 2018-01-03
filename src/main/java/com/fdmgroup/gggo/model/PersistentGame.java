@@ -10,9 +10,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -33,6 +36,12 @@ public class PersistentGame extends PersistentInteractiveGo {
 	@OneToMany(mappedBy="pGame", fetch=FetchType.EAGER, orphanRemoval=true)
 	protected List<PersistentState> pStates;
 
+	@ManyToOne(optional=false)
+	User black;
+	
+	@ManyToOne(optional=false)
+	User white;
+	
 	public PersistentGame() {
 		pStates = new ArrayList<>();
 	}
@@ -95,5 +104,21 @@ public class PersistentGame extends PersistentInteractiveGo {
 			}
 		}		
 		return true;
+	}
+	
+	public User getBlack() {
+		return black;
+	}
+
+	public void setBlack(User black) {
+		this.black = black;
+	}
+
+	public User getWhite() {
+		return white;
+	}
+
+	public void setWhite(User white) {
+		this.white = white;
 	}
 }

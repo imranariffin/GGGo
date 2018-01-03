@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -106,6 +107,10 @@ public class PersistentGameDAO {
 		PersistentGame pg = new PersistentGame();
 		EntityManager em = emf.createEntityManager();
 		
+		int i = new Random().nextInt(2); 
+		pg.setBlack(i == 1 ? inv.getInvitor() : inv.getInvitee());
+		pg.setWhite(i != 1 ? inv.getInvitor() : inv.getInvitee());
+		
 		try {
 			em.getTransaction().begin();
 			em.persist(pg);
@@ -120,26 +125,6 @@ public class PersistentGameDAO {
 		
 		return pg;
 	}
-	
-//	private Game mapToGame(PersistentGame pg) {
-//		Game game = new Game(pg.getGameId());
-//		
-//		List<PersistentState> pStates = pg.getStates();
-//		Collections.sort(pStates, new Comparator<PersistentState>() {
-//			@Override
-//			public int compare(PersistentState ps0, PersistentState ps1) {
-//				return ps1.getTurnNumber() - ps0.getTurnNumber();
-//			}
-//		});
-//		
-//		PersistentStateDAO sdao = PersistentStateDAO.getInstance();
-//		for (PersistentState ps: pStates) {
-//			State s = sdao.mapToState(ps);
-//			game.getStates().push(s);
-//		}
-//		
-//		return game;
-//	}
 
 	void deletePersistentGame(PersistentGame pg, Invite inv) {
 		EntityManager em = emf.createEntityManager();
