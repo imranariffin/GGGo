@@ -12,6 +12,7 @@ import java.util.Stack;
 
 import com.fdmgroup.gggo.controller.GoUtils;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.Placement;
@@ -186,6 +187,10 @@ public class Game extends InteractiveGo implements Go {
 
 	public Stack<State> getStates() {
 		return states;
+	}
+	
+	public Stack<State> getFutureStates() {
+		return futureStates;
 	}
 
 	public int getGameId() {

@@ -3,8 +3,11 @@ var OFFSET;
 
 $(document).ready(function(){
 	
-	OFFSET = (($("#board").width() / BOARD_SIZE) / 2);
-
+	OFFSET = (41.0 / 651.0) * $("#board").width();
+	
+	console.log("OFFSET: ");
+	console.log(OFFSET);
+	
 	$("#board").mousemove(function(e) {
 		var x = e.pageX;
 		var y = e.pageY;
@@ -91,16 +94,16 @@ function hoverStone(board, i, j) {
 	$("#stone").remove();
 	$('#stones').prepend("<img class='stone' id='stone' src='img/go-stone-black.png'>")
 
-	var x0 = $(board).offset().left + OFFSET / 2;
-	var y0 = $(board).offset().top + OFFSET / 2;
-	var dw = ($(board).width() - 2.1 * OFFSET) / (BOARD_SIZE - 1);
+	var x0 = $(board).offset().left + OFFSET;
+	var y0 = $(board).offset().top + OFFSET;
+	var dw = ($(board).width() - 2 * OFFSET) / (BOARD_SIZE - 1);
 	var dh = dw;
 
 	$("#stone").css({
 		width: dw,
 		height: dh,
-		top: y0 + i * dh, 
-		left: x0 + j * dw, 
+		top: y0 + i * dh - 0.9 * (dh / 2), 
+		left: x0 + j * dw - 0.9 * (dw / 2), 
 		position:'fixed'
 	});
 }
