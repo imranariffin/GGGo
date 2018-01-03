@@ -15,6 +15,7 @@ import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.Placement;
+import com.fdmgroup.gggo.model.User;
 import com.mchange.v2.c3p0.impl.NewProxyCallableStatement;
 
 public class Game extends InteractiveGo implements Go {
@@ -23,6 +24,8 @@ public class Game extends InteractiveGo implements Go {
 	private final int SIZE;
 	private boolean passed;
 	private boolean finished;
+	private User black;
+	private User white;
 	
 	public Game() {
 		this(-1);
@@ -34,6 +37,8 @@ public class Game extends InteractiveGo implements Go {
 		Stone[][] board = new Stone[SIZE][SIZE];
 		states = new Stack<State>();
 		futureStates = new Stack<State>();
+		black = pg.getBlack();
+		white = pg.getWhite();
 		
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
@@ -71,6 +76,8 @@ public class Game extends InteractiveGo implements Go {
 		Stone[][] board = new Stone[SIZE][SIZE];
 		states = new Stack<State>();
 		futureStates = new Stack<State>();
+		black = null;
+		white = null;
 		
 		for (int i=0; i<SIZE; i++) {
 			for (int j=0; j<SIZE; j++) {
@@ -223,5 +230,21 @@ public class Game extends InteractiveGo implements Go {
 	public String toString() {
 		return "Game [gameId=" + gameId + ", SIZE=" + SIZE + ", passed=" + passed + ", finished=" + finished
 				+ ", states=" + states + ", futureStates=" + futureStates + "]";
+	}
+	
+	public User getBlack() {
+		return black;
+	}
+
+	public void setBlack(User black) {
+		this.black = black;
+	}
+
+	public User getWhite() {
+		return white;
+	}
+
+	public void setWhite(User white) {
+		this.white = white;
 	}
 }

@@ -88,8 +88,8 @@
 		  	</tr>
 		  	<c:forEach items="${ activeGames }" var="game">
 				<tr>
-					<td> Some black player</td>
-					<td> Some white player</td>
+					<td>${ game.black.username }</td>
+					<td>${ game.white.username }</td>
 					<td>9x9</td>
 					<td><a href="game?gameId=${ game.gameId }">Continue Playing</a></td>
 				</tr>
