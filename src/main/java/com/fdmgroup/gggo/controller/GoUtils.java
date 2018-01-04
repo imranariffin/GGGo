@@ -4,8 +4,12 @@ import static com.fdmgroup.gggo.controller.Stone.B;
 import static com.fdmgroup.gggo.controller.Stone.E;
 import static com.fdmgroup.gggo.controller.Stone.H;
 import static com.fdmgroup.gggo.controller.Stone.W;
+
+import java.util.List;
+
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.Placement;
 
 public class GoUtils {
 	
@@ -280,5 +284,28 @@ public class GoUtils {
 			case HOSHI: return H;
 			default: return null;
 		}
+	}
+
+	public static Stone[][] createBoardFromPlacementList(List<Placement> placements) {
+		Stone[][] b = new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,E,E,E,E,E,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,E,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8
+		};
+		
+		for (Placement pt: placements) {
+			int r = pt.getRowNumber(), c = pt.getColNumber();
+			Stone st = pt.getStone();
+			b[r][c] = st;
+		}
+		
+		return b;
 	}
 }
