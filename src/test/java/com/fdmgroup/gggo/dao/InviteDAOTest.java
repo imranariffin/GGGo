@@ -24,7 +24,7 @@ public class InviteDAOTest {
 	
 	private static InviteDAO idao;
 	private static UserDAO udao;
-	private static PersistentGameDAO gdao;
+	private static GameDAO gdao;
 	
 	@BeforeClass
 	public static void setupOnce() {

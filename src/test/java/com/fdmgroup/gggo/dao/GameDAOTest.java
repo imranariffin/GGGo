@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.fdmgroup.gggo.controller.Game;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
@@ -20,7 +20,7 @@ public class GameDAOTest {
 
 	private static UserDAO udao;
 	private static InviteDAO idao;
-	private static PersistentGameDAO gdao;
+	private static GameDAO gdao;
 	
 	@BeforeClass
 	public static void setupOnce() throws DeleteInviteInvitorInviteeMismatchException {

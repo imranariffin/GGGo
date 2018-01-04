@@ -14,8 +14,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.fdmgroup.gggo.controller.Stone;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
-import com.fdmgroup.gggo.dao.PersistentStateDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
+import com.fdmgroup.gggo.dao.StateDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
@@ -29,8 +29,8 @@ public class StateDAOTest {
 	
 	private static UserDAO udao;
 	private static InviteDAO idao;
-	private static PersistentGameDAO gdao;
-	private static PersistentStateDAO sdao;
+	private static GameDAO gdao;
+	private static StateDAO sdao;
 	private static PlacementDAO pdao;
 	
 	private static String password;

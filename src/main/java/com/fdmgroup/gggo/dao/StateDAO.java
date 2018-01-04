@@ -1,33 +1,29 @@
 package com.fdmgroup.gggo.dao;
 
-import static com.fdmgroup.gggo.controller.Stone.E;
-
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import com.fdmgroup.gggo.controller.Stone;
 import com.fdmgroup.gggo.model.NamedQuerySet;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.Placement;
 
-public class PersistentStateDAO {
-	private static PersistentStateDAO inst;
+public class StateDAO {
+	private static StateDAO inst;
 	private static EntityManagerFactory emf;
 	
-	private PersistentStateDAO() {
+	private StateDAO() {
 	}
 	
-	public static PersistentStateDAO getInstance(EntityManagerFactory _emf) {
+	public static StateDAO getInstance(EntityManagerFactory _emf) {
 		emf = _emf;
 		if (inst == null) {
-			inst = new PersistentStateDAO();
+			inst = new StateDAO();
 		}
 		return inst;
 	}

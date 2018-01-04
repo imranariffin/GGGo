@@ -34,7 +34,7 @@ public class PlacementDAO {
 	
 	public Placement createPlacement(int r, int c, Stone st, PersistentState ps) {
 		EntityManager em = emf.createEntityManager();
-		PersistentStateDAO sdao = DAOFactory.getPersistentStateDAO();
+		StateDAO sdao = DAOFactory.getPersistentStateDAO();
 		
 		Placement pt = new Placement(r, c, st, ps);;
 
