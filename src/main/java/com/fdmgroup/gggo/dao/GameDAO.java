@@ -170,4 +170,9 @@ public class GameDAO {
 		Invite inv = idao.getInviteByGameId(gameId);
 		deletePersistentGame(pg, inv);
 	}
+
+	public Game getGame(int gameId) {
+		PersistentGame pg = getPersistentGame(gameId);
+		return new Game(pg);
+	}
 }

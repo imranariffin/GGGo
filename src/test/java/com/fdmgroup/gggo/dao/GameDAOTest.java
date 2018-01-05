@@ -172,11 +172,23 @@ public class GameDAOTest {
 		
 		assertNotNull(gdao.getGames(imran.getUsername()));
 		assertEquals(2, gdao.getGames(imran.getUsername()).size());
+		
+		gdao.deleteGame(game1.getGameId());
+		gdao.deleteGame(game2.getGameId());
 	}
 	
 	@Test
 	public void test_GetGame_ReturnsGame_GivenGameId() {
+		User imran = udao.createUser("imran.ariffin", "pazzword");
+		User amir = udao.createUser("amir.ariffin", "pazzword");
+		Invite inv1 = idao.createInvite(imran, amir);
+		Game game = gdao.createGame(inv1);
 		
+		Game expected = game;
+		Game actual = gdao.getGame(game.getGameId());
+		assertEquals(expected, actual);
+		
+		gdao.deleteGame(game.getGameId());
 	}
 	
 	@Test
