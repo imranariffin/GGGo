@@ -11,8 +11,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.fdmgroup.gggo.controller.Game;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
 
@@ -20,7 +21,7 @@ public class GameDAOTest {
 
 	private static UserDAO udao;
 	private static InviteDAO idao;
-	private static PersistentGameDAO gdao;
+	private static GameDAO gdao;
 	
 	@BeforeClass
 	public static void setupOnce() throws DeleteInviteInvitorInviteeMismatchException {
@@ -155,7 +156,7 @@ public class GameDAOTest {
 		
 		assertNotNull(pg);
 		assertEquals(pg.getGameId(), g.getGameId());
-		assertEquals(pg.getPersistentStates().size(), g.getStates().size());
+		assertEquals(pg.getPersistentStates().size(), g.getStates().size() - 1);
 		assertEquals(n + 1, gdao.getPersistentGames().size());
 		
 		gdao.deletePersistentGame(pg, inv);
@@ -172,5 +173,69 @@ public class GameDAOTest {
 		
 		assertNotNull(gdao.getGames(imran.getUsername()));
 		assertEquals(2, gdao.getGames(imran.getUsername()).size());
+		
+		gdao.deleteGame(game1.getGameId());
+		gdao.deleteGame(game2.getGameId());
+	}
+	
+	@Test
+	public void test_GetGame_ReturnsGame_GivenGameId() {
+		User imran = udao.createUser("imran.ariffin", "pazzword");
+		User amir = udao.createUser("amir.ariffin", "pazzword");
+		Invite inv1 = idao.createInvite(imran, amir);
+		Game game = gdao.createGame(inv1);
+		
+		Game expected = game;
+		Game actual = gdao.getGame(game.getGameId());
+		assertEquals(expected, actual);
+		
+		gdao.deleteGame(game.getGameId());
+	}
+	
+	@Test
+	public void test_GetGame_ReturnsGameWithAllTHeCorrectStates_GivenGameIdOfGameWIthAFewStates() 
+			throws InvalidPlacementException {
+		
+		User imran = udao.createUser("imran.ariffin", "pazzword");
+		User amir = udao.createUser("amir.ariffin", "pazzword");
+		Invite inv1 = idao.createInvite(imran, amir);
+		Game game = gdao.createGame(inv1);
+		
+		game.place(3, 3);
+		
+		Game expected = game;
+		Game actual = gdao.getGame(game.getGameId());
+		assertEquals(expected, actual);
+		
+		gdao.deleteGame(game.getGameId());
+	}
+	
+	@Test
+	public void test_DeleteGame_removesExistingGameFromDatabase_GivenGameId() {
+		User invitor = udao.createUser("invitor", "password");
+		User invitee = udao.createUser("invitee", "password");
+		Invite inv = idao.createInvite(invitor, invitee);
+		Game game = gdao.createGame(inv);
+
+		int n = gdao.getPersistentGames().size();
+		
+		gdao.deleteGame(game.getGameId());
+		
+		assertEquals(n - 1, gdao.getPersistentGames().size());
+	}
+	
+	@Test
+	public void test_DeleteGame_DoesNothing_GivenNonExistingGameId() {
+		User invitor = udao.createUser("invitor", "password");
+		User invitee = udao.createUser("invitee", "password");
+		Invite inv = idao.createInvite(invitor, invitee);
+		Game game = gdao.createGame(inv);
+		
+		gdao.deleteGame(game.getGameId());
+		int n = gdao.getPersistentGames().size();
+		
+		gdao.deleteGame(game.getGameId());
+		
+		assertEquals(n, gdao.getPersistentGames().size());
 	}
 }

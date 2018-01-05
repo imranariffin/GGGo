@@ -13,18 +13,18 @@ public class DAOFactory {
 		return UserDAO.getInstance(emf);
 	}
 	
-	public static PersistentGameDAO getPersistentGameDAO() {
+	public static GameDAO getPersistentGameDAO() {
 		if (emf == null) {
 			emf = createEntityManagerFactor();
 		}
-		return PersistentGameDAO.getInstance(emf);
+		return GameDAO.getInstance(emf);
 	}
 	
-	public static PersistentStateDAO getPersistentStateDAO() {
+	public static StateDAO getPersistentStateDAO() {
 		if (emf == null) {
 			emf = createEntityManagerFactor();
 		}
-		return PersistentStateDAO.getInstance(emf);
+		return StateDAO.getInstance(emf);
 	}
 	
 	public static PlacementDAO getPlacementDAO() {

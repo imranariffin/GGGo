@@ -15,6 +15,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.NamedQuerySet;
+import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.User;
 
 public class InviteDAO {
@@ -244,6 +245,26 @@ public class InviteDAO {
 			q.setParameter("user", user);
 			res = q.getResultList();
 			
+		} finally {
+			em.close();
+		}
+		
+		return res;
+	}
+
+	public Invite getInviteByGameId(int gameId) {
+		EntityManager em = emf.createEntityManager();
+		Invite res = null;
+		
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		PersistentGame pg = gdao.getPersistentGame(gameId);
+		
+		try {
+			Query q = em.createNamedQuery(NamedQuerySet.INVITE_FIND_ONE_BY_GAMEID);
+			q.setParameter("game", pg);
+			res = (Invite) q.getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
 		} finally {
 			em.close();
 		}

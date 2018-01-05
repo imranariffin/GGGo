@@ -4,9 +4,20 @@ import static com.fdmgroup.gggo.controller.Stone.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import com.fdmgroup.gggo.dao.DAOFactory;
+import com.fdmgroup.gggo.dao.GameDAO;
+import com.fdmgroup.gggo.dao.PlacementDAO;
+import com.fdmgroup.gggo.dao.StateDAO;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.PersistentGame;
+import com.fdmgroup.gggo.model.PersistentState;
+import com.fdmgroup.gggo.model.Placement;
 
 public class GoUtilsTest {
 	
@@ -594,6 +605,61 @@ public class GoUtilsTest {
 			{E,E,W,E,E,E,W,W,E}, // 8
 		};
 		
+		assertTrue(GoUtils.compareBoard(expected, actual));
+	}
+	
+	@Test
+	public void test_CreateBoardFromPlacementList_ReturnsEmptyBoard_GivenEmptyListOfPlacements() {
+		List<Placement> placements = new ArrayList<>();
+		
+		Stone[][] expected = new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,E,E,E,E,E,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,E,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8
+		};
+		Stone[][] actual = GoUtils.createBoardFromPlacementList(placements);
+		assertTrue(GoUtils.compareBoard(expected, actual));		
+	}
+	
+	@Test
+	public void test_CreateBoardFromPlacementList_ReturnsBoard_GivenListOfPlacements() {
+		
+		Placement pt1 = Mockito.mock(Placement.class);
+		Placement pt2 = Mockito.mock(Placement.class);
+		
+		/* Black san-san top left then White replies diagonal san-san */
+		Mockito.when(pt1.getRowNumber()).thenReturn(2);
+		Mockito.when(pt1.getColNumber()).thenReturn(2);
+		Mockito.when(pt1.getStone()).thenReturn(B);
+		Mockito.when(pt2.getRowNumber()).thenReturn(6);
+		Mockito.when(pt2.getColNumber()).thenReturn(6);
+		Mockito.when(pt2.getStone()).thenReturn(W);
+		
+		List<Placement> placements = new ArrayList<>();
+		
+		placements.add(pt1);
+		placements.add(pt2);
+		
+		Stone[][] expected = new Stone[][] {
+//			 0 1 2 3 4 5 6 7 8
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,B,E,E,E,E,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,W,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8
+		};
+		Stone[][] actual = GoUtils.createBoardFromPlacementList(placements);
 		assertTrue(GoUtils.compareBoard(expected, actual));
 	}
 }

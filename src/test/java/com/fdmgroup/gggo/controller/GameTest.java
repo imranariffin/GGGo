@@ -18,7 +18,7 @@ import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.controller.State;
 import com.fdmgroup.gggo.dao.DAOFactory;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
 
 public class GameTest {
 	

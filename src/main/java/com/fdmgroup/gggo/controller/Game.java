@@ -16,7 +16,6 @@ import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.Placement;
 import com.fdmgroup.gggo.model.User;
-import com.mchange.v2.c3p0.impl.NewProxyCallableStatement;
 
 public class Game extends InteractiveGo implements Go {
 	
@@ -65,6 +64,8 @@ public class Game extends InteractiveGo implements Go {
 			}
 		});
 		
+		/* Push empty states and then all other placement states */
+		states.push(new State());
 		for (State s: sortedStates) {
 			states.push(s);
 		}
@@ -106,7 +107,7 @@ public class Game extends InteractiveGo implements Go {
 		
 		Stone[][] newBoard = createNewBoard(i, j, stone);
 		GoUtils.removeCaptured(newBoard, i, j);
-		states.push(new State(newBoard, getNextTurn()));
+		states.push(new State(newBoard, getTurn()));
 	}
 
 	@Override

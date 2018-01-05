@@ -1,39 +1,32 @@
 package com.fdmgroup.gggo.dao;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import com.fdmgroup.gggo.controller.Game;
-import com.fdmgroup.gggo.controller.GoUtils;
-import com.fdmgroup.gggo.controller.State;
-import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.NamedQuerySet;
 import com.fdmgroup.gggo.model.PersistentGame;
-import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.User;
 
-public class PersistentGameDAO {
+public class GameDAO {
 	
-	private static PersistentGameDAO inst;
+	private static GameDAO inst;
 	private static EntityManagerFactory emf;
 	
-	private PersistentGameDAO() {
+	private GameDAO() {
 	}
 	
-	public static PersistentGameDAO getInstance(EntityManagerFactory _emf) {
+	public static GameDAO getInstance(EntityManagerFactory _emf) {
 		emf = _emf;
 		if (inst == null) {
-			inst = new PersistentGameDAO();
+			inst = new GameDAO();
 		}
 		return inst;
 	}
@@ -128,7 +121,7 @@ public class PersistentGameDAO {
 
 	void deletePersistentGame(PersistentGame pg, Invite inv) {
 		EntityManager em = emf.createEntityManager();
-		PersistentStateDAO sdao = DAOFactory.getPersistentStateDAO();
+		StateDAO sdao = DAOFactory.getPersistentStateDAO();
 		
 		if (pg == null) {
 			return;
@@ -141,7 +134,7 @@ public class PersistentGameDAO {
 		InviteDAO idao = DAOFactory.getInviteDAO();
 		inv.setGame(null);
 		idao.updateInvite(inv);
-		
+
 		try {
 			em.getTransaction().begin();
 			em.remove(em.contains(pg) ? pg : em.merge(pg));
@@ -169,5 +162,17 @@ public class PersistentGameDAO {
 		}
 		
 		return res;
+	}
+
+	public void deleteGame(int gameId) {
+		PersistentGame pg = getPersistentGame(gameId);
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		Invite inv = idao.getInviteByGameId(gameId);
+		deletePersistentGame(pg, inv);
+	}
+
+	public Game getGame(int gameId) {
+		PersistentGame pg = getPersistentGame(gameId);
+		return new Game(pg);
 	}
 }

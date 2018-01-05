@@ -1,11 +1,9 @@
 package com.fdmgroup.gggo.dao;
 
-import static com.fdmgroup.gggo.controller.Stone.E;
 import static com.fdmgroup.gggo.controller.Stone.B;
 import static com.fdmgroup.gggo.controller.Stone.W;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -15,14 +13,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.fdmgroup.gggo.controller.Game;
-import com.fdmgroup.gggo.controller.State;
 import com.fdmgroup.gggo.controller.Stone;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
-import com.fdmgroup.gggo.dao.PersistentStateDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
+import com.fdmgroup.gggo.dao.StateDAO;
 import com.fdmgroup.gggo.dao.PlacementDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
-import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
@@ -33,8 +28,8 @@ public class PlacementDAOTest {
 
 	private static UserDAO udao;
 	private static InviteDAO idao;
-	private static PersistentGameDAO gdao;
-	private static PersistentStateDAO sdao;
+	private static GameDAO gdao;
+	private static StateDAO sdao;
 	private static PlacementDAO pdao;
 	
 	private static String password;
@@ -44,6 +39,9 @@ public class PlacementDAOTest {
 	private static PersistentGame pg;
 	private static PersistentState ps;
 	
+//	private int r = 3, c = 3, t = 0;
+//	private Stone st = B;
+//	
 	@BeforeClass
 	public static void setupOnce() throws DeleteInviteInvitorInviteeMismatchException {
 		udao = DAOFactory.getUserDAO();
@@ -62,11 +60,6 @@ public class PlacementDAOTest {
 	
 	@AfterClass
 	public static void tearDownOnce() throws DeleteInviteInvitorInviteeMismatchException {
-//		sdao.deletePersistentState(pg, ps);
-//		gdao.deletePersistentGame(pg, inv);
-//		idao.deleteInvite(invitor, invitee, inv);
-//		udao.deleteUser("invitor");
-//		udao.deleteUser("invitee");
 	}
 	
 	@Before
@@ -76,7 +69,7 @@ public class PlacementDAOTest {
 		invitee = udao.createUser("invitee", password);
 		inv = idao.createInvite(invitor, invitee);
 		pg = gdao.createPersistentGame(inv);
-		ps = sdao.createPersistentState(pg);
+		ps = sdao.createEmptyPersistentState(pg.getGameId());
 	}
 	
 	@After
@@ -99,7 +92,6 @@ public class PlacementDAOTest {
 		
 		assertEquals(expected, actual);
 		assertEquals(ps, actual.getPersistentState());
-		assertEquals(pg, actual.getPersistentState().getPersistentGame());
 	}
 	
 	@Test

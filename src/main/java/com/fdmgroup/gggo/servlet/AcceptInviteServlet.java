@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.InviteDAO;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.User;
 
@@ -52,7 +52,7 @@ public class AcceptInviteServlet extends HttpServlet {
 		}
 		
 		InviteDAO idao = DAOFactory.getInviteDAO();
-		PersistentGameDAO gdao = DAOFactory.getPersistentGameDAO();
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
 		
 		Invite inv = idao.getInvite(Integer.parseInt(inviteId));
 		

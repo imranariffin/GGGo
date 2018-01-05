@@ -18,7 +18,7 @@ import org.apache.catalina.connector.Request;
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.InviteDAO;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
@@ -50,7 +50,7 @@ public class ViewInviteServlet extends HttpServlet {
 		}
 		
 		InviteDAO idao = DAOFactory.getInviteDAO();
-		PersistentGameDAO gdao = DAOFactory.getPersistentGameDAO();
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
 
 		User invitee = invitor;
 		List<Invite> sentInvites = idao.getSentInvites(invitor.getUsername());

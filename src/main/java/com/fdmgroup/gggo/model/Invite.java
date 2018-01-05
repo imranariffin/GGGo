@@ -28,6 +28,9 @@ import javax.persistence.Table;
 			name=NamedQuerySet.INVITE_FIND_ONE, 
 			query="select inv from Invite inv where inv.inviteId = :invid"),
 	@NamedQuery(
+			name=NamedQuerySet.INVITE_FIND_ONE_BY_GAMEID, 
+			query="select inv from Invite inv where inv.game = :game"),
+	@NamedQuery(
 			name=NamedQuerySet.INVITE_ACCEPTED_FIND_ALL, 
 			query="select inv from Invite inv where (inv.invitee = :user or inv.invitor = :user) and inv.game IS NOT NULL"),
 })
