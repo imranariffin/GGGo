@@ -1,16 +1,34 @@
 package com.fdmgroup.gggo.view;
 
 import java.util.Scanner;
-
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.controller.GoUtils;
+import com.fdmgroup.gggo.dao.DAOFactory;
+import com.fdmgroup.gggo.dao.GameDAO;
+import com.fdmgroup.gggo.dao.InviteDAO;
+import com.fdmgroup.gggo.dao.UserDAO;
+import com.fdmgroup.gggo.model.Invite;
+import com.fdmgroup.gggo.model.User;
 
 public class GameView {
 
 	public void main() {
 		
 		Scanner in = new Scanner(System.in);
-		Game game = new Game();
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		UserDAO udao = DAOFactory.getUserDAO();
+		
+		String password = "pazzword"; 
+		User invitor = udao.getUser("invitor");
+		invitor = invitor == null ? udao.createUser("invitor", password) : invitor;
+		User invitee = udao.getUser("invitee");
+		invitee = invitee == null ? udao.createUser("invitee", password) : invitee;
+		
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		Game game = gdao.createGame(inv);
+		
 		GoCommandHandler cmdHandler = new GoCommandHandler(game);
 		
 		print(welcome());

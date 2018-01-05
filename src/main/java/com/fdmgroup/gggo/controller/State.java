@@ -15,7 +15,7 @@ public class State {
 	public State(PersistentState ps) {
 		stateId = ps.getStateId();
 		turnNumber = ps.getTurnNumber();
-		board = GoUtils.createBoardFromPlacementList(ps.getPlacements());
+		board = GoUtils.createBoardFromPersistentState(ps);
 	}
 	
 	public State() {
@@ -27,12 +27,8 @@ public class State {
 			}
 		}
 	}
-	
-	public State(Stone[][] b, int t) {
-		this(b, t, -1);
-	}
-	
-	public State(Stone[][] b, int t, int stid) {
+
+	private State(Stone[][] b, int t, int stid) {
 		board = b;
 		turnNumber = t;
 		stateId = stid;

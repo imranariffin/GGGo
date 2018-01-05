@@ -5,26 +5,72 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.GameDAO;
+import com.fdmgroup.gggo.dao.InviteDAO;
 import com.fdmgroup.gggo.dao.PlacementDAO;
 import com.fdmgroup.gggo.dao.StateDAO;
+import com.fdmgroup.gggo.dao.UserDAO;
+import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.Placement;
+import com.fdmgroup.gggo.model.User;
 
 public class GoUtilsTest {
+
+	private static UserDAO udao;
+	private static InviteDAO idao;
+	private static GameDAO gdao;
+	private static StateDAO sdao;
+	
+	private User invitor;
+	private User invitee;
+	private Invite invite;
+	private Game game;
+	
+	@BeforeClass
+	public static void setupOnce() throws DeleteInviteInvitorInviteeMismatchException {
+		udao = DAOFactory.getUserDAO();
+		idao = DAOFactory.getInviteDAO();
+		gdao = DAOFactory.getPersistentGameDAO();
+		sdao = DAOFactory.getPersistentStateDAO();
+		
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
+	}
+	
+	@Before
+	public void setup() {
+		String password = "pazzword";
+		invitor = udao.createUser("invitor", password);
+		invitee = udao.createUser("invitee", password);
+		invite = idao.createInvite(invitor, invitee);
+		game = gdao.createGame(invite);
+	}
+	
+	@After
+	public void tearDown() throws DeleteInviteInvitorInviteeMismatchException {
+		udao.deleteUser(invitor.getUsername());
+		udao.deleteUser(invitee.getUsername());
+	}
 	
 	@Test
 	public void test_ToString_ReturnsCorrectEmptyBoardString_GivenEmptyBoard() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -48,8 +94,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_ToString_ReturnsCorrectBoardString_GivenOnePlacement() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -78,8 +125,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_ToString_ReturnsCorrectBoardString_GivenAFewPlacements() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -110,8 +158,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_ToString_ReturnsCorrectBoardString_GivenACapture() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		String expected =
 				
 				"╔════════════════════════╗\n"+
@@ -149,8 +198,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsTrue_GivenAGroupThatHasNoLiberty() {
-		Game goGame = new Game();	
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -175,8 +225,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAGroupThatStillHasLiberty() {
-		Game goGame = new Game();		
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -201,8 +252,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAGroupThatStillHasLibertyButHasACapturedGroupCloseby() {
-		Game goGame = new Game();	
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -227,8 +279,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAGroupThatStillHasLibertyButHasACapturedGroupCloseby2() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -253,8 +306,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Captured_ReturnsFalse_GivenAStoneAtFringeOfCapturedGroup() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -279,8 +333,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_RemoveCaptured_ReplacesCapturedOneSizeGroupsWithEmptyStones_AfterAPlacement() {
-		Game goGame = new Game();	
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -316,8 +371,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_RemoveCaptured_ReplacesCapturedTwoSizeGroupsWithEmptyStones_AfterAPlacement() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -353,8 +409,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_RemoveCaptured_ReplacesCapturedTwoSizeGroupsWithEmptyStonesOnly_AfterAPlacement() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -390,8 +447,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_Remove_RepplacesAStoneWithEmpty_GivenAStoneThatIsSurroundedByFourStonesOfOppositeColors() {
-		Game goGame = new Game();		
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
 //			 0 1 2 3 4 5 6 7 8
@@ -430,8 +488,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByASingleColor_GivenBlackAndBoard() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -455,8 +514,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByAWallAndASingleColor_GivenWhiteAndBoard() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -480,8 +540,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_ReturnsNumOfEmptyPositionsSurroundedByAWallAndASingleColor_GivenWhiteAndBoardMultipleTerritory() {
-		Game goGame = new Game();		
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -505,8 +566,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_DoesNotCountIfGroupHasMoreThanOneLiberty() {
-		Game goGame = new Game();		
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -530,8 +592,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_DoesCountIfOccupiedGroupAtCorner() {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -555,8 +618,9 @@ public class GoUtilsTest {
 	
 	@Test
 	public void test_CountTerritory_DoesNotCountIfGroupSurroundedByMoreThanOneColor() {
-		Game goGame = new Game();	
-		goGame.states.push(new State());
+		Invite invite = idao.createInvite(invitor, invitee);
+		Game goGame = gdao.createGame(invite);
+		
 		Game spyGoGame = spy(goGame);
 		
 		when(spyGoGame.getBoard()).thenReturn(new Stone[][] {
@@ -605,6 +669,8 @@ public class GoUtilsTest {
 			{E,E,W,E,E,E,W,W,E}, // 8
 		};
 		
+		System.out.println(GoUtils.toString(actual));
+		System.out.println(GoUtils.toString(expected));
 		assertTrue(GoUtils.compareBoard(expected, actual));
 	}
 	
@@ -661,5 +727,77 @@ public class GoUtilsTest {
 		};
 		Stone[][] actual = GoUtils.createBoardFromPlacementList(placements);
 		assertTrue(GoUtils.compareBoard(expected, actual));
+	}
+	
+	@Test
+	public void test_CreateBoardFromPersistentState_ReturnsBoard_GivenEmptyPersistentState() {
+		PersistentState ps = sdao.createEmptyPersistentState(game.getGameId());
+		
+		Stone[][] expected = new Stone[][] {
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,E,E,E,E,E,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,E,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8			
+		};
+		Stone[][] actual = GoUtils.createBoardFromPersistentState(ps);
+		
+		assertTrue(Arrays.deepEquals(expected, actual));
+	}
+	
+	@Test
+	public void test_CreateBoardFromPersistentState_ReturnsBoard_GivenPersistentState() {
+		PersistentState ps1 = sdao.createPersistentState(game.getGameId(), 2, 2, 0, B);
+		PersistentState ps2 = sdao.createPersistentState(game.getGameId(), 6, 6, 1, W);
+		PersistentState ps3 = sdao.createPersistentState(game.getGameId(), 2, 6, 2, B);
+		
+		Stone[][] expected = new Stone[][] {
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,B,E,E,E,E,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,E,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8			
+		};
+		Stone[][] actual = GoUtils.createBoardFromPersistentState(ps1);
+		
+		assertTrue(Arrays.deepEquals(expected, actual));
+		
+		expected = new Stone[][] {
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,B,E,E,E,E,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,W,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8			
+		};
+		actual = GoUtils.createBoardFromPersistentState(ps2);
+		
+		assertTrue(Arrays.deepEquals(expected, actual));
+		
+		expected = new Stone[][] {
+			{E,E,E,E,E,E,E,E,E}, // 0
+			{E,E,E,E,E,E,E,E,E}, // 1
+			{E,E,B,E,E,E,B,E,E}, // 2
+			{E,E,E,E,E,E,E,E,E}, // 3
+			{E,E,E,E,E,E,E,E,E}, // 4
+			{E,E,E,E,E,E,E,E,E}, // 5
+			{E,E,E,E,E,E,W,E,E}, // 6
+			{E,E,E,E,E,E,E,E,E}, // 7
+			{E,E,E,E,E,E,E,E,E}, // 8			
+		};
+		actual = GoUtils.createBoardFromPersistentState(ps3);
+		
+		assertTrue(Arrays.deepEquals(expected, actual));
 	}
 }

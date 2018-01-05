@@ -45,9 +45,9 @@ public class Placement {
 		super();
 	}
 	
-	public Placement(int i, int j, Stone s, PersistentState ps) {
-		colNumber = i;
-		rowNumber = j;
+	public Placement(int r, int c, Stone s, PersistentState ps) {
+		rowNumber = r;
+		colNumber = c;
 		stone = s;
 		persistentState = ps;
 	}
@@ -76,6 +76,7 @@ public class Placement {
 		return stone;
 	}
 	
+	@Override
 	public String toString() {
 		return "[" + rowNumber + "," + colNumber + ":" + GoUtils.toString(stone) + "]"; 
 	}

@@ -158,4 +158,24 @@ public class StateDAOTest {
 		
 		assertEquals(n + 1, sdao.getPersistentStateList(pg.getGameId()).size());
 	}
+	
+//	@Test
+//	public void test_CreateState_CreatesAStateBasedOnCurrentPlacementAndPreviousPlacements() {
+//		Invite invite = idao.createInvite(invitor, invitee);
+//		Game game = gdao.createGame(invite);
+//		PersistentGame pg = gdao.getPersistentGame(game.getGameId());
+//		int t = 0;
+//		
+//		int n = sdao.getPersistentStateList(pg.getGameId()).size();
+//		
+//		State ps1 = sdao.createState(game, 3, 3, t, B);
+//		State ps2 = sdao.createState(game, 6, 6, t + 1, W);
+//		State ps3 = sdao.createState(game, 6, 6, t + 2, B);
+//		State ps4 = sdao.createState(game, 6, 6, t + 3, W);
+//		
+//		assertEquals(1, pdao.getPlacements(ps1.getStateId()).size());
+////		assertEquals(2, pdao.getPlacements(ps2.getStateId()).size());
+//		assertEquals(3, pdao.getPlacements(ps3.getStateId()).size());
+//		assertEquals(4, pdao.getPlacements(ps4.getStateId()).size());
+//	}
 }

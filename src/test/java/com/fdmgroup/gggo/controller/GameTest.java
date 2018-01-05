@@ -8,39 +8,67 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.exceptions.EndOfStateStackException;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.Invite;
+import com.fdmgroup.gggo.model.User;
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.controller.State;
 import com.fdmgroup.gggo.dao.DAOFactory;
 import com.fdmgroup.gggo.dao.GameDAO;
+import com.fdmgroup.gggo.dao.InviteDAO;
+import com.fdmgroup.gggo.dao.UserDAO;
 
 public class GameTest {
+	
+	private static GameDAO gdao;
+	private static InviteDAO idao;
+	private static UserDAO udao;
+	
+	private User invitor;
+	private User invitee;
+	private Invite invite;
 	
 	Game spyGoGame;
 	Game mockGoGame;
 	Game goGame;
 	
 	@BeforeClass
-	public static void setupOnce() {
+	public static void setupOnce() throws DeleteInviteInvitorInviteeMismatchException {
+		gdao = DAOFactory.getPersistentGameDAO();
+		idao = DAOFactory.getInviteDAO();
+		udao = DAOFactory.getUserDAO();
+		
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
 	}
 	
 	@Before
 	public void setup() {
-		goGame = new Game();
+		
+		String password = "pazzword"; 
+		invitor = udao.createUser("invitor", password);
+		invitee = udao.createUser("invitee", password);
+		invite = idao.createInvite(invitor, invitee);
+		
+		goGame = gdao.createGame(invite);
+		
 		mockGoGame = mock(Game.class);
 		spyGoGame = spy(goGame);
-		
-		goGame.states.push(new State());
 	}
 	
 	@After
-	public void tearDown() {
+	public void tearDown() throws DeleteInviteInvitorInviteeMismatchException {
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
 	}
 	
 	@Test
@@ -137,7 +165,8 @@ public class GameTest {
 			fail();
 		}
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
+		State curState = goGame.getCurState();
+		assertTrue(Arrays.deepEquals(curState.getBoard(), currBoard));
 		
 		try {
 			goGame.place(4, 3);
@@ -173,19 +202,19 @@ public class GameTest {
 			fail();
 		}
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
+		State curState = goGame.getCurState();
+		assertTrue(Arrays.deepEquals(curState.getBoard(), currBoard));
 		/*
 		 * On this board, the number of turn is 6 so it's Black's turn to place a stone.
 		 * When Black places at 2,4, White at 2,3 should be captured and removed from board.
 		*/
-		
 		
 		try {
 			goGame.place(2, 4);
 		} catch (InvalidPlacementException e) {
 			fail();
 		}
-		
+
 		assertEquals(B, goGame.getStone(2, 4));
 		assertEquals(E, goGame.getStone(2, 3));
 	}
@@ -215,7 +244,8 @@ public class GameTest {
 			fail();
 		}
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
+		State curState = goGame.getCurState();
+		assertTrue(Arrays.deepEquals(curState.getBoard(), currBoard));
 		/*
 		 * On this board, the number of turn is 5 so it's White's turn to place a stone.
 		 * When White places at 3,0, Black at 2,0 should be captured and removed from board.
@@ -264,7 +294,8 @@ public class GameTest {
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
 		
-		assertTrue(goGame.getCurState().equals(new State(currBoard, goGame.getNextTurn())));
+		State curState = goGame.getCurState();
+		assertTrue(Arrays.deepEquals(curState.getBoard(), currBoard));
 		
 		/*
 		 * On this board, the number of turn is 12 so it's Black's turn to place a stone.
@@ -324,6 +355,7 @@ public class GameTest {
 	@Test
 	public void test_Back_throwsError_IfCurrentStateIsBeginningOfGame() {
 		try {
+			goGame.back();
 			goGame.back();
 			fail();
 		} catch (Exception e) {
@@ -438,7 +470,8 @@ public class GameTest {
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
 		
-		assertTrue(goGame.getCurState().equals(new State(expected, goGame.getNextTurn())));
+		State curState = goGame.getCurState();
+		assertTrue(Arrays.deepEquals(curState.getBoard(), expected));
 		
 		/*
 		 * On this board, the number of turn is 12 so it's Black's turn to place a stone.
@@ -464,6 +497,7 @@ public class GameTest {
 			{E, E, E, E, E, E, E, E, E}, // 8
 		};
 		
-		assertTrue(goGame.getCurState().equals(new State(expected, goGame.getNextTurn())));
+		curState = goGame.getCurState();
+		assertTrue(Arrays.deepEquals(curState.getBoard(), expected));
 	}
 }
