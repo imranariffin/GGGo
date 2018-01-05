@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
+import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 import com.fdmgroup.gggo.model.Invite;
 import com.fdmgroup.gggo.model.PersistentGame;
 
@@ -155,7 +156,7 @@ public class GameDAOTest {
 		
 		assertNotNull(pg);
 		assertEquals(pg.getGameId(), g.getGameId());
-		assertEquals(pg.getPersistentStates().size(), g.getStates().size());
+		assertEquals(pg.getPersistentStates().size(), g.getStates().size() - 1);
 		assertEquals(n + 1, gdao.getPersistentGames().size());
 		
 		gdao.deletePersistentGame(pg, inv);
@@ -183,6 +184,24 @@ public class GameDAOTest {
 		User amir = udao.createUser("amir.ariffin", "pazzword");
 		Invite inv1 = idao.createInvite(imran, amir);
 		Game game = gdao.createGame(inv1);
+		
+		Game expected = game;
+		Game actual = gdao.getGame(game.getGameId());
+		assertEquals(expected, actual);
+		
+		gdao.deleteGame(game.getGameId());
+	}
+	
+	@Test
+	public void test_GetGame_ReturnsGameWithAllTHeCorrectStates_GivenGameIdOfGameWIthAFewStates() 
+			throws InvalidPlacementException {
+		
+		User imran = udao.createUser("imran.ariffin", "pazzword");
+		User amir = udao.createUser("amir.ariffin", "pazzword");
+		Invite inv1 = idao.createInvite(imran, amir);
+		Game game = gdao.createGame(inv1);
+		
+		game.place(3, 3);
 		
 		Game expected = game;
 		Game actual = gdao.getGame(game.getGameId());

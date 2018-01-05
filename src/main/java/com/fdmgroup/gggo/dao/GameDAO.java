@@ -134,7 +134,7 @@ public class GameDAO {
 		InviteDAO idao = DAOFactory.getInviteDAO();
 		inv.setGame(null);
 		idao.updateInvite(inv);
-		
+
 		try {
 			em.getTransaction().begin();
 			em.remove(em.contains(pg) ? pg : em.merge(pg));

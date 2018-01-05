@@ -1,5 +1,8 @@
 package com.fdmgroup.gggo.dao;
 
+import static com.fdmgroup.gggo.controller.Stone.B;
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
@@ -8,6 +11,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import com.fdmgroup.gggo.controller.Game;
+import com.fdmgroup.gggo.controller.State;
+import com.fdmgroup.gggo.controller.Stone;
 import com.fdmgroup.gggo.model.NamedQuerySet;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
@@ -29,8 +35,12 @@ public class StateDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	List<PersistentState> getPersistentStateList(PersistentGame pg) {
+	List<PersistentState> getPersistentStateList(int gameId) {
 		EntityManager em = emf.createEntityManager();
+		
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		PersistentGame pg =  gdao.getPersistentGame(gameId);
+		
 		List<PersistentState> pStates;
 		
 		try {
@@ -67,8 +77,13 @@ public class StateDAO {
 		return ps;
 	}
 	
-	public PersistentState createPersistentState(PersistentGame pg) {
+
+
+	public PersistentState createEmptyPersistentState(int gameId) {
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		PersistentGame pg = gdao.getPersistentGame(gameId);
 		PersistentState ps = new PersistentState(pg);
+		
 		EntityManager em = emf.createEntityManager();
 		
 		try {
@@ -91,29 +106,37 @@ public class StateDAO {
 		return ps;
 	}
 	
-//	public State mapToState(PersistentState ps) {
-//		int size = 9;
-//		Stone[][] board = new Stone[size][size];
-//		
-//		for (Placement p: ps.getPlacements()) {
-//			Stone s = p.getStone();
-//			int r = p.getRowNumber();
-//			int c = p.getColNumber();
-//			board[r][c] = s;
-//		}
-//		
-//		for (int i = 0; i < size; i++) {
-//			for (int j = 0; j < size; j++) {
-//				if (board[i][j] == null) {
-//					board[i][j] = E;
-//				}
-//			}
-//		}
-//
-//		State state = new State(board, ps.getTurnNumber(), ps.getStateId());
-//		
-//		return state;
-//	}
+	public PersistentState createPersistentState(
+			int gameId, int r, int c, int t, Stone st) {
+		
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		PersistentGame pg = gdao.getPersistentGame(gameId);
+		PersistentState ps = new PersistentState(pg);
+		
+		EntityManager em = emf.createEntityManager();
+		
+		try {
+			em.getTransaction().begin();
+			ps.setPersistentGame((em.contains(pg) ? pg : em.merge(pg)));
+			em.persist(ps);
+			em.getTransaction().commit();
+		} catch (EntityExistsException eee) {
+			eee.printStackTrace();
+			return null;
+		} catch(IllegalArgumentException iae) {
+			iae.printStackTrace();
+			return null;
+		} finally {
+			em.close();
+		}
+		
+		PlacementDAO pdao = DAOFactory.getPlacementDAO();
+		Placement pt = pdao.createPlacement(r, c, st, ps);
+		
+		pg.getPersistentStates().add(ps);
+		
+		return ps;
+	}
 	
 	public void deletePersistentState(PersistentGame pg, PersistentState ps) {
 		
@@ -139,5 +162,14 @@ public class StateDAO {
 		} finally {
 			em.close();
 		}		
+	}
+
+	public State createState(Game game, int i, int j, int t, Stone b) {
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		PersistentState ps = createPersistentState(game.getGameId(), i, j, t, B);
+		
+		State s = new State(ps);
+		
+		return s;
 	}
 }
