@@ -163,4 +163,11 @@ public class GameDAO {
 		
 		return res;
 	}
+
+	public void deleteGame(int gameId) {
+		PersistentGame pg = getPersistentGame(gameId);
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		Invite inv = idao.getInviteByGameId(gameId);
+		deletePersistentGame(pg, inv);
+	}
 }

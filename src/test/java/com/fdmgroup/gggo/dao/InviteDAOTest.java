@@ -355,6 +355,23 @@ public class InviteDAOTest {
 	}
 	
 	@Test
+	public void test_DeleteInvite_RemovesCorrespondingPersistentGame_GivenInvitorId() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
+		User invitor = udao.createUser("invitor", "pazzword");
+		User invitee = udao.createUser("invitee", "pazzword");
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		PersistentGame pg = gdao.createPersistentGame(inv);
+		
+		idao.deleteInvite(invitor, invitee, inv);
+		
+		assertNull(gdao.getPersistentGame(pg.getGameId()));
+	}
+	
+	
+	@Test
 	public void test_GetAcceptedInvites_ReturnsListOfInvitesAcceptedByEitherParty() {
 		String password = "pazzword";
 		User invitor = udao.createUser("invitor", password);
@@ -397,6 +414,27 @@ public class InviteDAOTest {
 		assertTrue(invites.contains(inv1));
 		assertTrue(invites.contains(inv2));
 		assertFalse(invites.contains(inv3));		
+	}
+	
+	@Test
+	public void test_GetInviteByGameId_ReturnsInvite_GivenGameId() 
+			throws DeleteInviteInvitorInviteeMismatchException {
+		
+		User invitor = udao.createUser("invitor", "pazzword");
+		User invitee = udao.createUser("invitee", "pazzword");
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		PersistentGame pg = gdao.createPersistentGame(inv);
+		
+		Invite expected = inv;
+		Invite actual = idao.getInviteByGameId(pg.getGameId());
+		
+		assertNotNull(inv);
+		assertEquals(expected, actual);
+		
+		udao.deleteUser(invitor);
+		udao.deleteUser(invitee);
 	}
 }
 

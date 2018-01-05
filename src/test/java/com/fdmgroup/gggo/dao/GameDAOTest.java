@@ -173,4 +173,38 @@ public class GameDAOTest {
 		assertNotNull(gdao.getGames(imran.getUsername()));
 		assertEquals(2, gdao.getGames(imran.getUsername()).size());
 	}
+	
+	@Test
+	public void test_GetGame_ReturnsGame_GivenGameId() {
+		
+	}
+	
+	@Test
+	public void test_DeleteGame_removesExistingGameFromDatabase_GivenGameId() {
+		User invitor = udao.createUser("invitor", "password");
+		User invitee = udao.createUser("invitee", "password");
+		Invite inv = idao.createInvite(invitor, invitee);
+		Game game = gdao.createGame(inv);
+
+		int n = gdao.getPersistentGames().size();
+		
+		gdao.deleteGame(game.getGameId());
+		
+		assertEquals(n - 1, gdao.getPersistentGames().size());
+	}
+	
+	@Test
+	public void test_DeleteGame_DoesNothing_GivenNonExistingGameId() {
+		User invitor = udao.createUser("invitor", "password");
+		User invitee = udao.createUser("invitee", "password");
+		Invite inv = idao.createInvite(invitor, invitee);
+		Game game = gdao.createGame(inv);
+		
+		gdao.deleteGame(game.getGameId());
+		int n = gdao.getPersistentGames().size();
+		
+		gdao.deleteGame(game.getGameId());
+		
+		assertEquals(n, gdao.getPersistentGames().size());
+	}
 }
