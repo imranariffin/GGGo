@@ -5,6 +5,9 @@ import static com.fdmgroup.gggo.controller.Stone.W;
 
 import java.util.Stack;
 
+import com.fdmgroup.gggo.dao.DAOFactory;
+import com.fdmgroup.gggo.dao.StateDAO;
+
 public class FinishedGame extends InteractiveGo {
 	private final float whiteScore;
 	private final float blackScore;
@@ -16,8 +19,9 @@ public class FinishedGame extends InteractiveGo {
 		whiteScore = wScore;
 		blackScore = bScore;
 		
+		StateDAO sdao = DAOFactory.getPersistentStateDAO();
 		for (State s: gg.getStates()) {
-			states.push(new State(s.getBoard(), getNextTurn()));
+			states.push(s);
 		}
 	}
 	

@@ -193,8 +193,8 @@ public class GameDAOTest {
 	}
 	
 	@Test
-	public void test_GetGame_ReturnsGameWithAllTHeCorrectStates_GivenGameIdOfGameWIthAFewStates() 
-			throws InvalidPlacementException {
+	public void test_GetGame_ReturnsGameWithAllTHeCorrectStates_GivenGameIdOfGameWithAFewStates() 
+			throws InvalidPlacementException, DeleteInviteInvitorInviteeMismatchException {
 		
 		User imran = udao.createUser("imran.ariffin", "pazzword");
 		User amir = udao.createUser("amir.ariffin", "pazzword");
@@ -207,7 +207,8 @@ public class GameDAOTest {
 		Game actual = gdao.getGame(game.getGameId());
 		assertEquals(expected, actual);
 		
-		gdao.deleteGame(game.getGameId());
+		udao.deleteUser("imran.ariffin");
+		udao.deleteUser("amir.ariffin");
 	}
 	
 	@Test

@@ -51,6 +51,8 @@ public class UserDAOTest {
 		udao.deleteUser("nonexistinguser");
 		udao.deleteUser("akira.touya");
 		udao.deleteUser("updateable");
+		udao.deleteUser("invitor");
+		udao.deleteUser("invitee");
 	}
 	
 	@AfterClass
@@ -149,7 +151,5 @@ public class UserDAOTest {
 		
 		assertNull(idao.getInvite(inv1.getInviteId()));
 		assertNull(idao.getInvite(inv2.getInviteId()));
-		
-		udao.deleteUser(invitee.getUsername());
 	}
 }

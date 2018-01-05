@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,13 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
-import com.fdmgroup.gggo.dao.UserDAO;
-import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
-import com.fdmgroup.gggo.model.Invite;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.model.User;
 import com.fdmgroup.gggo.serializer.GGJson;
-import com.google.gson.Gson;
 
 @WebServlet(Path.Url.API)
 public class ApiServlet extends HttpServlet {
@@ -30,26 +30,42 @@ public class ApiServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
-		doGet(request, response, new ErrorResponse());
+		setCorsHeaders(response);
+		GGJson ggjson = new GGJson();
+		doGet(request, response, ggjson, new ErrorResponse());
 	}
 	
-	void doGet(HttpServletRequest request, HttpServletResponse response, ErrorResponse errorResponse) 
+	void doGet(HttpServletRequest request, 
+			HttpServletResponse response,
+			GGJson ggjson,
+			ErrorResponse errorResponse) 
 			throws IOException {
 		
-		String url = request.getRequestURI().replace("/GGGo/api", "");
+		String endPoint = request.getRequestURI().replace("/GGGo/api", "");
+		Matcher onlineUsersEndPoint = Pattern.compile("/online-users").matcher(endPoint);
+		Matcher gameListEndPoint  = Pattern.compile("/game").matcher(endPoint);
+		Matcher gameEndPoint  = Pattern.compile("/game/<[0-9]*>/?").matcher(endPoint);
 		
-		switch (url) {
-			case "/online-users": 
-				GGJson ggjson = new GGJson();
-				respondWithOnelineUserList(request, response, ggjson);
-				break;
-			default:
-				errorResponse.respond404(request, response);
+		if (onlineUsersEndPoint.matches()) 
+		{
+			respondWithOnlineUserList(request, response, ggjson);
+			
+		} else if (gameListEndPoint.matches()) 
+		{
+			respondWithUserGameList(request, response, ggjson);
+			
+		} else if (gameEndPoint.matches()) 
+		{
+			System.out.println("respondWithUserGame");
+			
+		} else 
+		{
+			errorResponse.respond404(request, response);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	void respondWithOnelineUserList(HttpServletRequest request, HttpServletResponse response, GGJson ggjson) 
+	void respondWithOnlineUserList(HttpServletRequest request, HttpServletResponse response, GGJson ggjson) 
 			throws IOException {
 		
 		ServletContext context = request.getSession().getServletContext();
@@ -70,8 +86,32 @@ public class ApiServlet extends HttpServlet {
 
 		String json = ggjson.toJsonUserList(users);
 		
+		setJsonHeaders(response);
+		response.getWriter().write(json);
+	}
+	
+	public void respondWithUserGameList(HttpServletRequest request, HttpServletResponse response, GGJson ggjson) 
+			throws IOException {
+
+		HttpSession session = request.getSession();
+		User currentUser = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
+		
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		List<Game> userGameList = gdao.getGames(currentUser.getUsername());
+		
+		String json = ggjson.toJsonGameList(userGameList);
+		
+		setJsonHeaders(response);
+		response.getWriter().write(json);
+	}
+	
+	private void setCorsHeaders(HttpServletResponse response) {
+		response.addHeader("Access-Control-Allow-Methods", "GET");
+		response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");		
+	}
+	
+	private void setJsonHeaders(HttpServletResponse response) {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json.toString());
 	}
 }

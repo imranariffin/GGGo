@@ -11,10 +11,11 @@ import java.util.List;
 import java.util.Stack;
 
 import com.fdmgroup.gggo.controller.GoUtils;
+import com.fdmgroup.gggo.dao.DAOFactory;
+import com.fdmgroup.gggo.dao.StateDAO;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
 import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.PersistentState;
-import com.fdmgroup.gggo.model.Placement;
 import com.fdmgroup.gggo.model.User;
 
 public class Game extends InteractiveGo implements Go {
@@ -26,9 +27,9 @@ public class Game extends InteractiveGo implements Go {
 	private User black;
 	private User white;
 	
-	public Game() {
-		this(-1);
-	}
+//	public Game() {
+//		this(-1);
+//	}
 	
 	public Game(PersistentGame pg) {
 		SIZE = 9;
@@ -47,23 +48,17 @@ public class Game extends InteractiveGo implements Go {
 		
 		List<State> sortedStates = new ArrayList<>();
 		for (PersistentState ps: pg.getPersistentStates()) {
-			for (Placement pt: ps.getPlacements()) {
-				int i = pt.getRowNumber();
-				int j = pt.getColNumber();
-				Stone st = pt.getStone();
-				board[i][j] = st;
-			}
-			State s = new State(board, ps.getTurnNumber(), ps.getStateId());
-			states.add(s);
+			State s = new State(ps);
+			sortedStates.add(s);
 		}
 		
 		Collections.sort(sortedStates, new Comparator<State>() {
 			@Override
 			public int compare(State s1, State s2) {
-				return s1.getTurn() - s2.getTurn();
+				return s2.getTurn() - s1.getTurn();
 			}
 		});
-		
+
 		/* Push empty states and then all other placement states */
 		states.push(new State());
 		for (State s: sortedStates) {
@@ -71,23 +66,23 @@ public class Game extends InteractiveGo implements Go {
 		}
 	}
 	
-	public Game(int gid) {
-		gameId = gid;
-		SIZE = 9;
-		Stone[][] board = new Stone[SIZE][SIZE];
-		states = new Stack<State>();
-		futureStates = new Stack<State>();
-		black = null;
-		white = null;
-		
-		for (int i=0; i<SIZE; i++) {
-			for (int j=0; j<SIZE; j++) {
-				board[i][j] = E;
-			}
-		}
-		
-//		states.push(new State(board, getNextTurn()));
-	}
+//	public Game(int gid) {
+//		gameId = gid;
+//		SIZE = 9;
+//		Stone[][] board = new Stone[SIZE][SIZE];
+//		states = new Stack<State>();
+//		futureStates = new Stack<State>();
+//		black = null;
+//		white = null;
+//		
+//		for (int i=0; i<SIZE; i++) {
+//			for (int j=0; j<SIZE; j++) {
+//				board[i][j] = E;
+//			}
+//		}
+//		
+////		states.push(new State(board, getNextTurn()));
+//	}
 
 	@Override
 	public void place(int i, int j) throws InvalidPlacementException {
@@ -107,7 +102,11 @@ public class Game extends InteractiveGo implements Go {
 		
 		Stone[][] newBoard = createNewBoard(i, j, stone);
 		GoUtils.removeCaptured(newBoard, i, j);
-		states.push(new State(newBoard, getTurn()));
+		
+		StateDAO sdao = DAOFactory.getPersistentStateDAO();
+		State s = sdao.createState(this, i, j, getTurn(), stone);
+//		State s = new State(newBoard, getTurn())
+		states.push(s);
 	}
 
 	@Override
@@ -125,7 +124,10 @@ public class Game extends InteractiveGo implements Go {
 		Stone[][] board = getBoard();
 		Stone[][] newBoard = copyBoard(board);
 		
-		states.push(new State(newBoard, getNextTurn()));
+		StateDAO sdao = DAOFactory.getPersistentStateDAO();
+		State s = sdao.createState(this, getTurn());
+		
+		states.push(s);
 		passed = true;
 	}
 
@@ -186,6 +188,10 @@ public class Game extends InteractiveGo implements Go {
 
 	public Stack<State> getStates() {
 		return states;
+	}
+	
+	public Stack<State> getFutureStates() {
+		return futureStates;
 	}
 
 	public int getGameId() {

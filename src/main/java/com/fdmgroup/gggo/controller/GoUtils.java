@@ -5,11 +5,23 @@ import static com.fdmgroup.gggo.controller.Stone.E;
 import static com.fdmgroup.gggo.controller.Stone.H;
 import static com.fdmgroup.gggo.controller.Stone.W;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.fdmgroup.gggo.controller.Game;
+import com.fdmgroup.gggo.dao.DAOFactory;
+import com.fdmgroup.gggo.dao.GameDAO;
+import com.fdmgroup.gggo.dao.InviteDAO;
+import com.fdmgroup.gggo.dao.StateDAO;
+import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.InvalidPlacementException;
+import com.fdmgroup.gggo.model.Invite;
+import com.fdmgroup.gggo.model.PersistentGame;
+import com.fdmgroup.gggo.model.PersistentState;
 import com.fdmgroup.gggo.model.Placement;
+import com.fdmgroup.gggo.model.User;
 
 public class GoUtils {
 	
@@ -87,19 +99,31 @@ public class GoUtils {
 	}
 	
 	public static Game generateGoGame(int[][] kifu) {
-		Game goGame = new Game();
-		goGame.states.push(new State());
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
+		InviteDAO idao = DAOFactory.getInviteDAO();
+		UserDAO udao = DAOFactory.getUserDAO();
+		
+		String password = "pazzword"; 
+		User invitor = udao.getUser("invitor");
+		invitor = invitor == null ? udao.createUser("invitor", password) : invitor;
+		User invitee = udao.getUser("invitee");
+		invitee = invitee == null ? udao.createUser("invitee", password) : invitee;
+		
+		Invite inv = idao.createInvite(invitor, invitee);
+		
+		Game game = gdao.createGame(inv);
+		
 		for (int[] pos: kifu) {
 			int i = pos[0];
 			int j = pos[1];
 			
 			try {
-				goGame.place(i, j);
+				game.place(i, j);
 			} catch (InvalidPlacementException e) {
 				System.out.println(e.getMessage());
 			}
 		}
-		return goGame;
+		return game;
 	}
 	
 	private static int countTerritory(Stone[][] board, Stone stone, boolean[][] visited) {
@@ -304,8 +328,41 @@ public class GoUtils {
 			int r = pt.getRowNumber(), c = pt.getColNumber();
 			Stone st = pt.getStone();
 			b[r][c] = st;
+//			System.out.println("before: remove captured");
+//			System.out.println(GoUtils.toString(b));
+			GoUtils.removeCaptured(b, r, c);
+//			System.out.println("after: remove captured");
+//			System.out.println(GoUtils.toString(b));
 		}
 		
 		return b;
+	}
+
+	public static Stone[][] createBoardFromPersistentState(PersistentState ps) {
+
+		StateDAO sdao = DAOFactory.getPersistentStateDAO();
+		PersistentGame pg = ps.getPersistentGame();
+		List<PersistentState> persistentStateList = sdao.getPersistentStateList(pg.getGameId());
+		
+		Collections.sort(persistentStateList, new Comparator<PersistentState>() {
+
+			@Override
+			public int compare(PersistentState ps1, PersistentState ps2) {
+				return ps2.getTurnNumber() - ps1.getTurnNumber();
+			}
+		});
+		
+		List<Placement> placements = new ArrayList<>();
+		for (PersistentState pps: persistentStateList) {
+			if (pps.getTurnNumber() <= ps.getTurnNumber()) {
+				if (!pps.getPlacements().isEmpty()) {
+					placements.add(pps.getPlacements().get(0));	
+				}
+			}
+		}
+		
+		Stone[][] board = GoUtils.createBoardFromPlacementList(placements);
+		
+		return board;
 	}
 }
