@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.OneToOne;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,24 +18,21 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.w3c.dom.Attr;
 
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.dao.InviteDAO;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
-import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.User;
 import com.fdmgroup.gggo.serializer.GGJson;
 
 public class ApiServletTest {
 
 	private static UserDAO udao;
-	private static PersistentGameDAO gdao;
+	private static GameDAO gdao;
 	private static InviteDAO idao;
 	
 	private HttpServletRequest request;

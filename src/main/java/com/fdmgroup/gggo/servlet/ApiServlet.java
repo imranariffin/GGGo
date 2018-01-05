@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.dao.DAOFactory;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.model.User;
 import com.fdmgroup.gggo.serializer.GGJson;
 
@@ -96,7 +96,7 @@ public class ApiServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		User currentUser = (User) session.getAttribute(Attributes.Session.CURRENT_USER);
 		
-		PersistentGameDAO gdao = DAOFactory.getPersistentGameDAO();
+		GameDAO gdao = DAOFactory.getPersistentGameDAO();
 		List<Game> userGameList = gdao.getGames(currentUser.getUsername());
 		
 		String json = ggjson.toJsonGameList(userGameList);

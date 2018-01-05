@@ -14,21 +14,20 @@ import org.mockito.Mockito;
 
 import com.fdmgroup.gggo.controller.Game;
 import com.fdmgroup.gggo.controller.State;
+import com.fdmgroup.gggo.controller.Stone;
 import com.fdmgroup.gggo.dao.DAOFactory;
+import com.fdmgroup.gggo.dao.GameDAO;
 import com.fdmgroup.gggo.dao.InviteDAO;
-import com.fdmgroup.gggo.dao.PersistentGameDAO;
-import com.fdmgroup.gggo.dao.PersistentStateDAO;
 import com.fdmgroup.gggo.dao.UserDAO;
 import com.fdmgroup.gggo.exceptions.DeleteInviteInvitorInviteeMismatchException;
 import com.fdmgroup.gggo.model.Invite;
-import com.fdmgroup.gggo.model.PersistentGame;
 import com.fdmgroup.gggo.model.User;
 
 public class GGJsonTest {
 	
 	private static UserDAO udao;
 	private static InviteDAO idao;
-	private static PersistentGameDAO gdao;
+	private static GameDAO gdao;
 	private static InviteDAO mockIdao;
 	private static UserDAO mockUdao;
 	
@@ -109,7 +108,7 @@ public class GGJsonTest {
 	}
 	
 	@Test
-	public void test_ToJson_ReturnsValidJsonString_GivenInvite() {
+	public void test_ToJsonInvite_ReturnsValidJsonString_GivenInvite() {
 		
 		String expected = "{\"inviteId\":1,\"invitor\":\"saifujiwara\",\"invitee\":\"shindouhikaru\"}";
 		String actual = ggjson.toJsonInvite(inv);
@@ -119,7 +118,7 @@ public class GGJsonTest {
 	}
 	
 	@Test
-	public void test_ToJson_ReturnsValidJsonString_GivenListOfInvite() {
+	public void test_ToJsonInviteList_ReturnsValidJsonString_GivenListOfInvite() {
 		List<Invite> invites = new ArrayList<>();
 		invites.add(inv);
 		invites.add(inv2);
@@ -138,7 +137,7 @@ public class GGJsonTest {
 	}
 	
 	@Test
-	public void test_ToJson_ReturnsValidJsonString_GivenUserWhosIsInvitor() {
+	public void test_ToJsonUser_ReturnsValidJsonString_GivenUserWhosIsInvitor() {
 		String expected = new StringBuilder()
 			.append("{\"username\":\"saifujiwara\",\"sentInvites\":")
 				.append("[{\"inviteId\":1,\"invitor\":\"saifujiwara\",\"invitee\":\"shindouhikaru\"},")
@@ -157,7 +156,7 @@ public class GGJsonTest {
 	}
 	
 	@Test
-	public void test_ToJson_ReturnsValidJsonString_GivenUserWhosIsInvitee() {
+	public void test_ToJsonUser_ReturnsValidJsonString_GivenUserWhosIsInvitee() {
 		String expected = new StringBuilder()
 			.append("{\"username\":\"shindouhikaru\",\"sentInvites\":")
 				.append("[],")
@@ -197,7 +196,7 @@ public class GGJsonTest {
 		List<Game> userGameList = new ArrayList<>();
 		userGameList.add(game);
 		
-		assertEquals(0, game.getStates().size());
+		assertEquals(1, game.getStates().size());
 		assertEquals(0, game.getFutureStates().size());
 		
 		String expected = new StringBuilder()
@@ -206,7 +205,9 @@ public class GGJsonTest {
 						.append("\"gameId\": \"" + game.getGameId() + "\",")
 						.append("\"black\": \"" + game.getBlack().getUsername() + "\",")
 						.append("\"white\": \"" + game.getWhite().getUsername() + "\",")
-						.append("\"states\": [],")
+						.append("\"states\": ")
+						.append(ggjson.toJsonStateList(game.getStates()))
+						.append(",")
 						.append("\"futureStates\": []")
 					.append("}")
 				.append("]")
@@ -218,12 +219,33 @@ public class GGJsonTest {
 	}
 	
 	@Test
-	public void test_ToJsonStateList_ReturnsEmptyValidJson_GivenListOfStates() {
+	public void test_ToJsonGame_ReturnsValidGameJson_GivenGame() {
 		Game game = gdao.createGame(saivshikaru);
-		List<Game> userGameList = new ArrayList<>();
-		userGameList.add(game);
 		
-		List<State> states = game.getStates();
+		StringBuilder json = new StringBuilder();
+		
+		json
+		.append("{")
+			.append("\"gameId\": \"" + game.getGameId() + "\",")
+			.append("\"black\": \"" + game.getBlack().getUsername() + "\",")
+			.append("\"white\": \"" + game.getWhite().getUsername() + "\",")
+			.append("\"states\": ")
+				.append(ggjson.toJsonStateList(game.getStates()))
+			.append(",")
+			.append("\"futureStates\": ")
+				.append(ggjson.toJsonStateList(game.getFutureStates()))
+		.append("}");
+		
+		String expected = json.toString();
+		String actual = ggjson.toJsonGame(game);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test_ToJsonStateList_ReturnsEmptyValidJson_GivenEmptyListOfStates() {
+
+		List<State> states = new ArrayList<>();
 		
 		String expected = new StringBuilder().append("[]").toString();
 		String actual = ggjson.toJsonStateList(states); 
@@ -232,7 +254,33 @@ public class GGJsonTest {
 	}
 	
 	@Test
-	public void test_ToJsonState_ReturnsValidJson_GivenState() {
-
+	public void test_ToJsonState_ReturnsValidJson_GivenEmptyState() {
+		Game game = gdao.createGame(saivshikaru);
+		State s = game.getCurState();
+		Stone[][] board = s.getBoard();
+		
+		StringBuilder json = new StringBuilder();
+		
+		json.append("{")
+			.append("\"stateId\": " + s.getStateId() + ",")
+			.append("\"turn\": " + s.getTurn() + ",")
+			.append("\"board\": " + "[");
+			for (int i = 0; i < board.length; i++) {
+				json.append("[");
+				for (int j = 0; j < board.length; j++) {
+					String st = board[i][j].toString();
+					json.append("\"" + st + "\"");
+					if (j < board.length - 1) json.append(",");
+				}
+				json.append("]");
+				if (i < board.length - 1) json.append(",");
+			}
+			json.append("]");
+		json.append("}");
+		
+		String expected = json.toString();
+		String actual = ggjson.toJsonState(s);
+		
+		assertEquals(expected, actual);
 	}
 }

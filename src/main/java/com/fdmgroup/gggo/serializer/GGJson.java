@@ -76,37 +76,8 @@ public class GGJson {
 		StringBuilder json = new StringBuilder().append("[");
 		
 		for (Game game: userGameList) {
-			json.append("{")
-				.append("\"gameId\": \"" + game.getGameId() + "\",")
-				.append("\"black\": \"" + game.getBlack().getUsername() + "\",")
-				.append("\"white\": \"" + game.getWhite().getUsername() + "\",")
-				.append("\"states\": [");
-			for (State s: game.getStates()) {
-				json.append("{")
-					.append("\"stateId\": " + s.getStateId() + ",")
-					.append("\"turn\": " + s.getTurn() + ",")
-					.append("\"board\": " + "[");
-				Stone[][] board = s.getBoard();
-				for (int i = 0; i < board.length; i++) {
-					json.append("[");
-					for (int j = 0; j < board.length; j++) {
-						String st = board[i][j].toString(); 
-						json.append(st);
-						if (j < board.length - 1) json.append(",");
-					}
-					json.append("]");
-					if (i < board.length - 1) json.append(",");
-				}
-				json.append("}");
-				
-				State last = game.getStates().get(game.getStates().size() - 1);
-				if (!s.equals(last)) json.append(",");
-			}
-				json.append("],")
-				.append("\"futureStates\": [");
-				
-				json.append("]")
-			.append("}");
+
+			json.append(toJsonGame(game));
 			
 			Game last = userGameList.get(userGameList.size() - 1);
 			if (!game.equals(last)) {
@@ -133,7 +104,44 @@ public class GGJson {
 		return json.toString();
 	}
 
-	private String toJsonState(State s) {
-		return "";
+	public String toJsonState(State s) {
+		Stone[][] board = s.getBoard();
+		
+		StringBuilder json = new StringBuilder();
+		json.append("{")
+			.append("\"stateId\": " + s.getStateId() + ",")
+			.append("\"turn\": " + s.getTurn() + ",")
+			.append("\"board\": " + "[");
+			for (int i = 0; i < board.length; i++) {
+				json.append("[");
+				for (int j = 0; j < board.length; j++) {
+					String st = board[i][j].toString();
+					json.append("\"" + st + "\"");
+					if (j < board.length - 1) json.append(",");
+				}
+				json.append("]");
+				if (i < board.length - 1) json.append(",");
+			}
+			json.append("]");
+		json.append("}");
+	
+		return json.toString();
+	}
+
+	public String toJsonGame(Game game) {
+		StringBuilder json = new StringBuilder();
+		json
+		.append("{")
+			.append("\"gameId\": \"" + game.getGameId() + "\",")
+			.append("\"black\": \"" + game.getBlack().getUsername() + "\",")
+			.append("\"white\": \"" + game.getWhite().getUsername() + "\",")
+			.append("\"states\": ")
+				.append(toJsonStateList(game.getStates()))
+			.append(",")
+			.append("\"futureStates\": ")
+				.append(toJsonStateList(game.getFutureStates()))
+		.append("}");
+		
+		return json.toString();
 	}
 }
